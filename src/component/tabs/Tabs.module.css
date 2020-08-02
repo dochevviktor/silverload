@@ -1,0 +1,22 @@
+.tabsStyle {
+  color:grey;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  width:100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.tabsStyle::-webkit-scrollbar {
+  display: none;
+}
+
+.tabsStyle > i {
+  margin-top: 3px;
+}
+
+.tabsStyle > i:hover {
+  color:silver;
+}
+

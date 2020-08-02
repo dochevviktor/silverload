@@ -1,0 +1,44 @@
+.titleBar {
+  background-color: #36393f;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  -webkit-app-region: drag;
+}
+
+.titleBar p {
+  font-size: 1rem;
+  font-weight: bolder;
+  color: silver;
+  margin: 0;
+  padding: 2px 2px 2px 5px;
+  text-align: center;
+}
+
+.titleBarButton,
+.titleBarCloseButton {
+  background: transparent;
+  border-radius: 0;
+  -webkit-app-region: no-drag;
+  color: grey;
+  border: none;
+  width: 45px;
+}
+
+.titleBarButton:focus,
+.titleBarCloseButton:focus {
+  outline: 0;
+  background-color: inherit;
+}
+
+.titleBarButton:hover {
+  box-shadow: 0 3px 5px 2px rgba(114, 114, 114, 0.3);
+  background: linear-gradient(45deg, #646464 30%, #4e4e4e 90%);
+  color: white;
+}
+
+.titleBarCloseButton:hover {
+  box-shadow: 0 3px 5px 2px rgba(240, 71, 71, 0.3);
+  background: linear-gradient(45deg, #f04747 30%, #ff8e53 90%);
+  color: white;
+}
