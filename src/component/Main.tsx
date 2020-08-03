@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import styles from './Main.module.css';
 import {asSequence as stream} from 'sequency';
-import 'material-design-lite';
 import Tabs from './tabs/Tabs';
 import ImagePanel from './image.panel/ImagePanel';
 import {SLTab} from "../interface/Common";
@@ -33,25 +32,13 @@ const Main = () => {
   };
 
   return (
-    <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-      <header className={styles.mainHeader + ' mdl-layout__header mdl-layout__header--scroll'}>
-        <div className="mdl-layout__header-row">
-          <Tabs tabs={tabsState.tabs} remove={removeTab} add={addTab}/>
-        </div>
-      </header>
-      <div className="mdl-layout__drawer">
-        <span className="mdl-layout-title">Menu</span>
-        <nav className="mdl-navigation">
-          <a className="mdl-navigation__link" href="/"><i className="fas fa-folder fa-lg"/>&nbsp;&nbsp;Open in Explorer</a>
-          <a className="mdl-navigation__link" href="/"><i className="fas fa-palette fa-lg"/>&nbsp;&nbsp;Open in
-            Editor</a>
-          <a className="mdl-navigation__link" href="/"><i className="fas fa-cog fa-lg"/>&nbsp;&nbsp;Settings</a>
-          <a className="mdl-navigation__link" href="/"><i className="fas fa-info-circle fa-lg"/>&nbsp;&nbsp;About</a>
-        </nav>
+    <div className={styles.mainHeader}>
+      <div className={styles.headerRow}>
+        <Tabs tabs={tabsState.tabs} remove={removeTab} add={addTab}/>
       </div>
-      <main className="mdl-layout__content">
+      <div>
         <ImagePanel/>
-      </main>
+      </div>
     </div>
   );
 };

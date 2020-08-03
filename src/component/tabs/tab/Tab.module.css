@@ -8,7 +8,7 @@
   align-items: baseline;
   margin-right: 5px;
   margin-top: 4px;
-  height: 38px;
+  height: 36px;
   max-width: 160px;
   min-width: 33px;
   white-space: nowrap;
@@ -19,7 +19,6 @@
 }
 
 .tabStyle:hover {
-  height: 36px;
   border-bottom: solid 2px grey;
 }
 
@@ -47,8 +46,6 @@
 }
 
 .tabActive {
-  margin-top: 4px;
-  height: 36px;
   border-bottom: solid 2px silver;
 }
 

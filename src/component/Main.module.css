@@ -1,13 +1,16 @@
 .mainHeader {
-  background-color: #292d33 !important;
+  background-color: #292d33;
   user-select: none;
-  height: 45px !important;
-  min-height: 45px !important;
-  max-height: 45px !important;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
-    0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;
+  height: 40px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
 
 .mainHeader > div > i {
   margin-top: 14px;
+}
+
+.headerRow {
+  height: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
 }
