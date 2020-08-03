@@ -1,4 +1,4 @@
-export interface GenericTab {
-    id: number;
-    title: string;
+export interface SLTab {
+  id: number;
+  title: string;
 }

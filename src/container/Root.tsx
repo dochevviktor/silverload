@@ -1,5 +1,5 @@
-import React,{Fragment} from 'react';
-import TitleBar from '../component/title_bar/Titlebar';
+import React, {Fragment} from 'react';
+import TitleBar from '../component/title.bar/Titlebar';
 import Main from '../component/Main';
 
 const Root = () => (

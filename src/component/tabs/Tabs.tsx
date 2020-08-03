@@ -2,26 +2,25 @@ import React, {useState, useRef, WheelEvent, MouseEvent} from 'react';
 import {asSequence as stream} from 'sequency';
 import styles from './Tabs.module.css';
 import Tab from './tab/Tab';
-import {GenericTab} from "../../interface/Common";
+import {SLTab} from "../../interface/Common";
 
 interface TabsParams {
-   remove: (arg0: number) => GenericTab[];
-   add: () => any;
-   tabs: GenericTab[]
+  remove: (arg0: number) => SLTab[];
+  add: () => any;
+  tabs: SLTab[];
 }
 
-const Tabs = (props : TabsParams) => {
+const Tabs = (props: TabsParams) => {
 
   const [activeTab, updateActiveTab] = useState(0);
-  const isActiveTab = (tabId : number) => activeTab === tabId;
+  const isActiveTab = (tabId: number) => activeTab === tabId;
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const removeTab = (event : MouseEvent, index : number, id :number) => {
-    // do not trigger updateActiveTab bound to parent element
+  const removeTab = (event: MouseEvent, index: number, id: number) => {
     event.stopPropagation();
-    const remainingTabs : GenericTab[] = props.remove(index);
+    const remainingTabs: SLTab[] = props.remove(index);
     if (isActiveTab(id)) {
-      updateActiveTab(stream(remainingTabs).map((it) => it.id).max()??0);
+      updateActiveTab(stream(remainingTabs).map((it) => it.id).max() ?? 0);
     }
   }
 
@@ -39,7 +38,7 @@ const Tabs = (props : TabsParams) => {
     });
   }
 
-  const onWheel = (event : WheelEvent) => {
+  const onWheel = (event: WheelEvent) => {
     scrollRef?.current?.scrollTo({
       top: 0,
       left: scrollRef?.current?.scrollLeft + event.deltaY,
@@ -57,7 +56,7 @@ const Tabs = (props : TabsParams) => {
              active={isActiveTab(tab.id)}
              position={index}
              click={() => updateActiveTab(tab.id)}
-             close={(event : MouseEvent) => removeTab(event, index, tab.id)}
+             close={(event: MouseEvent) => removeTab(event, index, tab.id)}
              key={tab.id}/>
       )}
       <i className="fas fa-plus fa-lg" onClick={addTab}/>

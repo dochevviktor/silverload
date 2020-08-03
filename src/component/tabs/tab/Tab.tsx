@@ -2,20 +2,20 @@ import React, {MouseEvent} from 'react';
 import styles from './Tab.module.css';
 
 interface TabParams {
-    id: number
-    active: boolean;
-    position: number
-    click: ((event: MouseEvent) => void) | undefined;
-    title: string;
-    close: ((event: MouseEvent) => void) | undefined
+  id: number
+  active: boolean;
+  position: number
+  click: ((event: MouseEvent) => void);
+  title: string;
+  close: ((event: MouseEvent) => void);
 }
 
-const tab = (props: TabParams) => {
+const Tab = (props: TabParams) => {
 
   const tabCloseButtonClass = `fas fa-times-circle ${styles.tabCloseButton}`;
   const tabStyle = [styles.tabStyle];
 
-  if(props.active) {
+  if (props.active) {
     tabStyle.push(styles.tabActive);
   }
 
@@ -27,4 +27,4 @@ const tab = (props: TabParams) => {
   );
 };
 
-export default tab;
+export default Tab;
