@@ -1,4 +1,4 @@
-import {SLTab} from "../interface/Common";
+import { SLTab } from '../interface/Common';
 
 class SLBasicTab implements SLTab {
   private _id: number;

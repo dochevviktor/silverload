@@ -1,17 +1,17 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Titlebar.module.less';
 
 const electron = window.require('electron');
-const remote = electron.remote
+const remote = electron.remote;
 const win = remote.getCurrentWindow();
 
-const TitleBar = () => {
-
+const TitleBar = (): JSX.Element => {
   const [isMaximized, updateMaxState] = useState(win.isMaximized());
 
   const setMaximised = () => updateMaxState(win.isMaximized());
 
-  const toggleMaximised = () => win.isMaximized() ? win.unmaximize() : win.maximize();
+  const toggleMaximised = () =>
+    win.isMaximized() ? win.unmaximize() : win.maximize();
 
   useEffect(() => {
     win.addListener('maximize', setMaximised);
@@ -28,16 +28,25 @@ const TitleBar = () => {
 
   return (
     <div className={styles.titleBar}>
-      <p><i className="fab fa-superpowers fa-sm"/>&nbsp;Sliverload</p>
+      <p>
+        <i className="fab fa-superpowers fa-sm" />
+        &nbsp;Sliverload
+      </p>
       <div className={styles.titleBar}>
-        <button className={styles.titleBarButton} onClick={() => win.minimize()}>
-          <i className="fas fa-window-minimize fa-xs"/>
+        <button
+          className={styles.titleBarButton}
+          onClick={() => win.minimize()}
+        >
+          <i className="fas fa-window-minimize fa-xs" />
         </button>
         <button className={styles.titleBarButton} onClick={toggleMaximised}>
-          <i className={getMaximisedButtonIcon}/>
+          <i className={getMaximisedButtonIcon} />
         </button>
-        <button className={styles.titleBarCloseButton} onClick={() => win.close()}>
-          <i className="fas fa-times"/>
+        <button
+          className={styles.titleBarCloseButton}
+          onClick={() => win.close()}
+        >
+          <i className="fas fa-times" />
         </button>
       </div>
     </div>

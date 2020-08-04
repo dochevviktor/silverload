@@ -3,6 +3,18 @@
   overflow: hidden;
 }
 
+.tabActive {
+  border-bottom: solid 2px silver;
+
+  i {
+    display: initial;
+  }
+
+  &:hover {
+    border-bottom-color: white;
+  }
+}
+
 .tabStyle {
   display: flex;
   flex-direction: row;
@@ -19,6 +31,12 @@
   border: solid 1px #36393f;
   background-color: #36393f;
   .overflow();
+
+  i {
+    margin-right: 5px;
+    padding: 2px;
+    display: none;
+  }
 
   &:hover {
     border-bottom: solid 2px grey;
@@ -37,24 +55,6 @@
     max-width: 100%;
     min-width: 0;
     .overflow();
-  }
-
-  i {
-    margin-right: 5px;
-    padding: 2px;
-    display: none;
-  }
-}
-
-.tabActive {
-  border-bottom: solid 2px silver;
-
-  &:hover {
-    border-bottom-color: white;
-  }
-
-  i {
-    display: initial;
   }
 }
 

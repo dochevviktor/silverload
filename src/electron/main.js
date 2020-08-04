@@ -21,9 +21,7 @@ const url = require('url');
 
 let mainWindow = null;
 
-
 const createWindow = async () => {
-
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
@@ -34,17 +32,18 @@ const createWindow = async () => {
       nodeIntegration: true,
       webviewTag: true,
       enableRemoteModule: true,
-      webSecurity: false
-    }
+      webSecurity: false,
+    },
   });
 
-  const startUrl = process.env.ELECTRON_START_URL || url.format({
-    pathname: path.join(__dirname, '/../build/index.html'),
-    protocol: 'file:',
-    slashes: true
-  });
+  const startUrl =
+    process.env.ELECTRON_START_URL ||
+    url.format({
+      pathname: path.join(__dirname, '/../build/index.html'),
+      protocol: 'file:',
+      slashes: true,
+    });
   mainWindow.loadURL(startUrl);
-  
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -74,33 +73,32 @@ const createWindow = async () => {
         label: 'Reload',
         click: () => {
           mainWindow.reload();
-        }
+        },
       },
       {
         label: 'Inspect element',
         click: () => {
           mainWindow.inspectElement(x, y);
-        }
-      }
+        },
+      },
     ]).popup(mainWindow);
   });
-
 };
 app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
-    // On OS X it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== 'darwin') {
-        app.quit()
-    }
+  // On OS X it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
 });
 
 app.on('activate', function () {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (mainWindow === null) {
-        createWindow()
-    }
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (mainWindow === null) {
+    createWindow();
+  }
 });

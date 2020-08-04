@@ -1,11 +1,11 @@
-import React, {Fragment} from 'react';
+import React, { Fragment } from 'react';
 import TitleBar from '../component/title.bar/Titlebar';
 import Main from '../component/Main';
 
-const Root = () => (
+const Root = (): JSX.Element => (
   <Fragment>
-    <TitleBar/>
-    <Main/>
+    <TitleBar />
+    <Main />
   </Fragment>
 );
 
