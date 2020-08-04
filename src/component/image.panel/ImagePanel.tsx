@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Drawer, Button} from 'antd';
-import styles from './Content.module.css';
+import styles from './ImagePanel.module.less';
 
 const ImagePanel = () => {
 

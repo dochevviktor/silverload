@@ -1,5 +1,5 @@
 import React, {MouseEvent} from 'react';
-import styles from './Tab.module.css';
+import styles from './Tab.module.less';
 
 interface TabParams {
   id: number

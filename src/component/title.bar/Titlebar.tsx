@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import styles from './Titlebar.module.css';
+import styles from './Titlebar.module.less';
 
 const electron = window.require('electron');
 const remote = electron.remote

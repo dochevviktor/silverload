@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import styles from './Main.module.css';
+import styles from './Main.module.less';
 import {asSequence as stream} from 'sequency';
 import Tabs from './tabs/Tabs';
 import ImagePanel from './image.panel/ImagePanel';

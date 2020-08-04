@@ -1,0 +1,52 @@
+.highlight(@background1: #646464; @background2: #4e4e4e; @shadow: rgba(114, 114, 114, 0.3)) {
+  background: linear-gradient(45deg, @background1 30%, @background2 90%);
+  box-shadow: 0 3px 5px 2px @shadow;
+  color: white;
+}
+
+.titleBar {
+  background-color: #36393f;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  -webkit-app-region: drag;
+
+  p {
+    font-size: 1rem;
+    font-weight: bolder;
+    color: silver;
+    margin: 0;
+    padding: 2px 2px 2px 5px;
+    text-align: center;
+  }
+}
+
+.titleBarButtonCommon {
+  background: transparent;
+  border-radius: 0;
+  -webkit-app-region: no-drag;
+  color: grey;
+  border: none;
+  width: 45px;
+
+  &:focus {
+    outline: 0;
+    background-color: inherit;
+  }
+}
+
+.titleBarButton {
+  .titleBarButtonCommon();
+
+  &:hover {
+    .highlight()
+  }
+}
+
+.titleBarCloseButton {
+  .titleBarButtonCommon();
+
+  &:hover {
+    .highlight(#f04747, #ff8e53, rgba(240, 71, 71, 0.3))
+  }
+}

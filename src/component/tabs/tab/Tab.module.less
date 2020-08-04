@@ -1,0 +1,63 @@
+.overflow {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.tabStyle {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+  justify-content: space-between;
+  align-items: center;
+  margin: 4px 2px 0;
+  height: 36px;
+  max-width: 160px;
+  min-width: 33px;
+  color: silver;
+  border: solid 1px #36393f;
+  background-color: #36393f;
+  .overflow();
+
+  &:hover {
+    border-bottom: solid 2px grey;
+
+    i {
+      display: initial;
+    }
+  }
+
+  p {
+    font-size: 14px;
+    user-select: none;
+    margin: 0;
+    flex-grow: 1;
+    padding: 6px;
+    max-width: 100%;
+    min-width: 0;
+    .overflow();
+  }
+
+  i {
+    margin-right: 5px;
+    padding: 2px;
+    display: none;
+  }
+}
+
+.tabActive {
+  border-bottom: solid 2px silver;
+
+  &:hover {
+    border-bottom-color: white;
+  }
+
+  i {
+    display: initial;
+  }
+}
+
+.tabCloseButton:hover {
+  color: white;
+}

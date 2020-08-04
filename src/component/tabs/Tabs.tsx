@@ -1,6 +1,6 @@
 import React, {useState, useRef, WheelEvent, MouseEvent} from 'react';
 import {asSequence as stream} from 'sequency';
-import styles from './Tabs.module.css';
+import styles from './Tabs.module.less';
 import Tab from './tab/Tab';
 import {SLTab} from "../../interface/Common";
 
@@ -12,7 +12,7 @@ interface TabsParams {
 
 const Tabs = (props: TabsParams) => {
 
-  const [activeTab, updateActiveTab] = useState(0);
+  const [activeTab, updateActiveTab] = useState(1);
   const isActiveTab = (tabId: number) => activeTab === tabId;
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -20,7 +20,7 @@ const Tabs = (props: TabsParams) => {
     event.stopPropagation();
     const remainingTabs: SLTab[] = props.remove(index);
     if (isActiveTab(id)) {
-      updateActiveTab(stream(remainingTabs).map((it) => it.id).max() ?? 0);
+      updateActiveTab(stream(remainingTabs).map((it) => it.id).max() ?? 1);
     }
   }
 

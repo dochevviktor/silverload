@@ -14,9 +14,9 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
-    "test": "craco test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "electron": "electron .",
     "dev": "nf start"
@@ -37,12 +37,14 @@
     ]
   },
   "devDependencies": {
-    "@craco/craco": "^5.6.4",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "antd": "^4.5.2",
-    "craco-less": "^1.17.0",
+    "customize-cra": "^1.0.0",
     "electron": "^9.1.2",
     "foreman": "^3.0.1",
+    "less": "^3.12.2",
+    "less-loader": "^6.2.0",
+    "react-app-rewired": "^2.1.6",
     "sequency": "^0.19.2"
   }
 }
