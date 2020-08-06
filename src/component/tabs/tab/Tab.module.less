@@ -3,18 +3,6 @@
   overflow: hidden;
 }
 
-.tabActive {
-  border-bottom: solid 2px silver;
-
-  i {
-    display: initial;
-  }
-
-  &:hover {
-    border-bottom-color: white;
-  }
-}
-
 .tabStyle {
   display: flex;
   flex-direction: row;
@@ -38,11 +26,27 @@
     display: none;
   }
 
+  &.tabActive {
+    border-bottom: solid 2px silver;
+
+    i {
+      display: initial;
+    }
+
+    &:hover {
+      border-bottom-color: white;
+    }
+  }
+
   &:hover {
     border-bottom: solid 2px grey;
 
     i {
       display: initial;
+
+      &:hover {
+        color: white;
+      }
     }
   }
 
@@ -56,8 +60,4 @@
     min-width: 0;
     .overflow();
   }
-}
-
-.tabCloseButton:hover {
-  color: white;
 }

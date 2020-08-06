@@ -11,7 +11,6 @@ interface TabParams {
 }
 
 const Tab = (props: TabParams): JSX.Element => {
-  const tabCloseButtonClass = `fas fa-times-circle ${styles.tabCloseButton}`;
   const tabStyle = [styles.tabStyle];
 
   if (props.active) {
@@ -21,7 +20,7 @@ const Tab = (props: TabParams): JSX.Element => {
   return (
     <div className={tabStyle.join(' ')} onClick={props.click}>
       <p>{props.title}</p>
-      <i className={tabCloseButtonClass} onClick={props.close} />
+      <i className="fas fa-times-circle" onClick={props.close} />
     </div>
   );
 };
