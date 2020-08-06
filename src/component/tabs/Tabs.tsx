@@ -14,6 +14,8 @@ const Tabs = (props: TabsParams): JSX.Element => {
   const [activeTab, updateActiveTab] = useState(1);
   const isActiveTab = (tabId: number) => activeTab === tabId;
   const scrollRef = useRef<HTMLDivElement>(null);
+  let waitForMe = false;
+  let nextNumber = 0.0;
 
   const removeTab = (event: MouseEvent, index: number, id: number) => {
     event.stopPropagation();
@@ -34,23 +36,36 @@ const Tabs = (props: TabsParams): JSX.Element => {
   };
 
   const scrollToRightEnd = () => {
-    scrollRef?.current?.scrollTo({
+    scrollRef?.current?.scrollBy({
       top: 0,
-      left: scrollRef.current.scrollLeft + 100,
+      left: 100,
       behavior: 'smooth',
     });
   };
 
-  const onWheel = (event: WheelEvent) => {
-    scrollRef?.current?.scrollTo({
-      top: 0,
-      left: scrollRef?.current?.scrollLeft + event.deltaY,
-      behavior: 'smooth',
-    });
+  const smoothScroll = async (left: number) => {
+    nextNumber += left;
+    if (!waitForMe) {
+      waitForMe = true;
+      const myNum = nextNumber;
+      nextNumber = left;
+      scrollRef?.current?.scrollBy({
+        top: 0,
+        left: myNum / 2,
+        behavior: 'smooth',
+      });
+      await new Promise(() => setTimeout(() => (waitForMe = false), 75));
+    } else {
+      return;
+    }
   };
 
   return (
-    <div ref={scrollRef} className={styles.tabsStyle} onWheel={onWheel}>
+    <div
+      ref={scrollRef}
+      className={styles.tabsStyle}
+      onWheel={(event: WheelEvent) => smoothScroll(event.deltaY)}
+    >
       {props.tabs.map((tab, index) => (
         <Tab
           id={tab.id}
