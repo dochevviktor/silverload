@@ -3,6 +3,7 @@ import { asSequence as stream } from 'sequency';
 import styles from './Tabs.module.less';
 import Tab from './tab/Tab';
 import { SLTab } from '../../interface/Common';
+import SLScroll from '../../class/SLScroll';
 
 interface TabsParams {
   remove: (arg0: number) => SLTab[];
@@ -14,8 +15,7 @@ const Tabs = (props: TabsParams): JSX.Element => {
   const [activeTab, updateActiveTab] = useState(1);
   const isActiveTab = (tabId: number) => activeTab === tabId;
   const scrollRef = useRef<HTMLDivElement>(null);
-  let waitForMe = false;
-  let nextNumber = 0.0;
+  const scroll = new SLScroll(scrollRef?.current);
 
   const removeTab = (event: MouseEvent, index: number, id: number) => {
     event.stopPropagation();
@@ -32,32 +32,11 @@ const Tabs = (props: TabsParams): JSX.Element => {
   const addTab = () => {
     const newTab = props.add();
     updateActiveTab(newTab.id);
-    return setTimeoutPromise(() => scrollToValue(100), 100);
+    return scroll.scrollLeft(100, 10);
   };
 
   const smoothScroll = async (left: number) => {
-    if (Math.sign(nextNumber) !== Math.sign(left)) {
-      nextNumber = left;
-    } else {
-      nextNumber += left;
-    }
-    if (!waitForMe) {
-      waitForMe = true;
-      await setTimeoutPromise(() => scrollToValue(nextNumber), 100);
-      nextNumber = 0;
-      await setTimeoutPromise(() => (waitForMe = false), 100);
-    }
-  };
-
-  const setTimeoutPromise = (fn: () => void, timeout = 0): Promise<void> =>
-    new Promise((resolve) => setTimeout(() => resolve(fn()), timeout));
-
-  const scrollToValue = (left: number) => {
-    scrollRef?.current?.scrollBy({
-      top: 0,
-      left: left,
-      behavior: 'smooth',
-    });
+    return scroll.scrollLeft(left);
   };
 
   return (
