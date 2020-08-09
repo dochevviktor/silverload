@@ -32,32 +32,32 @@ const Tabs = (props: TabsParams): JSX.Element => {
   const addTab = () => {
     const newTab = props.add();
     updateActiveTab(newTab.id);
-    return new Promise(() => setTimeout(() => scrollToRightEnd(), 25));
-  };
-
-  const scrollToRightEnd = () => {
-    scrollRef?.current?.scrollBy({
-      top: 0,
-      left: 100,
-      behavior: 'smooth',
-    });
+    return setTimeoutPromise(() => scrollToValue(100), 100);
   };
 
   const smoothScroll = async (left: number) => {
-    nextNumber += left;
+    if (Math.sign(nextNumber) !== Math.sign(left)) {
+      nextNumber = left;
+    } else {
+      nextNumber += left;
+    }
     if (!waitForMe) {
       waitForMe = true;
-      const myNum = nextNumber;
-      nextNumber = left;
-      scrollRef?.current?.scrollBy({
-        top: 0,
-        left: myNum / 2,
-        behavior: 'smooth',
-      });
-      await new Promise(() => setTimeout(() => (waitForMe = false), 75));
-    } else {
-      return;
+      await setTimeoutPromise(() => scrollToValue(nextNumber), 100);
+      nextNumber = 0;
+      await setTimeoutPromise(() => (waitForMe = false), 100);
     }
+  };
+
+  const setTimeoutPromise = (fn: () => void, timeout = 0): Promise<void> =>
+    new Promise((resolve) => setTimeout(() => resolve(fn()), timeout));
+
+  const scrollToValue = (left: number) => {
+    scrollRef?.current?.scrollBy({
+      top: 0,
+      left: left,
+      behavior: 'smooth',
+    });
   };
 
   return (
