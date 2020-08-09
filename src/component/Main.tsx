@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styles from './Main.module.less';
 import { asSequence as stream } from 'sequency';
 import Tabs from './tabs/Tabs';
@@ -13,6 +13,7 @@ interface SLMainState {
 const Main = (): JSX.Element => {
   const initialState: SLMainState = { tabs: [new SLBasicTab()] };
   const [tabsState, updateTabsState] = useState(initialState);
+  const imagePanelRef = useRef<HTMLDivElement>(null);
 
   const addTab = () => {
     const newTabId: number = getNextId(tabsState.tabs);
@@ -35,14 +36,19 @@ const Main = (): JSX.Element => {
   };
 
   return (
-    <div className={styles.mainHeader}>
-      <div className={styles.headerRow}>
-        <Tabs tabs={tabsState.tabs} remove={removeTab} add={addTab} />
+    <>
+      <div className={styles.mainHeader}>
+        <Tabs
+          tabs={tabsState.tabs}
+          remove={removeTab}
+          add={addTab}
+          imagePanelElement={imagePanelRef}
+        />
       </div>
-      <div>
+      <div ref={imagePanelRef}>
         <ImagePanel />
       </div>
-    </div>
+    </>
   );
 };
 

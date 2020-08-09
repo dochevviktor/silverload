@@ -1,14 +1,22 @@
-import React, { useState, useRef, WheelEvent, MouseEvent } from 'react';
+import React, {
+  useState,
+  useRef,
+  WheelEvent,
+  MouseEvent,
+  RefObject,
+} from 'react';
 import { asSequence as stream } from 'sequency';
 import styles from './Tabs.module.less';
 import Tab from './tab/Tab';
 import { SLTab } from '../../interface/Common';
 import SLScroll from '../../class/SLScroll';
+import SLDrawer from '../drawer/SLDrawer';
 
 interface TabsParams {
   remove: (arg0: number) => SLTab[];
   add: () => SLTab;
   tabs: SLTab[];
+  imagePanelElement: RefObject<HTMLDivElement> | null;
 }
 
 const Tabs = (props: TabsParams): JSX.Element => {
@@ -40,23 +48,26 @@ const Tabs = (props: TabsParams): JSX.Element => {
   };
 
   return (
-    <div
-      ref={scrollRef}
-      className={styles.tabsStyle}
-      onWheel={(event: WheelEvent) => smoothScroll(event.deltaY)}
-    >
-      {props.tabs.map((tab, index) => (
-        <Tab
-          id={tab.id}
-          title={tab.title}
-          active={isActiveTab(tab.id)}
-          position={index}
-          click={() => updateActiveTab(tab.id)}
-          close={(event: MouseEvent) => removeTab(event, index, tab.id)}
-          key={tab.id}
-        />
-      ))}
-      <i className="fas fa-plus fa-lg" onClick={addTab} />
+    <div className={styles.tabsContainer}>
+      <SLDrawer imagePanelElement={props.imagePanelElement} />
+      <div
+        ref={scrollRef}
+        className={styles.tabsStyle}
+        onWheel={(event: WheelEvent) => smoothScroll(event.deltaY)}
+      >
+        {props.tabs.map((tab, index) => (
+          <Tab
+            id={tab.id}
+            title={tab.title}
+            active={isActiveTab(tab.id)}
+            position={index}
+            click={() => updateActiveTab(tab.id)}
+            close={(event: MouseEvent) => removeTab(event, index, tab.id)}
+            key={tab.id}
+          />
+        ))}
+        <i className="fas fa-plus fa-lg" onClick={addTab} />
+      </div>
     </div>
   );
 };
