@@ -17,6 +17,11 @@ const Main = (): JSX.Element => {
 
   const imagePanelRef = useRef<HTMLDivElement>(null);
 
+  const getNextId = (tabs: SLTab[]) =>
+    (stream(tabs)
+      .map((it) => it.id)
+      .max() ?? 0) + 1;
+
   const addTab = () => {
     const newTabId: number = getNextId(tabsState.tabs);
     const newTab: SLTab = new SLBasicTab(newTabId);
@@ -26,11 +31,6 @@ const Main = (): JSX.Element => {
 
     return newTab;
   };
-
-  const getNextId = (tabs: SLTab[]) =>
-    (stream(tabs)
-      .map((it) => it.id)
-      .max() ?? 0) + 1;
 
   const removeTab = (tabIndex: number) => {
     const tabs = [...tabsState.tabs];
