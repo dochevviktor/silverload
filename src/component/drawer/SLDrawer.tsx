@@ -9,21 +9,13 @@ interface TabParams {
 const SLDrawer = (props: TabParams): JSX.Element => {
   const [isVisible, updateVisible] = useState(false);
 
-  const showDrawer = () => {
-    updateVisible(!isVisible);
-  };
+  const showDrawer = () => updateVisible(!isVisible);
 
-  const onClose = () => {
-    updateVisible(false);
-  };
+  const onClose = () => updateVisible(false);
 
-  const drawerStyle = {
-    ['backgroundColor' as string]: '#292d33',
-  };
+  const drawerStyle = { ['backgroundColor' as string]: '#292d33' };
 
-  const drawerButtonIcon = isVisible
-    ? 'fas fa-grip-lines fa-lg'
-    : 'fas fa-bars fa-lg';
+  const drawerButtonIcon = isVisible ? 'fas fa-grip-lines fa-lg' : 'fas fa-bars fa-lg';
 
   return (
     <div className="site-drawer-render-in-current-wrapper">
@@ -37,8 +29,7 @@ const SLDrawer = (props: TabParams): JSX.Element => {
         onClose={onClose}
         visible={isVisible}
         drawerStyle={drawerStyle}
-        getContainer={props.imagePanelElement?.current ?? false}
-      >
+        getContainer={props.imagePanelElement?.current ?? false}>
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>

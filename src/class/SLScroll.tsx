@@ -13,12 +13,10 @@ class SLScroll {
     } else {
       this.nextNumber += left;
     }
+
     if (!this.waitForMe) {
       this.waitForMe = true;
-      await this.setTimeoutPromise(
-        () => this.scrollToLeftBy(this.nextNumber),
-        timeout
-      );
+      await this.setTimeoutPromise(() => this.scrollToLeftBy(this.nextNumber), timeout);
       this.nextNumber = 0;
       await this.setTimeoutPromise(() => (this.waitForMe = false), timeout);
     }

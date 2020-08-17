@@ -12,14 +12,18 @@ interface SLMainState {
 
 const Main = (): JSX.Element => {
   const initialState: SLMainState = { tabs: [new SLBasicTab()] };
+
   const [tabsState, updateTabsState] = useState(initialState);
+
   const imagePanelRef = useRef<HTMLDivElement>(null);
 
   const addTab = () => {
     const newTabId: number = getNextId(tabsState.tabs);
     const newTab: SLTab = new SLBasicTab(newTabId);
     const tabs: SLTab[] = [...tabsState.tabs, newTab];
+
     updateTabsState({ tabs: tabs });
+
     return newTab;
   };
 
@@ -30,20 +34,17 @@ const Main = (): JSX.Element => {
 
   const removeTab = (tabIndex: number) => {
     const tabs = [...tabsState.tabs];
+
     tabs.splice(tabIndex, 1);
     updateTabsState({ tabs: tabs });
+
     return tabs;
   };
 
   return (
     <>
       <div className={styles.mainHeader}>
-        <Tabs
-          tabs={tabsState.tabs}
-          remove={removeTab}
-          add={addTab}
-          imagePanelElement={imagePanelRef}
-        />
+        <Tabs tabs={tabsState.tabs} remove={removeTab} add={addTab} imagePanelElement={imagePanelRef} />
       </div>
       <div ref={imagePanelRef}>
         <ImagePanel />

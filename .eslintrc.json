@@ -18,7 +18,14 @@
     "@typescript-eslint/explicit-function-return-type": 0,
     "react/no-unescaped-entities": 0,
     "@typescript-eslint/no-var-requires": 0,
-    "no-undef": 0
+    "no-undef": 0,
+    "padding-line-between-statements": [
+      "warn",
+      { "blankLine": "always", "prev": "*", "next": "return" },
+      { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*"},
+      { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
+      { "blankLine": "always", "prev": "if", "next": "if" }
+    ]
   },
   "settings": {
     "react": {
