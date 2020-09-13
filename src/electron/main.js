@@ -39,10 +39,11 @@ const createWindow = async () => {
   const startUrl =
     process.env.ELECTRON_START_URL ||
     url.format({
-      pathname: path.join(__dirname, '/../build/index.html'),
+      pathname: path.join(__dirname, '/../../build/index.html'),
       protocol: 'file:',
       slashes: true,
     });
+
   mainWindow.loadURL(startUrl);
 
   // @TODO: Use 'ready-to-show' event
@@ -51,6 +52,7 @@ const createWindow = async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
+
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
@@ -84,6 +86,7 @@ const createWindow = async () => {
     ]).popup(mainWindow);
   });
 };
+
 app.on('ready', createWindow);
 
 // Quit when all windows are closed.
