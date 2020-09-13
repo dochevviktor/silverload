@@ -1,5 +1,7 @@
 import React, { MouseEvent } from 'react';
 import styles from './Tab.module.less';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 interface TabParams {
   id: number;
@@ -20,7 +22,7 @@ const Tab = (props: TabParams): JSX.Element => {
   return (
     <div className={tabStyle.join(' ')} onClick={props.click}>
       <p>{props.title}</p>
-      <i className="fas fa-times-circle" onClick={props.close} />
+      <FontAwesomeIcon icon={faTimesCircle} size="lg" onClick={props.close} />
     </div>
   );
 };

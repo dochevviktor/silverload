@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWindowRestore, faWindowMaximize, faWindowMinimize, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faSuperpowers } from '@fortawesome/free-brands-svg-icons';
 import styles from './Titlebar.module.less';
 
 const electron = window.require('electron');
@@ -22,7 +25,7 @@ const TitleBar = (): JSX.Element => {
     };
   }, []);
 
-  const getMaximisedButtonIcon = isMaximized ? 'far fa-window-restore fa-xs' : 'far fa-window-maximize fa-xs';
+  const getMaximisedButtonIcon = isMaximized ? faWindowRestore : faWindowMaximize;
 
   return (
     <div className={styles.titleBar}>
@@ -32,13 +35,13 @@ const TitleBar = (): JSX.Element => {
       </p>
       <div className={styles.titleBar}>
         <button className={styles.titleBarButton} onClick={() => win.minimize()}>
-          <i className="fas fa-window-minimize fa-xs" />
+          <FontAwesomeIcon icon={faWindowMinimize} size="xs" />
         </button>
         <button className={styles.titleBarButton} onClick={toggleMaximised}>
-          <i className={getMaximisedButtonIcon} />
+          <FontAwesomeIcon icon={getMaximisedButtonIcon} size="xs" />
         </button>
         <button className={styles.titleBarCloseButton} onClick={() => win.close()}>
-          <i className="fas fa-times" />
+          <FontAwesomeIcon icon={faTimes} />
         </button>
       </div>
     </div>

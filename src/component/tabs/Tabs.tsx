@@ -5,6 +5,8 @@ import Tab from './tab/Tab';
 import { SLTab } from '../../interface/Common';
 import SLScroll from '../../class/SLScroll';
 import SLDrawer from '../drawer/SLDrawer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 interface TabsParams {
   remove: (arg0: number) => SLTab[];
@@ -62,7 +64,7 @@ const Tabs = (props: TabsParams): JSX.Element => {
             key={tab.id}
           />
         ))}
-        <i className="fas fa-plus fa-lg" onClick={addTab} />
+        <FontAwesomeIcon icon={faPlus} size="2x" onClick={addTab} />
       </div>
     </div>
   );

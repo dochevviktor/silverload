@@ -1,6 +1,8 @@
 import { Drawer } from 'antd';
 import React, { RefObject, useState } from 'react';
 import styles from './SLDrawer.module.less';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGripLines, faBars } from '@fortawesome/free-solid-svg-icons';
 
 interface TabParams {
   imagePanelElement: RefObject<HTMLDivElement> | null;
@@ -15,12 +17,12 @@ const SLDrawer = (props: TabParams): JSX.Element => {
 
   const drawerStyle = { ['backgroundColor' as string]: '#292d33' };
 
-  const drawerButtonIcon = isVisible ? 'fas fa-grip-lines fa-lg' : 'fas fa-bars fa-lg';
+  const drawerButtonIcon = isVisible ? faGripLines : faBars;
 
   return (
     <div className="site-drawer-render-in-current-wrapper">
-      <div className={styles.drawerButton}>
-        <i className={drawerButtonIcon} onClick={showDrawer} />
+      <div className={styles.drawerButton} onClick={showDrawer}>
+        <FontAwesomeIcon icon={drawerButtonIcon} size="lg" />
       </div>
       <Drawer
         className={styles.drawerFrame}
