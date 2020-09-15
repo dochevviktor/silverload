@@ -1,4 +1,4 @@
-class SLScroll {
+export default class SLScroll {
   waitForMe = false;
   nextNumber = 0;
   element: HTMLDivElement | null;
@@ -34,5 +34,3 @@ class SLScroll {
     });
   }
 }
-
-export default SLScroll;

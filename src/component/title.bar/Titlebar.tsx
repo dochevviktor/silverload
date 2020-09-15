@@ -30,7 +30,7 @@ const TitleBar = (): JSX.Element => {
   return (
     <div className={styles.titleBar}>
       <p>
-        <i className="fab fa-superpowers fa-sm" />
+        <FontAwesomeIcon icon={faSuperpowers} size="sm" />
         &nbsp;Sliverload
       </p>
       <div className={styles.titleBar}>

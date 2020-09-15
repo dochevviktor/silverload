@@ -1,50 +1,62 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './Main.module.less';
-import { asSequence as stream } from 'sequency';
 import Tabs from './tabs/Tabs';
 import ImagePanel from './image.panel/ImagePanel';
-import { SLTab } from '../interface/Common';
 import SLBasicTab from '../class/SLBasicTab';
 
 interface SLMainState {
-  tabs: SLTab[];
+  tabs: SLBasicTab[];
 }
 
 const Main = (): JSX.Element => {
-  const initialState: SLMainState = { tabs: [new SLBasicTab()] };
+  const initialState: SLMainState = { tabs: [] };
+
+  const [activeTab, updateActiveTab] = useState<SLBasicTab>(null);
+
+  const isActiveTab = (tab: SLBasicTab) => activeTab.id === tab.id;
 
   const [tabsState, updateTabsState] = useState(initialState);
 
   const imagePanelRef = useRef<HTMLDivElement>(null);
 
-  const getNextId = (tabs: SLTab[]) =>
-    (stream(tabs)
-      .map((it) => it.id)
-      .max() ?? 0) + 1;
-
   const addTab = () => {
-    const newTabId: number = getNextId(tabsState.tabs);
-    const newTab: SLTab = new SLBasicTab(newTabId);
-    const tabs: SLTab[] = [...tabsState.tabs, newTab];
+    const newTab: SLBasicTab = new SLBasicTab();
+    const tabs: SLBasicTab[] = [...tabsState.tabs, newTab];
 
     updateTabsState({ tabs: tabs });
-
-    return newTab;
+    updateActiveTab(newTab);
   };
 
   const removeTab = (tabIndex: number) => {
     const tabs = [...tabsState.tabs];
 
-    tabs.splice(tabIndex, 1);
+    const deletedTab = tabs.splice(tabIndex, 1)[0];
+
+    const nextPos = tabs.length - 1 >= tabIndex ? tabIndex : tabs.length - 1;
+
     updateTabsState({ tabs: tabs });
 
-    return tabs;
+    if (isActiveTab(deletedTab) && nextPos >= 0) {
+      updateActiveTab(tabs[nextPos]);
+    }
   };
+
+  // On application start we either create a new tab or load previous state (WIP)
+  useEffect(() => {
+    addTab();
+  }, []);
 
   return (
     <>
       <div className={styles.mainHeader}>
-        <Tabs tabs={tabsState.tabs} remove={removeTab} add={addTab} imagePanelElement={imagePanelRef} />
+        <Tabs
+          tabs={tabsState.tabs}
+          remove={removeTab}
+          add={addTab}
+          isActiveTab={isActiveTab}
+          updateActiveTab={updateActiveTab}
+          imagePanelElement={imagePanelRef}
+        />
       </div>
       <div ref={imagePanelRef}>
         <ImagePanel />

@@ -1,46 +1,33 @@
-import React, { useState, useRef, WheelEvent, MouseEvent, RefObject } from 'react';
-import { asSequence as stream } from 'sequency';
+import React, { useRef, WheelEvent, MouseEvent, RefObject } from 'react';
 import styles from './Tabs.module.less';
 import Tab from './tab/Tab';
-import { SLTab } from '../../interface/Common';
 import SLScroll from '../../class/SLScroll';
 import SLDrawer from '../drawer/SLDrawer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import SLBasicTab from '../../class/SLBasicTab';
 
 interface TabsParams {
-  remove: (arg0: number) => SLTab[];
-  add: () => SLTab;
-  tabs: SLTab[];
+  remove: (arg0: number) => void;
+  add: () => void;
+  tabs: SLBasicTab[];
+  isActiveTab: (arg0: SLBasicTab) => boolean;
+  updateActiveTab: (arg0: SLBasicTab) => void;
   imagePanelElement: RefObject<HTMLDivElement> | null;
 }
 
 const Tabs = (props: TabsParams): JSX.Element => {
-  const [activeTab, updateActiveTab] = useState(1);
-
-  const isActiveTab = (tabId: number) => activeTab === tabId;
-
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = new SLScroll(scrollRef?.current);
 
-  const removeTab = (event: MouseEvent, index: number, id: number) => {
+  const removeTab = (event: MouseEvent, index: number) => {
     event.stopPropagation();
-    const remainingTabs: SLTab[] = props.remove(index);
-
-    if (isActiveTab(id)) {
-      updateActiveTab(
-        stream(remainingTabs)
-          .map((it) => it.id)
-          .max() ?? 1
-      );
-    }
+    props.remove(index);
   };
 
   const addTab = () => {
-    const newTab = props.add();
-
-    updateActiveTab(newTab.id);
+    props.add();
 
     return scroll.scrollLeft(100, 10);
   };
@@ -57,10 +44,10 @@ const Tabs = (props: TabsParams): JSX.Element => {
           <Tab
             id={tab.id}
             title={tab.title}
-            active={isActiveTab(tab.id)}
+            active={props.isActiveTab(tab)}
             position={index}
-            click={() => updateActiveTab(tab.id)}
-            close={(event: MouseEvent) => removeTab(event, index, tab.id)}
+            click={() => props.updateActiveTab(tab)}
+            close={(event: MouseEvent) => removeTab(event, index)}
             key={tab.id}
           />
         ))}

@@ -1,12 +1,15 @@
-import { SLTab } from '../interface/Common';
+import newId from '../function/SLRandom';
+import SLImage from './SLImage';
 
-class SLBasicTab implements SLTab {
+export default class SLBasicTab {
   private _id: number;
   private _title: string;
+  private _image: SLImage;
 
-  constructor(id?: number, title?: string) {
-    this._id = id || 1;
-    this._title = title || 'New Tab';
+  constructor(title = 'New Tab') {
+    this._id = newId();
+    this._title = title;
+    this._image = new SLImage();
   }
 
   get id(): number {
@@ -24,6 +27,12 @@ class SLBasicTab implements SLTab {
   set title(value: string) {
     this._title = value;
   }
-}
 
-export default SLBasicTab;
+  get image(): SLImage {
+    return this._image;
+  }
+
+  set image(value: SLImage) {
+    this._image = value;
+  }
+}
