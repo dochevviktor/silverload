@@ -26,12 +26,26 @@
     display: none;
   }
 
+  svg {
+    display: none;
+  }
+
   &.tabActive {
     border-bottom: solid 2px silver;
 
     svg {
       display: initial;
-      height: 20px;
+      color: grey;
+      height: 14px;
+      width: 14px;
+      padding-left: 2px;
+      padding-right: 2px;
+
+      &:hover {
+        color: #36393f;
+        background: #bbb left center;
+        border-radius: 50%;
+      }
     }
 
     &:hover {
@@ -41,15 +55,6 @@
 
   &:hover {
     border-bottom: solid 2px grey;
-
-    svg {
-      display: initial;
-      height: 20px;
-
-      &:hover {
-        color: white;
-      }
-    }
   }
 
   p {

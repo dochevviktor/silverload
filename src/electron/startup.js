@@ -13,6 +13,7 @@ const tryConnection = () =>
       console.log('starting electron');
       startedElectron = true;
       const exec = require('child_process').exec;
+
       exec('yarn run electron');
     }
   });
@@ -21,4 +22,5 @@ tryConnection();
 
 client.on('error', (error) => {
   setTimeout(tryConnection, 1000);
+  console.log(error.message);
 });
