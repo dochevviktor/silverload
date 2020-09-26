@@ -34,11 +34,11 @@ const Main = (): JSX.Element => {
 
     const nextPos = tabs.length - 1 >= tabIndex ? tabIndex : tabs.length - 1;
 
+    const nextActiveTab = isActiveTab(deletedTab) && nextPos >= 0 ? tabs[nextPos] : null;
+
     updateTabsState({ tabs: tabs });
 
-    if (isActiveTab(deletedTab) && nextPos >= 0) {
-      updateActiveTab(tabs[nextPos]);
-    }
+    updateActiveTab(nextActiveTab);
   };
 
   // On application start we either create a new tab or load previous state (WIP)
@@ -59,7 +59,7 @@ const Main = (): JSX.Element => {
         />
       </div>
       <div ref={imagePanelRef}>
-        <ImagePanel />
+        <ImagePanel image={activeTab?.image} />
       </div>
     </>
   );
