@@ -1,14 +1,10 @@
 import { Drawer } from 'antd';
-import React, { RefObject, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './SLDrawer.module.less';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGripLines, faBars } from '@fortawesome/free-solid-svg-icons';
 
-interface TabParams {
-  imagePanelElement: RefObject<HTMLDivElement> | null;
-}
-
-const SLDrawer = (props: TabParams): JSX.Element => {
+const SLDrawer = (): JSX.Element => {
   const [isVisible, updateVisible] = useState(false);
 
   const showDrawer = () => updateVisible(!isVisible);
@@ -30,8 +26,7 @@ const SLDrawer = (props: TabParams): JSX.Element => {
         closable={false}
         onClose={onClose}
         visible={isVisible}
-        drawerStyle={drawerStyle}
-        getContainer={props.imagePanelElement?.current ?? false}>
+        drawerStyle={drawerStyle}>
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>

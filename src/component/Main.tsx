@@ -1,8 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Main.module.less';
 import Tabs from './tabs/Tabs';
 import ImagePanel from './image.panel/ImagePanel';
 import SLBasicTab from '../class/SLBasicTab';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/rootReducer';
+import { TabSlice } from '../redux/slices/tab.slice';
 
 interface SLMainState {
   tabs: SLBasicTab[];
@@ -11,13 +14,15 @@ interface SLMainState {
 const Main = (): JSX.Element => {
   const initialState: SLMainState = { tabs: [] };
 
-  const [activeTab, updateActiveTab] = useState<SLBasicTab>(null);
+  const activeTab = useSelector((state: RootState) => state.tabSlice.activeTab);
+
+  const dispatch = useDispatch();
+
+  const updateActiveTab = (tab: SLBasicTab) => dispatch(TabSlice.actions.setActiveTab(tab));
 
   const isActiveTab = (tab: SLBasicTab) => activeTab.id === tab.id;
 
   const [tabsState, updateTabsState] = useState(initialState);
-
-  const imagePanelRef = useRef<HTMLDivElement>(null);
 
   const addTab = () => {
     const newTab: SLBasicTab = new SLBasicTab();
@@ -41,6 +46,8 @@ const Main = (): JSX.Element => {
     updateActiveTab(nextActiveTab);
   };
 
+  const imagePanel = activeTab ? <ImagePanel /> : null;
+
   // On application start we either create a new tab or load previous state (WIP)
   useEffect(() => {
     addTab();
@@ -49,18 +56,9 @@ const Main = (): JSX.Element => {
   return (
     <>
       <div className={styles.mainHeader}>
-        <Tabs
-          tabs={tabsState.tabs}
-          remove={removeTab}
-          add={addTab}
-          isActiveTab={isActiveTab}
-          updateActiveTab={updateActiveTab}
-          imagePanelElement={imagePanelRef}
-        />
+        <Tabs tabs={tabsState.tabs} remove={removeTab} add={addTab} />
       </div>
-      <div ref={imagePanelRef}>
-        <ImagePanel image={activeTab?.image} />
-      </div>
+      <div>{imagePanel}</div>
     </>
   );
 };

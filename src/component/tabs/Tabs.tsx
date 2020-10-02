@@ -1,4 +1,4 @@
-import React, { useRef, WheelEvent, MouseEvent, RefObject } from 'react';
+import React, { useRef, WheelEvent, MouseEvent } from 'react';
 import styles from './Tabs.module.less';
 import Tab from './tab/Tab';
 import SLScroll from '../../class/SLScroll';
@@ -11,9 +11,6 @@ interface TabsParams {
   remove: (arg0: number) => void;
   add: () => void;
   tabs: SLBasicTab[];
-  isActiveTab: (arg0: SLBasicTab) => boolean;
-  updateActiveTab: (arg0: SLBasicTab) => void;
-  imagePanelElement: RefObject<HTMLDivElement> | null;
 }
 
 const Tabs = (props: TabsParams): JSX.Element => {
@@ -38,18 +35,10 @@ const Tabs = (props: TabsParams): JSX.Element => {
 
   return (
     <div className={styles.tabsContainer}>
-      <SLDrawer imagePanelElement={props.imagePanelElement} />
+      <SLDrawer />
       <div ref={scrollRef} className={styles.tabsStyle} onWheel={(event: WheelEvent) => smoothScroll(event.deltaY)}>
         {props.tabs.map((tab, index) => (
-          <Tab
-            id={tab.id}
-            title={tab.title}
-            active={props.isActiveTab(tab)}
-            position={index}
-            click={() => props.updateActiveTab(tab)}
-            close={(event: MouseEvent) => removeTab(event, index)}
-            key={tab.id}
-          />
+          <Tab currentTab={tab} position={index} close={(event: MouseEvent) => removeTab(event, index)} key={tab.id} />
         ))}
         <FontAwesomeIcon icon={faPlus} size="2x" onClick={addTab} />
       </div>

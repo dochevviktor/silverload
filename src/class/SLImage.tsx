@@ -2,11 +2,11 @@ import newId from '../function/SLRandom';
 
 export default class SLImage {
   private _id: number;
-  private _path: string | null;
+  private _base64: string;
 
-  constructor(path?: string | null) {
+  constructor() {
     this._id = newId();
-    this._path = path;
+    this._base64 = '';
   }
 
   get id(): number {
@@ -17,11 +17,11 @@ export default class SLImage {
     this._id = value;
   }
 
-  get path(): string | null {
-    return this._path;
+  get base64(): string | null {
+    return this._base64;
   }
 
-  set path(value: string | null) {
-    this._path = value;
+  set base64(value: string | null) {
+    this._base64 = value;
   }
 }

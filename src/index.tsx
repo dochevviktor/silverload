@@ -1,13 +1,21 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { render } from 'react-dom';
 import './index.less';
-import TitleBar from './component/title.bar/Titlebar';
-import Main from './component/Main';
+import { Provider } from 'react-redux';
+import store from './redux/store';
+import App from './container/App';
 
-render(
-  <Fragment>
-    <TitleBar />
-    <Main />
-  </Fragment>,
-  document.getElementById('root')
-);
+const renderIndex = () => {
+  render(
+    <Provider store={store}>
+      <App />
+    </Provider>,
+    document.getElementById('root')
+  );
+};
+
+renderIndex();
+
+if (process.env.NODE_ENV === 'development' && module.hot) {
+  module.hot.accept('./container/App', renderIndex);
+}
