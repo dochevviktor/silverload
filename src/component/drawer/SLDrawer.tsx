@@ -27,9 +27,9 @@ const SLDrawer = (): JSX.Element => {
         onClose={onClose}
         visible={isVisible}
         drawerStyle={drawerStyle}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        {/*<p>Some contents...</p>*/}
+        {/*<p>Some contents...</p>*/}
+        {/*<p>Some contents...</p>*/}
       </Drawer>
     </div>
   );

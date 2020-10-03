@@ -65,7 +65,7 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  mainWindow.openDevTools();
+  //mainWindow.openDevTools();
 
   mainWindow.webContents.on('context-menu', (e, props) => {
     const { x, y } = props;
