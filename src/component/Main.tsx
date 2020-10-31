@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Main.module.less';
+import styles from './Main.scss';
 import Tabs from './tabs/Tabs';
 import ImagePanel from './image.panel/ImagePanel';
 import { useSelector } from 'react-redux';

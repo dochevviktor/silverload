@@ -1,0 +1,9 @@
+.contentContainer {
+  height: calc(100vh - 70px);//100% view height
+  width: 100vw;// 100% view width
+
+  img {
+    max-height: 100%;
+    max-width: 100%;
+  }
+}

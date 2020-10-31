@@ -1,9 +1,9 @@
-const net = require('net');
-const port = process.env.PORT ? process.env.PORT - 100 : 3000;
+import { Socket } from 'net';
+import * as process from 'child_process'
 
-process.env.ELECTRON_START_URL = `http://localhost:${port}`;
 
-const client = new net.Socket();
+const port = 8080;
+const client = new Socket();
 
 let startedElectron = false;
 const tryConnection = () =>
@@ -12,7 +12,7 @@ const tryConnection = () =>
     if (!startedElectron) {
       console.log('starting electron');
       startedElectron = true;
-      const exec = require('child_process').exec;
+      const exec = process.exec;
 
       exec('yarn run electron');
     }
@@ -21,6 +21,6 @@ const tryConnection = () =>
 tryConnection();
 
 client.on('error', (error) => {
-  setTimeout(tryConnection, 1000);
+  setTimeout(tryConnection, 5000);
   console.log(error.message);
 });

@@ -16,6 +16,7 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 // Module to create context menu pop-up window.
 const Menu = electron.Menu;
+const ipcMain = electron.ipcMain;
 const path = require('path');
 const url = require('url');
 
@@ -36,13 +37,7 @@ const createWindow = async () => {
     },
   });
 
-  const startUrl =
-    process.env.ELECTRON_START_URL ||
-    url.format({
-      pathname: path.join(__dirname, '/../../build/index.html'),
-      protocol: 'file:',
-      slashes: true,
-    });
+  const startUrl = 'http://localhost:8080/'
 
   mainWindow.loadURL(startUrl);
 
@@ -86,6 +81,10 @@ const createWindow = async () => {
     ]).popup(mainWindow);
   });
 };
+
+ipcMain.on('re-render', () => {
+  mainWindow.reload();
+})
 
 app.on('ready', createWindow);
 

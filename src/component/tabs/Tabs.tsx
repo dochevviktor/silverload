@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, WheelEvent } from 'react';
-import styles from './Tabs.module.less';
+import styles from './Tabs.scss';
 import Tab from './tab/Tab';
 import SLScroll from '../../class/SLScroll';
 import SLDrawer from '../drawer/SLDrawer';
