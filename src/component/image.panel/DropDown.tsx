@@ -1,7 +1,8 @@
 import React, { useState, useEffect, RefObject } from 'react';
+import SLFileList from '../../interface/SLFileList';
 
 interface DragAndDropParams {
-  handleDrop: (files: FileList) => void;
+  handleDrop: (files: SLFileList) => void;
   dropRef: RefObject<HTMLDivElement>;
 }
 

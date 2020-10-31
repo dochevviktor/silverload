@@ -2,7 +2,6 @@ import React, { useEffect, useRef, WheelEvent } from 'react';
 import styles from './Tabs.scss';
 import Tab from './tab/Tab';
 import SLScroll from '../../class/SLScroll';
-import SLDrawer from '../drawer/SLDrawer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,7 +34,6 @@ const Tabs = (): JSX.Element => {
 
   return (
     <div className={styles.tabsContainer}>
-      <SLDrawer />
       <div ref={scrollRef} className={styles.tabsStyle} onWheel={(event: WheelEvent) => smoothScroll(event.deltaY)}>
         {tabs.map((tab, index) => (
           <Tab tab={tab} position={index} key={tab.id} />

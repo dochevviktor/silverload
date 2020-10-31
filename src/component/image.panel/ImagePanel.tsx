@@ -1,10 +1,11 @@
 import React, { useRef } from 'react';
-import styles from './ImagePanel.module.less';
+import styles from './ImagePanel.scss';
 import DragAndDrop from './DropDown';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/rootReducer';
 import { TabListSlice } from '../../redux/slices/tab.slice';
 import newId from '../../function/SLRandom';
+import SLFileList from '../../interface/SLFileList';
 
 const electron = window.require('electron');
 const remote = electron.remote;
@@ -17,7 +18,7 @@ const ImagePanel = (): JSX.Element => {
 
   const dispatch = useDispatch();
 
-  const handleDrop = (files: FileList) => {
+  const handleDrop = (files: SLFileList) => {
     if (!files[0].path) return;
 
     dispatch(TabListSlice.actions.setActiveTabImage(fs.readFileSync(files[0].path).toString('base64')));
