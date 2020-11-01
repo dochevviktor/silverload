@@ -1,11 +1,13 @@
 import path from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
-import CompressionPlugin from 'compression-webpack-plugin';
+import InlineChunkHtmlPlugin from 'inline-chunk-html-plugin';
+import HTMLInlineCSSWebpackPlugin from 'html-inline-css-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import webpack, { EnvironmentPlugin } from 'webpack';
 import express from 'express';
 import merge from 'webpack-merge';
+import CompressionPlugin from 'compression-webpack-plugin';
 
 const devConfig: webpack.Configuration = {
   mode: 'development',
@@ -15,6 +17,8 @@ const devConfig: webpack.Configuration = {
       NODE_ENV: 'development', // use 'development' unless process.env.NODE_ENV is defined
       DEBUG: false,
     }),
+    // TODO: Remove "as any" when types are fixed
+    new CompressionPlugin() as any,
   ],
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
@@ -39,6 +43,7 @@ const prodConfig: webpack.Configuration = {
     // TODO: Remove "as any" when @types/terser-webpack-plugin stop using @types/webpack
     minimizer: [new TerserPlugin() as any],
   },
+  plugins: [new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/.*/]), new HTMLInlineCSSWebpackPlugin()],
 };
 
 const commonConfig: webpack.Configuration = {
@@ -86,10 +91,7 @@ const commonConfig: webpack.Configuration = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
-      favicon: 'src/favicon.ico',
     }),
-    // TODO: Remove "as any" when types are fixed
-    new CompressionPlugin() as any,
   ],
 };
 

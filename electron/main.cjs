@@ -37,7 +37,13 @@ const createWindow = async () => {
     },
   });
 
-  const startUrl = 'http://localhost:8080/'
+  const startUrl =
+    'http://localhost:8080/' ||
+    url.format({
+      pathname: path.join(__dirname, '/../dist/index.html'),
+      protocol: 'file:',
+      slashes: true,
+    });
 
   mainWindow.loadURL(startUrl);
 
@@ -84,7 +90,7 @@ const createWindow = async () => {
 
 ipcMain.on('re-render', () => {
   mainWindow.reload();
-})
+});
 
 app.on('ready', createWindow);
 
