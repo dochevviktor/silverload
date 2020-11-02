@@ -1,2 +1,2 @@
 react: webpack serve
-start_electron: node electron/startup
+start_electron: yarn run electron:build & node electron/out/startup & taskkill /F /IM node.exe

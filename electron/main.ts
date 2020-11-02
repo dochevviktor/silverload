@@ -9,18 +9,21 @@
  * `./app/main.prod.js` using webpack. This gives us some performance wins.
  *
  */
-const electron = require('electron');
-// Module to control application life.
-const app = electron.app;
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow;
-// Module to create context menu pop-up window.
-const Menu = electron.Menu;
-const ipcMain = electron.ipcMain;
-const path = require('path');
-const url = require('url');
+import { app, BrowserWindow, Menu, ipcMain } from 'electron';
+
+import path from 'path';
+
+import url from 'url';
 
 let mainWindow = null;
+
+const startUrl =
+  process.env.ELECTRON_START_URL ||
+  url.format({
+    pathname: path.join(__dirname, '/../../dist/index.html'),
+    protocol: 'file:',
+    slashes: true,
+  });
 
 const createWindow = async () => {
   mainWindow = new BrowserWindow({
@@ -38,14 +41,6 @@ const createWindow = async () => {
       webSecurity: false,
     },
   });
-
-  const startUrl =
-    process.env.ELECTRON_START_URL ||
-    url.format({
-      pathname: path.join(__dirname, '/../dist/index.html'),
-      protocol: 'file:',
-      slashes: true,
-    });
 
   mainWindow.loadURL(startUrl);
 

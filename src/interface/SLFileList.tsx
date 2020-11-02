@@ -5,7 +5,7 @@ interface SLFileList extends FileList {
 }
 
 interface SLFile extends File {
-  path?: string;
+  path: string;
 }
 
 export default SLFileList;
