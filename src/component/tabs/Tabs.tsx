@@ -28,11 +28,6 @@ const Tabs = (): JSX.Element => {
     return scroll.scrollLeft(left);
   };
 
-  // On application start we either create a new tab or load previous state (WIP)
-  useEffect(() => {
-    dispatch(TabListSlice.actions.addTab());
-  }, []);
-
   return (
     <div className={styles.tabsContainer}>
       <SLDrawer />

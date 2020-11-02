@@ -6,6 +6,7 @@ import { RootState } from '../../redux/rootReducer';
 import { TabListSlice } from '../../redux/slices/tab.slice';
 import newId from '../../function/SLRandom';
 import SLFileList from '../../interface/SLFileList';
+import Viewer from 'react-viewer';
 
 const electron = window.require('electron');
 const remote = electron.remote;
@@ -42,7 +43,19 @@ const ImagePanel = (): JSX.Element => {
   return (
     <div className={styles.contentContainer} ref={dropRef}>
       <DragAndDrop handleDrop={handleDrop} dropRef={dropRef} />
-      <img src={imageSource} alt="" />
+      <Viewer
+        zIndex={0}
+        className={styles.content}
+        visible={true}
+        images={[{ src: imageSource, alt: '' }]}
+        noResetZoomAfterChange={true}
+        noFooter={true}
+        noClose={true}
+        changeable={false}
+        disableKeyboardSupport={true}
+        zoomSpeed={0.2}
+        minScale={1}
+      />
     </div>
   );
 };
