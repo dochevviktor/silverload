@@ -1,9 +1,10 @@
 import { Socket } from 'net';
-import * as process from 'child_process'
-
+import exec from 'child_process';
 
 const port = 8080;
 const client = new Socket();
+
+process.env.ELECTRON_START_URL = `http://localhost:${port}`;
 
 let startedElectron = false;
 const tryConnection = () =>
@@ -12,9 +13,8 @@ const tryConnection = () =>
     if (!startedElectron) {
       console.log('starting electron');
       startedElectron = true;
-      const exec = process.exec;
 
-      exec('yarn run electron');
+      exec.exec('yarn run electron:run');
     }
   });
 

@@ -10,17 +10,17 @@
   "scripts": {
     "start:dev": "nf start",
     "build:dev": "webpack",
-    "build:prod": "webpack --env production",
-    "electron": "electron .",
+    "build:prod": "webpack --env production & electron-forge package",
+    "electron:run": "electron .",
+    "electron:package": "electron-forge package",
+    "electron:make": "electron-forge make",
     "lint": "run-p -n -l lint:eslint lint:stylelint",
     "lint:eslint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:stylelint": "stylelint \"src/**/*.scss\"",
     "lint:fix:eslint": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "lint:fix:stylelint": "stylelint \"src/**/*.scss\" --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,scss}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,scss}\"",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,scss}\""
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.54",
@@ -47,11 +47,13 @@
     "@types/webpack-merge": "^4.1.5",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
+    "antd": "^4.7.3",
     "clean-webpack-plugin": "^3.0.0",
     "compression-webpack-plugin": "^6.0.4",
     "copy-webpack-plugin": "^6.2.1",
     "css-loader": "^5.0.0",
     "electron": "^10.1.5",
+    "electron-squirrel-startup": "^1.0.0",
     "eslint": "^7.12.1",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-import": "^2.22.1",
@@ -168,9 +170,7 @@
     "endOfLine": "auto",
     "jsxBracketSameLine": true
   },
-  "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
-  },
+  "dependencies": {},
   "config": {
     "forge": {
       "packagerConfig": {

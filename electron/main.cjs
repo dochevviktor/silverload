@@ -27,6 +27,8 @@ const createWindow = async () => {
     show: false,
     width: 1024,
     height: 728,
+    minWidth: 240,
+    minHeight: 70,
     frame: false,
     icon: 'icon.ico',
     webPreferences: {
@@ -38,7 +40,7 @@ const createWindow = async () => {
   });
 
   const startUrl =
-    'http://localhost:8080/' ||
+    process.env.ELECTRON_START_URL ||
     url.format({
       pathname: path.join(__dirname, '/../dist/index.html'),
       protocol: 'file:',

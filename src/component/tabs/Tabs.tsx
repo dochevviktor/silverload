@@ -7,6 +7,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/rootReducer';
 import { TabListSlice } from '../../redux/slices/tab.slice';
+import SLDrawer from '../drawer/SLDrawer';
 
 const Tabs = (): JSX.Element => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -34,6 +35,7 @@ const Tabs = (): JSX.Element => {
 
   return (
     <div className={styles.tabsContainer}>
+      <SLDrawer />
       <div ref={scrollRef} className={styles.tabsStyle} onWheel={(event: WheelEvent) => smoothScroll(event.deltaY)}>
         {tabs.map((tab, index) => (
           <Tab tab={tab} position={index} key={tab.id} />
