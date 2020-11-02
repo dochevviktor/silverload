@@ -8,8 +8,7 @@
   "main": "electron/out/main.js",
   "scripts": {
     "start:dev": "nf start",
-    "build:dev": "webpack",
-    "build:prod": "webpack --env production & yarn electron:package",
+    "build:prod": "webpack --env production & yarn electron:package & rmdir /S /Q dist",
     "electron:run": "electron .",
     "electron:build": "tsc -p electron/tsconfig.json",
     "electron:package": "tsc -p electron/tsconfig.json & electron-forge package",
