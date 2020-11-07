@@ -8,6 +8,7 @@ import webpack, { EnvironmentPlugin } from 'webpack';
 import express from 'express';
 import merge from 'webpack-merge';
 import CompressionPlugin from 'compression-webpack-plugin';
+import { exec } from 'child_process';
 
 const devConfig: webpack.Configuration = {
   mode: 'development',
@@ -19,6 +20,11 @@ const devConfig: webpack.Configuration = {
     }),
     // TODO: Remove "as any" when types are fixed
     new CompressionPlugin() as any,
+    {
+      apply: (compiler) => {
+        compiler.hooks.afterEmit.tap('AfterEmitPlugin', () => exec('yarn run electron:run '));
+      },
+    },
   ],
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
