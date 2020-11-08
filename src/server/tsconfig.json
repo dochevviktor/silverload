@@ -1,0 +1,32 @@
+{
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
+  "compilerOptions": {
+    "module": "commonjs",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "outDir": "../../dist",
+    "types": ["node", "electron"],
+    "moduleResolution": "node",
+    "declaration": false,
+    "removeComments": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
+    "forceConsistentCasingInFileNames": true,
+    "target": "es2017",
+    "sourceMap": false,
+    "baseUrl": "./",
+    "jsx": "react"
+  },
+  "exclude": [
+    "node_modules/*"
+  ]
+}

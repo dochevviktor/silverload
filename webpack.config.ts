@@ -22,7 +22,13 @@ const devConfig: webpack.Configuration = {
     new CompressionPlugin() as any,
     {
       apply: (compiler) => {
-        compiler.hooks.afterEmit.tap('AfterEmitPlugin', () => exec('yarn run electron:run '));
+        let electronProcess = null;
+
+        compiler.hooks.afterEmit.tap('AfterEmitPlugin', () => {
+          if (!electronProcess) {
+            electronProcess = exec('yarn run electron:run ');
+          }
+        });
       },
     },
   ],
@@ -53,7 +59,7 @@ const prodConfig: webpack.Configuration = {
 };
 
 const commonConfig: webpack.Configuration = {
-  entry: './src/index.tsx',
+  entry: './src/client/index.tsx',
   output: {
     path: path.resolve('dist'),
     filename: 'bundle.[contenthash].js',
@@ -96,7 +102,7 @@ const commonConfig: webpack.Configuration = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: 'src/index.html',
+      template: 'src/client/index.html',
     }),
   ],
 };

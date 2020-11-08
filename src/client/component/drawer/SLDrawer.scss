@@ -1,0 +1,29 @@
+.drawerFrame {
+  color: silver;
+  margin-top: 70px;
+  div {
+    div {
+      background-color: #292d33;
+    }
+  }
+}
+
+.drawerButton {
+  padding: 10px 29px 29px 12px;
+  height: 20px;
+  width: 40px;
+
+  svg {
+    color: grey;
+    height: 20px;
+  }
+
+  &:hover {
+    box-shadow: 0 0 8px 2px rgba(114, 114, 114, 0.3);
+    background: linear-gradient(45deg, #646464 30%, #4e4e4e 90%);
+
+    svg {
+      color: white;
+    }
+  }
+}

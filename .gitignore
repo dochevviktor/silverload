@@ -26,4 +26,3 @@ yarn-error.log*
 *.iml
 /tsconfig.tsbuildinfo
 /out/
-/electron/out/
