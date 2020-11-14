@@ -82,7 +82,9 @@ const commonConfig: webpack.Configuration = {
           {
             loader: 'css-loader',
             options: {
-              modules: true,
+              modules: {
+                localIdentName: '[local]__[hash:base64:5]',
+              },
               importLoaders: 1,
             },
           },
