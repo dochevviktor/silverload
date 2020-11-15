@@ -4,7 +4,7 @@ import InlineChunkHtmlPlugin from 'inline-chunk-html-plugin';
 import HTMLInlineCSSWebpackPlugin from 'html-inline-css-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-import webpack, { EnvironmentPlugin } from 'webpack';
+import webpack, { DefinePlugin, EnvironmentPlugin } from 'webpack';
 import express from 'express';
 import merge from 'webpack-merge';
 import CompressionPlugin from 'compression-webpack-plugin';
@@ -14,12 +14,18 @@ const devConfig: webpack.Configuration = {
   mode: 'development',
   devtool: 'source-map',
   plugins: [
+    // use 'development' unless process.env.NODE_ENV is defined
     new EnvironmentPlugin({
-      NODE_ENV: 'development', // use 'development' unless process.env.NODE_ENV is defined
+      NODE_ENV: 'development',
       DEBUG: false,
     }),
-    // TODO: Remove "as any" when types are fixed
-    new CompressionPlugin() as any,
+    // disable annoying react advertisement
+    new DefinePlugin({
+      __REACT_DEVTOOLS_GLOBAL_HOOK__: '({ isDisabled: true })',
+      apply: 0,
+    }),
+    new CompressionPlugin() as DefinePlugin,
+    // Launch electron after webpack dev server is deployed
     {
       apply: (compiler) => {
         let electronProcess = null;
@@ -52,8 +58,7 @@ const prodConfig: webpack.Configuration = {
   mode: 'production',
   optimization: {
     minimize: true,
-    // TODO: Remove "as any" when @types/terser-webpack-plugin stop using @types/webpack
-    minimizer: [new TerserPlugin() as any],
+    minimizer: [new TerserPlugin() as DefinePlugin],
   },
   plugins: [new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/.*/]), new HTMLInlineCSSWebpackPlugin()],
 };

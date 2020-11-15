@@ -1,4 +1,4 @@
-import { BrowserWindow, Menu } from 'electron';
+import { BrowserWindow, Menu, ipcMain } from 'electron';
 
 let mainWindow = null;
 
@@ -11,6 +11,13 @@ const loadWindowListeners = () => {
       mainWindow.focus();
     }
   });
+
+  ipcMain.on('min-win', () => mainWindow.minimize());
+  ipcMain.on('max-win', () => (mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()));
+  ipcMain.on('quit-win', () => mainWindow.close());
+
+  mainWindow.on('maximize', () => mainWindow.webContents.send('win-max'));
+  mainWindow.on('unmaximize', () => mainWindow.webContents.send('win-umax'));
 
   mainWindow.webContents.on('closed', () => (mainWindow = null));
   mainWindow.webContents.on('context-menu', (e, props) => mainContext(e, props));
@@ -42,9 +49,6 @@ export const createWindow = (startUrl: string): void => {
     icon: 'icon.ico',
     webPreferences: {
       nodeIntegration: true,
-      webviewTag: true,
-      enableRemoteModule: true,
-      webSecurity: false,
     },
   });
 
