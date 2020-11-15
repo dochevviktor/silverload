@@ -47,6 +47,7 @@ export const TabListSlice = createSlice({
     removeTab(state, action: PayloadAction<number>) {
       const tabIndex = action.payload;
 
+      state.tabList[tabIndex].base64Image = null;
       state.tabList.splice(tabIndex, 1);
 
       const nextPos = state.tabList.length - 1 >= tabIndex ? tabIndex : state.tabList.length - 1;

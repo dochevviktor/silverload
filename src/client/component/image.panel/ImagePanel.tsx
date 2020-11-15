@@ -1,26 +1,27 @@
-import React, { MouseEvent, useRef, useState, WheelEvent } from 'react';
+import React, { MouseEvent, useRef, useState, WheelEvent, DragEvent } from 'react';
 import styles from './ImagePanel.scss';
-import DragAndDrop from './DropDown';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/rootReducer';
 import { TabListSlice } from '../../redux/slices/tab.slice';
 import { v4 as uuid } from 'uuid';
-import SLConstants from '../../class/SLConstants';
 import SLZoom from '../../class/SLZoom';
+import VALID_FILE_TYPES from '../../constant/SLImageFileTypes';
 
 const ImagePanel = (): JSX.Element => {
   const dropRef = useRef<HTMLDivElement>(null);
   const [isDragging, setDragging] = useState<boolean>(false);
   const [isAnimated, setAnimated] = useState<boolean>(false);
 
-  const activeTab = useSelector((state: RootState) => state.tabsSlice.activeTab);
+  let dragCounter = 0;
+
+  const { actions } = TabListSlice;
   const dispatch = useDispatch();
-  const actions = TabListSlice.actions;
+  const activeTab = useSelector((state: RootState) => state.tabsSlice.activeTab);
 
-  const zoom = new SLZoom((multiplier) => dispatch(TabListSlice.actions.changeImageSize(multiplier)));
-  const validateFile = (file: File) => SLConstants.VALID_FILE_TYPES.indexOf(file.type) !== -1;
+  const zoom = new SLZoom((multiplier) => dispatch(actions.changeImageSize(multiplier)));
+  const validateFile = (file: File) => VALID_FILE_TYPES.indexOf(file.type) !== -1;
 
-  const getBase64 = (file: File) =>
+  const getBase64 = async (file: File) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
 
@@ -30,55 +31,81 @@ const ImagePanel = (): JSX.Element => {
       reader.readAsDataURL(file);
     });
 
-  const handleDrop = (files: FileList) => {
-    if (!files[0].path || !validateFile(files[0])) return;
-    getBase64(files[0]).then((result) => {
-      dispatch(actions.setActiveTabImage(result.toString()));
-      dispatch(actions.setActiveTabTitle(files[0].name));
-      dispatch(actions.resetImageSizeAndPos());
-    });
+  const handleDrag = (e: DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
-    if (files.length > 1) {
-      for (let i = 1; i < files.length; i++) {
-        if (validateFile(files[i])) {
-          getBase64(files[i]).then((result) => {
-            dispatch(actions.addTab({ id: uuid(), title: files[i].name, base64Image: result.toString() }));
-          });
-        }
-      }
+  const handleDragIn = (e: DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounter++;
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+      setDragging(true);
     }
   };
 
-  // calculate relative position to the mouse and set dragging=true
-  const onMouseDown = (e: MouseEvent) => {
-    // only left mouse button
-    setAnimated(false);
-    if (e.button !== 0) return;
-
-    setDragging(true);
-    e.stopPropagation();
+  const handleDragOut = (e: DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    dragCounter = 0;
+    if (dragCounter === 0) {
+      setDragging(false);
+    }
   };
 
-  const onMouseUp = (e: MouseEvent) => {
-    setAnimated(false);
-    setDragging(false);
-    e.stopPropagation();
+  const handleDrop = async (e: DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      await handleDroppedFiles(e.dataTransfer.files);
+      e.dataTransfer.clearData();
+      dragCounter = 0;
+    }
+  };
+
+  const handleDroppedFiles = async (files: FileList) => {
+    const { length, 0: firstDroppedFile, ...otherDroppedFiles } = files;
+
+    if (!firstDroppedFile || !validateFile(firstDroppedFile)) return;
+
+    const result = await getBase64(firstDroppedFile);
+
+    dispatch(actions.setActiveTabImage(result.toString()));
+    dispatch(actions.setActiveTabTitle(firstDroppedFile.name));
+    dispatch(actions.resetImageSizeAndPos());
+
+    if (length === 1) return;
+
+    Object.values(otherDroppedFiles)
+      .filter((it) => validateFile(it))
+      .map(async (it) => {
+        const iteratedResult = await getBase64(it);
+
+        dispatch(actions.addTab({ id: uuid(), title: it.name, base64Image: iteratedResult.toString() }));
+      });
   };
 
   const onMouseMove = (e: MouseEvent) => {
-    if (!isDragging) return;
+    if (e.button !== 0 || e.buttons !== 1) return;
+    setAnimated(false);
     const newX = activeTab?.translateX + e.movementX / activeTab?.scaleX;
     const newY = activeTab?.translateY + e.movementY / activeTab?.scaleY;
 
-    dispatch(TabListSlice.actions.setImagePosition({ translateX: newX, translateY: newY }));
+    dispatch(actions.setImagePosition({ translateX: newX, translateY: newY }));
     e.stopPropagation();
     e.preventDefault();
   };
 
   const onDoubleClick = (e: MouseEvent) => {
-    dispatch(TabListSlice.actions.resetImageSizeAndPos());
+    dispatch(actions.resetImageSizeAndPos());
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
+  const onMouseLeave = (e: MouseEvent) => {
+    setAnimated(false);
     e.stopPropagation();
     e.preventDefault();
   };
@@ -102,20 +129,28 @@ const ImagePanel = (): JSX.Element => {
   const anim = isAnimated ? `transform 0.2s ease` : '';
   const transform = { transform: `${posX} ${posY} ${sclX} ${sclY}`, transition: anim };
 
+  const imagePanelClassName = `${styles.contentContainer} ${isDragging ? styles.dragging : null}`;
+
   return (
-    <div className={styles.contentContainer} ref={dropRef} onDoubleClick={onDoubleClick} onWheel={onWheel}>
-      <DragAndDrop handleDrop={handleDrop} dropRef={dropRef} />
-      <div className={styles.imageContainer}>
-        <img
-          src={activeTab?.base64Image}
-          alt=""
-          style={transform}
-          onMouseDown={onMouseDown}
-          onMouseMove={onMouseMove}
-          onMouseUp={onMouseUp}
-          onMouseLeave={onMouseUp}
-        />
-      </div>
+    <div
+      className={imagePanelClassName}
+      ref={dropRef}
+      onDoubleClick={onDoubleClick}
+      onWheel={onWheel}
+      onMouseLeave={onMouseLeave}
+      onDragEnter={handleDragIn}
+      onDragLeave={handleDragOut}
+      onDragOver={handleDrag}
+      onDrop={handleDrop}>
+      {!isDragging && activeTab?.base64Image ? (
+        <div className={styles.imageContainer}>
+          <img src={activeTab?.base64Image} alt="" style={transform} onMouseMove={onMouseMove} />
+        </div>
+      ) : (
+        <div className={styles.dropMessage}>
+          <p>Drag & Drop images here</p>
+        </div>
+      )}
     </div>
   );
 };

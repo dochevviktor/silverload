@@ -9,3 +9,25 @@
     align-items: center; /* align vertical */
   }
 }
+
+.dragging {
+  color:white;
+  content: "Coming Soon";
+  background: rgba(255, 255, 255, 0.50);
+}
+
+.dropMessage {
+  display: flex;
+  pointer-events: none;
+  align-items: center;
+  justify-content: center;
+  margin: 100px;
+  width: calc(100vw - 200px);
+  height: calc(100vh - 300px);//100% view height
+  min-width: 300px;
+  min-height: 200px;
+  border: 4px dashed silver;
+  text-align: center;
+  color: silver;
+  font-size: 20px;
+}
