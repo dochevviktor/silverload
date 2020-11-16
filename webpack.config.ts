@@ -4,13 +4,15 @@ import InlineChunkHtmlPlugin from 'inline-chunk-html-plugin';
 import HTMLInlineCSSWebpackPlugin from 'html-inline-css-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-import webpack, { DefinePlugin, EnvironmentPlugin } from 'webpack';
-import express from 'express';
+import { DefinePlugin, EnvironmentPlugin, Configuration } from 'webpack';
+import { Application, Request, Response, NextFunction } from 'express';
 import merge from 'webpack-merge';
 import CompressionPlugin from 'compression-webpack-plugin';
 import { exec } from 'child_process';
+import CspHtmlWebpackPlugin from 'csp-html-webpack-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 
-const devConfig: webpack.Configuration = {
+const devConfig: Configuration = {
   mode: 'development',
   devtool: 'source-map',
   plugins: [
@@ -42,9 +44,9 @@ const devConfig: webpack.Configuration = {
     contentBase: path.join(__dirname, 'dist'),
     historyApiFallback: true,
     hot: true,
-    before(app: express.Application) {
+    before(app: Application) {
       // Add Content-Encoding so that browser can read gzip-ed files
-      app.get('*.js', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+      app.get('*.js', (req: Request, res: Response, next: NextFunction) => {
         req.url = req.url + '.gz';
         res.set('Content-Encoding', 'gzip');
         res.set('Content-Type', 'text/javascript');
@@ -54,16 +56,16 @@ const devConfig: webpack.Configuration = {
   },
 };
 
-const prodConfig: webpack.Configuration = {
+const prodConfig: Configuration = {
   mode: 'production',
   optimization: {
     minimize: true,
-    minimizer: [new TerserPlugin() as DefinePlugin],
+    minimizer: [new TerserPlugin() as DefinePlugin, new CssMinimizerPlugin()],
   },
   plugins: [new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/.*/]), new HTMLInlineCSSWebpackPlugin()],
 };
 
-const commonConfig: webpack.Configuration = {
+const commonConfig: Configuration = {
   entry: './src/client/index.tsx',
   output: {
     path: path.resolve('dist'),
@@ -110,6 +112,15 @@ const commonConfig: webpack.Configuration = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: 'src/client/index.html',
+    }),
+    new CspHtmlWebpackPlugin({
+      'default-src': "'self'",
+      'img-src': ["'self'", 'data:'],
+      'object-src': "'none'",
+      'base-uri': "'self'",
+      'script-src': "'self'",
+      'worker-src': "'self'",
+      'style-src': ["'self'", "'unsafe-inline'"],
     }),
   ],
 };
