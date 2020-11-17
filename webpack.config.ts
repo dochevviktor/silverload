@@ -60,7 +60,7 @@ const prodConfig: Configuration = {
   mode: 'production',
   optimization: {
     minimize: true,
-    minimizer: [new TerserPlugin() as DefinePlugin, new CssMinimizerPlugin()],
+    minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
   },
   plugins: [new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/.*/]), new HTMLInlineCSSWebpackPlugin()],
 };
