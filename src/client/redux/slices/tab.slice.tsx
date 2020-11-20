@@ -30,19 +30,24 @@ const resetSizeAndPos = (tab: SLTab) => {
   tab.scaleY = 1;
 };
 
+const addNewTab = (state, action: PayloadAction<SLTab>): SLTab => {
+  const newTab: SLTab = action.payload ? action.payload : { id: uuid(), title: 'New Tab' };
+
+  resetSizeAndPos(newTab);
+  state.tabList.push(newTab);
+
+  return newTab;
+};
+
 export const TabListSlice = createSlice({
   name: 'TabListSlice',
   initialState: initialTabListState,
   reducers: {
     addTab(state, action: PayloadAction<SLTab>) {
-      const newTab: SLTab = action.payload ? action.payload : { id: uuid(), title: 'New Tab' };
-
-      resetSizeAndPos(newTab);
-      state.tabList.push(newTab);
-
-      if (!action.payload) {
-        state.activeTab = newTab;
-      }
+      addNewTab(state, action);
+    },
+    addTabAndSetActive(state, action: PayloadAction<SLTab>) {
+      state.activeTab = addNewTab(state, action);
     },
     removeTab(state, action: PayloadAction<number>) {
       const tabIndex = action.payload;

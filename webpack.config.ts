@@ -24,9 +24,8 @@ const devConfig: Configuration = {
     // disable annoying react advertisement
     new DefinePlugin({
       __REACT_DEVTOOLS_GLOBAL_HOOK__: '({ isDisabled: true })',
-      apply: 0,
     }),
-    new CompressionPlugin() as DefinePlugin,
+    new CompressionPlugin(),
     // Launch electron after webpack dev server is deployed
     {
       apply: (compiler) => {

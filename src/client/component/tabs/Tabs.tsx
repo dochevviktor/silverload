@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, WheelEvent } from 'react';
+import React, { useRef, WheelEvent } from 'react';
 import styles from './Tabs.scss';
 import Tab from './tab/Tab';
 import SLScroll from '../../class/SLScroll';
@@ -19,7 +19,7 @@ const Tabs = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const addTab = () => {
-    dispatch(TabListSlice.actions.addTab());
+    dispatch(TabListSlice.actions.addTabAndSetActive());
 
     return scroll.scrollLeft(100, 10);
   };

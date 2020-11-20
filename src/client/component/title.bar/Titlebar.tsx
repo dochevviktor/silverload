@@ -12,6 +12,11 @@ const TitleBar = (): JSX.Element => {
   useEffect(() => {
     ipcRenderer.on('win-max', () => updateMaxState(true));
     ipcRenderer.on('win-umax', () => updateMaxState(false));
+
+    return () => {
+      ipcRenderer.removeListener('win-max', () => updateMaxState(true));
+      ipcRenderer.removeListener('win-umax', () => updateMaxState(false));
+    };
   }, []);
 
   const getMaximisedButtonIcon = isMaximized ? faWindowRestore : faWindowMaximize;
