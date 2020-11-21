@@ -124,7 +124,7 @@ const commonConfig: Configuration = {
   ],
 };
 
-module.exports = (env: { production: boolean }) => {
+export default (env: { production: boolean }): Configuration => {
   const envConfig = env?.production ? prodConfig : devConfig;
 
   return merge(commonConfig, envConfig);

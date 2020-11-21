@@ -1,8 +1,9 @@
 import { BrowserWindow, Menu, ipcMain } from 'electron';
 import { existsSync, lstatSync, readFileSync } from 'fs';
-//import { lookup } from 'mime-types';
+import { lookup } from 'mime-types';
 import { basename } from 'path';
-import SLFile from '../interface/SLFile';
+import { SLFile } from '../../common/interface/SLFile';
+import { SLEvent } from '../../common/constant/SLEvent';
 
 let mainWindow = null;
 
@@ -21,13 +22,15 @@ const loadInitListeners = () => {
 };
 
 const loadFrameManipulationListeners = () => {
-  ipcMain.on('min-win', () => mainWindow.minimize());
-  ipcMain.on('max-win', () => (mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()));
-  ipcMain.on('quit-win', () => mainWindow.close());
-  ipcMain.on('get-args', (event) => (event.returnValue = getSLFilesFromArgs(process.argv)));
+  ipcMain.on(SLEvent.MINIMIZE_WINDOW, () => mainWindow.minimize());
+  ipcMain.on(SLEvent.MAXIMIZE_WINDOW, () =>
+    mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()
+  );
+  ipcMain.on(SLEvent.CLOSE_WINDOW, () => mainWindow.close());
+  ipcMain.on(SLEvent.GET_FILE_ARGUMENTS, (event) => (event.returnValue = getSLFilesFromArgs(process.argv)));
 
-  mainWindow.on('maximize', () => mainWindow.webContents.send('win-max'));
-  mainWindow.on('unmaximize', () => mainWindow.webContents.send('win-umax'));
+  mainWindow.on('maximize', () => mainWindow.webContents.send(SLEvent.WINDOW_MAXIMIZED));
+  mainWindow.on('unmaximize', () => mainWindow.webContents.send(SLEvent.WINDOW_UN_MAXIMIZED));
 };
 
 const getSLFilesFromArgs = (argList: string[]): SLFile[] => {
@@ -37,7 +40,7 @@ const getSLFilesFromArgs = (argList: string[]): SLFile[] => {
     .slice(1) // first element is always the process itself - skip it
     .filter((it) => existsSync(it) && lstatSync(it).isFile())
     .forEach((it) => {
-      const mimeType = 'image/png'; //lookup(it);
+      const mimeType = lookup(it);
       const base64 = readFileSync(it, { encoding: 'base64' });
       const name = basename(it);
       const file: SLFile = { name: name, base64: `data:${mimeType};base64,${base64}`, mimeType: mimeType };
@@ -95,6 +98,6 @@ export const handleSecondProcessCall = async (commandLine: string[]): Promise<vo
       mainWindow.restore();
     }
     mainWindow.focus();
-    mainWindow.webContents.send('sec-args', getSLFilesFromArgs(commandLine));
+    mainWindow.webContents.send(SLEvent.SENT_FILE_ARGUMENTS, getSLFilesFromArgs(commandLine));
   }
 };
