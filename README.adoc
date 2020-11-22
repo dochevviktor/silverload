@@ -70,7 +70,7 @@ This project will be written entirely in TypeScript, where possible.
 h|Version
 h|Usage
 
-a|image::{imgElectron}[link={ghElectron};Electron,50,50]
+a|image::{imgElectron}[link={ghElectron};Electron,40,40]
 |Electron
 a|[source, subs="attributes"]
 ----
