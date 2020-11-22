@@ -20,9 +20,9 @@ const SLDrawer = (): JSX.Element => {
         <FontAwesomeIcon icon={drawerButtonIcon} size="lg" />
       </div>
       <Drawer className={styles.drawerFrame} placement="left" closable={false} onClose={onClose} visible={isVisible}>
-        {/*<p>Some contents...</p>*/}
-        {/*<p>Some contents...</p>*/}
-        {/*<p>Some contents...</p>*/}
+        <p>'Settings' coming soon...</p>
+        <p>'Shortcuts' coming soon...</p>
+        <p>'About' coming soon...</p>
       </Drawer>
     </div>
   );

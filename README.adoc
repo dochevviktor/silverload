@@ -1,0 +1,231 @@
+[.text-justify]
+= Project Silverload
+:toc:
+
+// Preface
+
+== {counter:section}. Short Project Description
+[.text-justify]
+======
+The purpose of this project is to build a thin and lite Image Browser app
+with the hope of offering a decent, modern and simple alternative to
+the default Windows Photo Viewer. +
+This project will be written entirely in TypeScript, where possible.
+======
+
+
+// LINK_VARIABLES_START
+:verElectron: ^10.1.5
+:verReact: ^17.0.1
+:verRedux: ^4.0.5
+:verTypescript: ^4.0.5
+:verSass: ^1.29.0
+:verFontAwesome: ^0.1.12
+:verAntDesign: ^4.8.4
+:verESLint: ^7.13.0
+:verStyleLint: ^13.8.0
+:verPrettier: ^2.1.2
+:verWebpack: ^5.5.0
+:verRollup: ^2.33.3
+// LINK_VARIABLES_END
+
+// IMG_VARIABLES_START
+:imgElectron: https://upload.wikimedia.org/wikipedia/commons/9/91/Electron_Software_Framework_Logo.svg
+:imgReact: https://cdn.worldvectorlogo.com/logos/react-2.svg
+:imgRedux: https://cdn.worldvectorlogo.com/logos/redux.svg
+:imgTypescript: https://cdn.worldvectorlogo.com/logos/typescript.svg
+:imgSass: https://cdn.worldvectorlogo.com/logos/sass-1.svg
+:imgFontAwesome: https://cdn.worldvectorlogo.com/logos/fontawesome-1.svg
+:imgAntDesign: https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg
+:imgESLint: https://cdn.worldvectorlogo.com/logos/eslint-1.svg
+:imgStyleLint: https://cdn.worldvectorlogo.com/logos/stylelint.svg
+:imgPrettier: https://cdn.worldvectorlogo.com/logos/prettier-1.svg
+:imgWebpack: https://cdn.worldvectorlogo.com/logos/webpack-icon.svg
+:imgRollup: https://seeklogo.com/images/R/rollup-js-logo-F3925E2546-seeklogo.com.png
+// IMG_VARIABLES_END
+
+// GH_VARIABLES_START
+:ghElectron: https://github.com/electron/electron
+:ghReact: https://github.com/facebook/react
+:ghRedux: https://github.com/reduxjs/redux
+:ghTypescript: https://github.com/microsoft/TypeScript
+:ghSass: https://github.com/sass/sass
+:ghFontAwesome: https://github.com/FortAwesome/react-fontawesome
+:ghAntDesign: https://github.com/ant-design/ant-design
+:ghESLint: https://github.com/eslint/eslint
+:ghStyleLint: https://github.com/stylelint/stylelint
+:ghPrettier: https://github.com/prettier/prettier
+:ghWebpack: https://github.com/webpack/webpack
+:ghRollup: https://github.com/webpack/webpack
+// GH_VARIABLES_END
+
+
+
+== {counter:section}. Libraries Used
+
+======
+[cols="^.^1,.^2s,.^4s,.^5",frame="all", grid="rows"]
+|======
+2+h|Library
+h|Version
+h|Usage
+
+a|image::{imgElectron}[link={ghElectron};Electron,50,50]
+|Electron
+a|[source, subs="attributes"]
+----
+electron: {verElectron}
+----
+|Main server/host/output of the application
+
+a|image::{imgReact}[link={ghReact};React,50,50]
+[Electron,50,50]
+|React
+a|[source, subs="attributes"]
+----
+react: {verReact}
+----
+|Client side of the application
+
+a|image::{imgRedux}[link={ghRedux};Redux,50,50]
+|Redux
+a|[source, subs="attributes"]
+----
+redux: {verRedux}
+----
+|State container for our React components
+
+a|image::{imgTypescript}[link={ghTypescript};Typescript,50,50]
+|Typescript
+a|[source, subs="attributes"]
+----
+typescript: {verTypescript}
+----
+|Adds typed language support for TS(X) files
+
+a|image::{imgSass}[link={ghSass};Sass,50,50]
+|Sass/Scss
+a|[source, subs="attributes"]
+----
+sass: {verSass}
+----
+|CSS extension language
+
+a|image::{imgFontAwesome}[link={ghFontAwesome};FortAwesome,50,50]
+|React Font Awesome
+a|[source, subs="attributes"]
+----
+react-fontawesome: {verFontAwesome}
+----
+|Extensive and easy to use react icon library
+
+a|image::{imgAntDesign}[link={ghAntDesign};AntDesign,50,50]
+|Ant Design
+a|[source, subs="attributes"]
+----
+antd: {verAntDesign}
+----
+|React UI design library
+
+a|image::{imgESLint}[link={ghESLint};ESLint,50,50]
+|ESLint
+a|[source, subs="attributes"]
+----
+eslint: {verESLint}
+----
+|JS/TS linter
+
+a|image::{imgStyleLint}[link={ghStyleLint};StyleLint,50,50]
+|StyleLint
+a|[source, subs="attributes"]
+----
+stylelint: {verStyleLint}
+----
+|CSS/SCSS linter
+
+a|image::{imgPrettier}[link={ghPrettier};StyleLint,50,50]
+|Prettier
+a|[source, subs="attributes"]
+----
+prettier: {verPrettier}
+----
+|Code style formatter
+
+a|image::{imgWebpack}[link={ghWebpack};WebPack,50,50]
+|Webpack
+a|[source, subs="attributes"]
+----
+webpack: {verWebpack}
+----
+|React builder, bundler and development server
+
+a|image::{imgRollup}[link={ghRollup};WebPack,40,40]
+|Rollup
+a|[source, subs="attributes"]
+----
+rollup: {verRollup}
+----
+|Electron builder and bundler
+
+|======
+[NOTE]
+This project is a work in progress, hence expect changes to this list.
+======
+
+// IMG_VARIABLES_START
+:imgNodeJS: https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg
+:imgYarn: https://cdn.worldvectorlogo.com/logos/yarn.svg
+// IMG_VARIABLES_END
+
+// GH_VARIABLES_START
+:ghNodeJS: https://github.com/nodejs
+:ghYarn: https://github.com/yarnpkg/yarn
+// GH_VARIABLES_END
+
+== {counter:section}. Requirements
+======
+[cols="^.^1,.^2s,.^4s,.^5",frame="all", grid="rows"]
+|======
+2+h|Application
+h|Version
+h|Usage
+
+a|image::{imgNodeJS}[link={ghNodeJS};NodeJS,40,40]
+|NodeJS
+a|
+----
+node: v15.0.1
+----
+|Libs, Dev Server, Task Launcher, etc...
+
+a|image::{imgYarn}[link={ghYarn};Yarn,40,40]
+|Yarn
+a|
+----
+yarn: v1.22.5
+----
+|Package manager
+|======
+[NOTE]
+These are the versions that are currently used for this project. +
+Using different versions might affect the stability
+of the application build and install process.
+======
+
+== {counter:section}. Install
+
+----
+yarn install
+----
+
+== {counter:section}. Start
+
+----
+yarn run start:dev
+----
+
+== {counter:section}. Package
+
+----
+yarn run build:prod
+----
