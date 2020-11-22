@@ -70,7 +70,7 @@ This project will be written entirely in TypeScript, where possible.
 h|Version
 h|Usage
 
-a|image::{imgElectron}[link={ghElectron};Electron,40,40]
+a|image::{imgElectron}[link={ghElectron},40,40]
 |Electron
 a|[source, subs="attributes"]
 ----
@@ -78,7 +78,7 @@ electron: {verElectron}
 ----
 |Main server/host/output of the application
 
-a|image::{imgReact}[link={ghReact};React,50,50]
+a|image::{imgReact}[link={ghReact},50,50]
 [Electron,50,50]
 |React
 a|[source, subs="attributes"]
@@ -87,7 +87,7 @@ react: {verReact}
 ----
 |Client side of the application
 
-a|image::{imgRedux}[link={ghRedux};Redux,50,50]
+a|image::{imgRedux}[link={ghRedux},50,50]
 |Redux
 a|[source, subs="attributes"]
 ----
@@ -95,7 +95,7 @@ redux: {verRedux}
 ----
 |State container for our React components
 
-a|image::{imgTypescript}[link={ghTypescript};Typescript,50,50]
+a|image::{imgTypescript}[link={ghTypescript},50,50]
 |Typescript
 a|[source, subs="attributes"]
 ----
@@ -103,7 +103,7 @@ typescript: {verTypescript}
 ----
 |Adds typed language support for TS(X) files
 
-a|image::{imgSass}[link={ghSass};Sass,50,50]
+a|image::{imgSass}[link={ghSass},50,50]
 |Sass/Scss
 a|[source, subs="attributes"]
 ----
@@ -111,7 +111,7 @@ sass: {verSass}
 ----
 |CSS extension language
 
-a|image::{imgFontAwesome}[link={ghFontAwesome};FortAwesome,50,50]
+a|image::{imgFontAwesome}[link={ghFontAwesome},50,50]
 |React Font Awesome
 a|[source, subs="attributes"]
 ----
@@ -119,7 +119,7 @@ react-fontawesome: {verFontAwesome}
 ----
 |Extensive and easy to use react icon library
 
-a|image::{imgAntDesign}[link={ghAntDesign};AntDesign,50,50]
+a|image::{imgAntDesign}[link={ghAntDesign},50,50]
 |Ant Design
 a|[source, subs="attributes"]
 ----
@@ -127,7 +127,7 @@ antd: {verAntDesign}
 ----
 |React UI design library
 
-a|image::{imgESLint}[link={ghESLint};ESLint,50,50]
+a|image::{imgESLint}[link={ghESLint},50,50]
 |ESLint
 a|[source, subs="attributes"]
 ----
@@ -135,7 +135,7 @@ eslint: {verESLint}
 ----
 |JS/TS linter
 
-a|image::{imgStyleLint}[link={ghStyleLint};StyleLint,50,50]
+a|image::{imgStyleLint}[link={ghStyleLint},50,50]
 |StyleLint
 a|[source, subs="attributes"]
 ----
@@ -143,7 +143,7 @@ stylelint: {verStyleLint}
 ----
 |CSS/SCSS linter
 
-a|image::{imgPrettier}[link={ghPrettier};StyleLint,50,50]
+a|image::{imgPrettier}[link={ghPrettier},50,50]
 |Prettier
 a|[source, subs="attributes"]
 ----
@@ -151,7 +151,7 @@ prettier: {verPrettier}
 ----
 |Code style formatter
 
-a|image::{imgWebpack}[link={ghWebpack};WebPack,50,50]
+a|image::{imgWebpack}[link={ghWebpack},50,50]
 |Webpack
 a|[source, subs="attributes"]
 ----
@@ -159,7 +159,7 @@ webpack: {verWebpack}
 ----
 |React builder, bundler and development server
 
-a|image::{imgRollup}[link={ghRollup};WebPack,40,40]
+a|image::{imgRollup}[link={ghRollup},40,40]
 |Rollup
 a|[source, subs="attributes"]
 ----
@@ -190,7 +190,7 @@ This project is a work in progress, hence expect changes to this list.
 h|Version
 h|Usage
 
-a|image::{imgNodeJS}[link={ghNodeJS};NodeJS,40,40]
+a|image::{imgNodeJS}[link={ghNodeJS},40,40]
 |NodeJS
 a|
 ----
@@ -198,7 +198,7 @@ node: v15.0.1
 ----
 |Libs, Dev Server, Task Launcher, etc...
 
-a|image::{imgYarn}[link={ghYarn};Yarn,40,40]
+a|image::{imgYarn}[link={ghYarn},40,40]
 |Yarn
 a|
 ----
