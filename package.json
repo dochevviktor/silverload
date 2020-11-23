@@ -1,7 +1,7 @@
 {
   "name": "silverload",
   "homepage": "./",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "private": true,
   "author": "Viktor Dochev",
   "description": "A thin and lite Image Browser app",
