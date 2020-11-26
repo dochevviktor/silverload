@@ -1,22 +1,23 @@
 {
   "name": "silverload",
   "homepage": "./",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "private": true,
   "author": "Viktor Dochev",
   "description": "A thin and lite Image Browser app",
-  "main": "dist/main.js",
+  "main": "build/main.js",
   "scripts": {
     "start:dev": "webpack serve",
     "stop:dev": "yarn run clean & taskkill /F /IM node.exe",
     "build:prod": "webpack --env production & yarn electron:package & yarn run clean",
     "build:install": "webpack --env production & yarn electron:make & yarn run clean",
     "electron:run": "yarn run electron:build & cross-env ELECTRON_START_URL=http://localhost:8080 electron . & yarn run stop:dev",
+    "electron:install": "electron-rebuild",
     "electron:package": "yarn run electron:bundle & electron-forge package",
     "electron:make": "yarn run electron:bundle & electron-forge make",
     "electron:build": "ts-node --project src/server/tsconfig.json rollup.config.ts",
     "electron:bundle": "cross-env production=true ts-node --project src/server/tsconfig.json rollup.config.ts",
-    "clean": "rimraf dist",
+    "clean": "rimraf build",
     "lint": "run-p -n -l lint:eslint lint:stylelint",
     "lint:eslint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:stylelint": "stylelint \"src/**/*.scss\"",
@@ -40,7 +41,9 @@
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
+    "@rollup/plugin-replace": "^2.3.4",
     "@rollup/plugin-typescript": "^6.1.0",
+    "@types/better-sqlite3": "^5.4.1",
     "@types/compression-webpack-plugin": "^6.0.0",
     "@types/copy-webpack-plugin": "^6.2.0",
     "@types/node": "^14.14.7",
@@ -82,6 +85,8 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "rollup": "^2.33.3",
+    "rollup-plugin-copy": "^3.3.0",
+    "rollup-plugin-node-externals": "^2.2.0",
     "rollup-plugin-terser": "^7.0.2",
     "sass": "^1.29.0",
     "sass-loader": "^10.1.0",
@@ -184,7 +189,9 @@
     "endOfLine": "auto",
     "jsxBracketSameLine": true
   },
-  "dependencies": {},
+  "dependencies": {
+    "better-sqlite3": "^7.1.1"
+  },
   "config": {
     "forge": {
       "packagerConfig": {
@@ -192,12 +199,16 @@
         "asar": true,
         "dir": "build",
         "icon": "icon.ico",
+        "extraResource": ["build/better_sqlite3.node"],
         "ignore": [
           ".idea",
+          ".node",
           "src",
           "bundle*",
           ".iml",
           ".ts",
+          ".db",
+          ".adoc",
           ".ico",
           ".log",
           ".gitignore",
@@ -217,18 +228,7 @@
           }
         },
         {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
+          "name": "@electron-forge/maker-zip"
         }
       ]
     }

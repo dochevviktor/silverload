@@ -216,6 +216,7 @@ of the application build and install process.
 
 ----
 yarn install
+yarn run electron:install
 ----
 
 == {counter:section}. Start

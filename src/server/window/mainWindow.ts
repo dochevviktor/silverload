@@ -3,7 +3,7 @@ import { existsSync, lstatSync, readFileSync } from 'fs';
 import { lookup } from 'mime-types';
 import { basename } from 'path';
 import { SLFile } from '../../common/interface/SLFile';
-import { SLEvent } from '../../common/constant/SLEvent';
+import Database from 'better-sqlite3';
 
 let mainWindow = null;
 
@@ -19,18 +19,17 @@ const loadInitListeners = () => {
 
   mainWindow.webContents.on('closed', () => (mainWindow = null));
   mainWindow.webContents.on('context-menu', (e, props) => mainContext(e, props));
+  const db = new Database('storage.db');
 };
 
 const loadFrameManipulationListeners = () => {
-  ipcMain.on(SLEvent.MINIMIZE_WINDOW, () => mainWindow.minimize());
-  ipcMain.on(SLEvent.MAXIMIZE_WINDOW, () =>
-    mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()
-  );
-  ipcMain.on(SLEvent.CLOSE_WINDOW, () => mainWindow.close());
-  ipcMain.on(SLEvent.GET_FILE_ARGUMENTS, (event) => (event.returnValue = getSLFilesFromArgs(process.argv)));
+  ipcMain.on('MINIMIZE_WINDOW', () => mainWindow.minimize());
+  ipcMain.on('MAXIMIZE_WINDOW', () => (mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()));
+  ipcMain.on('CLOSE_WINDOW', () => mainWindow.close());
+  ipcMain.on('GET_FILE_ARGUMENTS', (event) => (event.returnValue = getSLFilesFromArgs(process.argv)));
 
-  mainWindow.on('maximize', () => mainWindow.webContents.send(SLEvent.WINDOW_MAXIMIZED));
-  mainWindow.on('unmaximize', () => mainWindow.webContents.send(SLEvent.WINDOW_UN_MAXIMIZED));
+  mainWindow.on('maximize', () => mainWindow.webContents.send('WINDOW_MAXIMIZED'));
+  mainWindow.on('unmaximize', () => mainWindow.webContents.send('WINDOW_MAXIMIZED'));
 };
 
 const getSLFilesFromArgs = (argList: string[]): SLFile[] => {
@@ -98,6 +97,6 @@ export const handleSecondProcessCall = async (commandLine: string[]): Promise<vo
       mainWindow.restore();
     }
     mainWindow.focus();
-    mainWindow.webContents.send(SLEvent.SENT_FILE_ARGUMENTS, getSLFilesFromArgs(commandLine));
+    mainWindow.webContents.send('SENT_FILE_ARGUMENTS', getSLFilesFromArgs(commandLine));
   }
 };

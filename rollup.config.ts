@@ -5,9 +5,19 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 import { rollup, InputOptions, OutputOptions } from 'rollup';
 import merge from 'webpack-merge';
+import replace from '@rollup/plugin-replace';
+import copy from 'rollup-plugin-copy';
+import externals from 'rollup-plugin-node-externals';
 
 const devInputOptions: InputOptions = {
   plugins: [
+    replace({
+      delimiters: ['', ''],
+      values: {
+        'exports.getRoot(exports.getFileName());': "exports.getRoot('package.json');",
+        ': commonjsRequire;': ': require;',
+      },
+    }),
     json({
       compact: false,
     }),
@@ -16,6 +26,14 @@ const devInputOptions: InputOptions = {
 
 const prodInputOptions: InputOptions = {
   plugins: [
+    replace({
+      delimiters: ['', ''],
+      values: {
+        'exports.getRoot(exports.getFileName());': 'process.resourcesPath',
+        ': commonjsRequire;': ': require;',
+        "'build'": "'.'",
+      },
+    }),
     json({
       compact: true,
     }),
@@ -26,29 +44,34 @@ const prodInputOptions: InputOptions = {
 const commonInputOptions: InputOptions = {
   input: 'src/server/main.ts',
   plugins: [
+    externals({
+      include: ['electron'],
+      devDeps: false,
+    }),
     nodeResolve({
       preferBuiltins: true,
-      resolveOnly: [new RegExp('^(?!.*(electron|url))')],
     }),
     typescript({
       tsconfig: 'src/server/tsconfig.json',
     }),
     commonjs(),
+    copy({
+      targets: [{ src: ['**/Release/*.node', '!**/*test*'], dest: 'build' }],
+      verbose: true,
+    }),
   ],
 };
 
 const outputOptions: OutputOptions = {
-  file: 'dist/main.js',
+  file: 'build/main.js',
   format: 'cjs',
   sourcemap: false,
 };
 
 const build = (): void => {
-  const inputOptions = process.env?.production ? prodInputOptions : devInputOptions;
+  const inputOptions = merge(commonInputOptions, process.env?.production ? prodInputOptions : devInputOptions);
 
-  rollup(merge(commonInputOptions, inputOptions)).then((bundle) =>
-    bundle.generate(outputOptions).then(() => bundle.write(outputOptions))
-  );
+  rollup(inputOptions).then((bundle) => bundle.generate(outputOptions).then(() => bundle.write(outputOptions)));
 };
 
 build();

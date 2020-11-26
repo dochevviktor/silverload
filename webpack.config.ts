@@ -40,7 +40,7 @@ const devConfig: Configuration = {
     },
   ],
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    contentBase: path.join(__dirname, 'build'),
     historyApiFallback: true,
     hot: true,
     before(app: Application) {
@@ -67,7 +67,7 @@ const prodConfig: Configuration = {
 const commonConfig: Configuration = {
   entry: './src/client/index.tsx',
   output: {
-    path: path.resolve('dist'),
+    path: path.resolve('build'),
     filename: 'bundle.[contenthash].js',
     publicPath: '/',
   },
