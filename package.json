@@ -107,6 +107,20 @@
     "webpack-dev-server": "^3.11.0",
     "webpack-merge": "5.4.0"
   },
+  "asciiDocVariableMap": {
+    "electron": ":verElectron:",
+    "react": ":verReact:",
+    "redux": ":verRedux:",
+    "typescript": ":verTypescript:",
+    "sass": ":verSass:",
+    "@fortawesome/react-fontawesome": ":verFontAwesome:",
+    "antd": ":verAntDesign:",
+    "eslint": ":verESLint:",
+    "stylelint": ":verStyleLint:",
+    "prettier": ":verPrettier:",
+    "webpack": ":verWebpack:",
+    "rollup": ":verRollup:"
+  },
   "eslintConfig": {
     "extends": [
       "eslint:recommended",

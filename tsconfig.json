@@ -14,6 +14,7 @@
     "moduleResolution": "node",
     "declaration": false,
     "removeComments": true,
+    "resolveJsonModule": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
