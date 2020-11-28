@@ -15,17 +15,17 @@ This project will be written entirely in TypeScript, where possible.
 
 
 // LINK_VARIABLES_START
-:verElectron: ^10.1.5
+:verElectron: ^10.1.6
 :verReact: ^17.0.1
 :verRedux: ^4.0.5
-:verTypescript: ^4.0.5
+:verTypescript: ^4.1.2
 :verSass: ^1.29.0
-:verFontAwesome: ^0.1.12
-:verAntDesign: ^4.8.4
-:verESLint: ^7.13.0
+:verFontAwesome: ^0.1.13
+:verAntDesign: ^4.8.6
+:verESLint: ^7.14.0
 :verStyleLint: ^13.8.0
-:verPrettier: ^2.1.2
-:verWebpack: ^5.5.0
+:verPrettier: ^2.2.0
+:verWebpack: ^5.8.0
 :verRollup: ^2.33.3
 // LINK_VARIABLES_END
 

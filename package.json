@@ -24,7 +24,8 @@
     "lint:fix:eslint": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "lint:fix:stylelint": "stylelint \"src/**/*.scss\" --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,scss}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,scss}\""
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,scss}\"",
+    "document:build": "ts-node doc.config.ts"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.54",
@@ -84,6 +85,7 @@
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "replace-in-file": "^6.1.0",
     "rollup": "^2.33.3",
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-node-externals": "^2.2.0",
@@ -199,7 +201,9 @@
         "asar": true,
         "dir": "build",
         "icon": "icon.ico",
-        "extraResource": ["build/better_sqlite3.node"],
+        "extraResource": [
+          "build/better_sqlite3.node"
+        ],
         "ignore": [
           ".idea",
           ".node",
