@@ -2,21 +2,27 @@ import React, { MouseEvent, useRef, useState, WheelEvent } from 'react';
 import styles from './ImagePanel.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/rootReducer';
-import { TabListSlice } from '../../redux/slices/tab.slice';
 import { v4 as uuid } from 'uuid';
 import SLZoom from '../../class/SLZoom';
 import VALID_FILE_TYPES from '../../constant/SLImageFileTypes';
 import DragAndDrop from './DropDown';
+import {
+  changeImageSize,
+  setActiveTabImage,
+  setActiveTabTitle,
+  addTab,
+  setImagePosition,
+  resetImageSizeAndPos,
+} from '../../redux/slices/tab.slice';
 
 const ImagePanel = (): JSX.Element => {
   const dropRef = useRef<HTMLDivElement>(null);
   const [isAnimated, setAnimated] = useState<boolean>(false);
 
-  const { actions } = TabListSlice;
   const dispatch = useDispatch();
   const activeTab = useSelector((state: RootState) => state.tabsSlice.activeTab);
 
-  const zoom = new SLZoom((multiplier) => dispatch(actions.changeImageSize(multiplier)));
+  const zoom = new SLZoom((multiplier) => dispatch(changeImageSize(multiplier)));
   const validateFile = (file: File) => VALID_FILE_TYPES.indexOf(file.type) !== -1;
 
   const getBase64 = async (file: File) =>
@@ -36,9 +42,9 @@ const ImagePanel = (): JSX.Element => {
 
     const result = await getBase64(firstDroppedFile);
 
-    dispatch(actions.setActiveTabImage(result.toString()));
-    dispatch(actions.setActiveTabTitle(firstDroppedFile.name));
-    dispatch(actions.resetImageSizeAndPos());
+    dispatch(setActiveTabImage(result.toString()));
+    dispatch(setActiveTabTitle(firstDroppedFile.name));
+    dispatch(resetImageSizeAndPos());
 
     if (length === 1) return;
 
@@ -47,7 +53,7 @@ const ImagePanel = (): JSX.Element => {
       .map(async (it) => {
         const iteratedResult = await getBase64(it);
 
-        dispatch(actions.addTab({ id: uuid(), title: it.name, base64Image: iteratedResult.toString() }));
+        dispatch(addTab({ id: uuid(), title: it.name, base64Image: iteratedResult.toString() }));
       });
   };
 
@@ -57,13 +63,13 @@ const ImagePanel = (): JSX.Element => {
     const newX = activeTab?.translateX + e.movementX / activeTab?.scaleX;
     const newY = activeTab?.translateY + e.movementY / activeTab?.scaleY;
 
-    dispatch(actions.setImagePosition({ translateX: newX, translateY: newY }));
+    dispatch(setImagePosition({ translateX: newX, translateY: newY }));
     e.stopPropagation();
     e.preventDefault();
   };
 
   const onDoubleClick = (e: MouseEvent) => {
-    dispatch(actions.resetImageSizeAndPos());
+    dispatch(resetImageSizeAndPos());
     e.stopPropagation();
     e.preventDefault();
   };
@@ -90,7 +96,7 @@ const ImagePanel = (): JSX.Element => {
   const sclX = `scaleX(${activeTab?.scaleX})`;
   const sclY = `scaleY(${activeTab?.scaleY})`;
 
-  const anim = isAnimated ? `transform 0.2s ease` : '';
+  const anim = isAnimated ? `transform 0.1s linear` : '';
   const transform = { transform: `${posX} ${posY} ${sclX} ${sclY}`, transition: anim };
 
   return (

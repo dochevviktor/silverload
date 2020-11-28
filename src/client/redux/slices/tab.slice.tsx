@@ -39,7 +39,7 @@ const addNewTab = (state, action: PayloadAction<SLTab>): SLTab => {
   return newTab;
 };
 
-export const TabListSlice = createSlice({
+const TabListSlice = createSlice({
   name: 'TabListSlice',
   initialState: initialTabListState,
   reducers: {
@@ -94,3 +94,17 @@ export const TabListSlice = createSlice({
     },
   },
 });
+
+export const {
+  addTab,
+  addTabAndSetActive,
+  removeTab,
+  setActiveTab,
+  setActiveTabImage,
+  setActiveTabTitle,
+  setImagePosition,
+  resetImageSizeAndPos,
+  changeImageSize,
+} = TabListSlice.actions;
+
+export default TabListSlice.reducer;

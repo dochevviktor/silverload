@@ -1,7 +1,7 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import { TabListSlice } from './slices/tab.slice';
+import TabListSlice from './slices/tab.slice';
 
-const rootReducer = combineReducers({ tabsSlice: TabListSlice.reducer });
+const rootReducer = combineReducers({ tabsSlice: TabListSlice });
 
 export type RootState = ReturnType<typeof rootReducer>;
 

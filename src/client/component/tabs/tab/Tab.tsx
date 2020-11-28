@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import SLTab from '../../../interface/SLTab';
-import { TabListSlice } from '../../../redux/slices/tab.slice';
+import { removeTab, setActiveTab } from '../../../redux/slices/tab.slice';
 import { RootState } from '../../../redux/rootReducer';
 
 interface TabParams {
@@ -19,13 +19,13 @@ const Tab = (props: TabParams): JSX.Element => {
 
   const activeTab = useSelector((state: RootState) => state.tabsSlice.activeTab);
 
-  const removeTab = (event: MouseEvent) => {
+  const remove = (event: MouseEvent) => {
     event.stopPropagation();
-    dispatch(TabListSlice.actions.removeTab(props.position));
+    dispatch(removeTab(props.position));
   };
 
-  const updateActiveTab = () => {
-    dispatch(TabListSlice.actions.setActiveTab(props.tab));
+  const updateActive = () => {
+    dispatch(setActiveTab(props.tab));
   };
 
   if (props.tab.id === activeTab.id) {
@@ -33,9 +33,9 @@ const Tab = (props: TabParams): JSX.Element => {
   }
 
   return (
-    <div className={tabStyle.join(' ')} onClick={updateActiveTab}>
+    <div className={tabStyle.join(' ')} onClick={updateActive}>
       <p>{props.tab.title}</p>
-      <FontAwesomeIcon icon={faTimes} onClick={removeTab} />
+      <FontAwesomeIcon icon={faTimes} onClick={remove} />
     </div>
   );
 };

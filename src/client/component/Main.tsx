@@ -7,7 +7,7 @@ import { RootState } from '../redux/rootReducer';
 import { SLFile } from '../../common/interface/SLFile';
 import { v4 as uuid } from 'uuid';
 import VALID_FILE_TYPES from '../constant/SLImageFileTypes';
-import { TabListSlice } from '../redux/slices/tab.slice';
+import { addTabAndSetActive } from '../redux/slices/tab.slice';
 import { SLEvent } from '../../common/constant/SLEvent';
 
 const { ipcRenderer } = window.require('electron');
@@ -29,9 +29,7 @@ const Main = (): JSX.Element => {
   const openNewTabs = (fileList: SLFile[]) => {
     Object.values(fileList)
       .filter((it) => validateFileMimeType(it.mimeType))
-      .map((it) =>
-        dispatch(TabListSlice.actions.addTabAndSetActive({ id: uuid(), title: it.name, base64Image: it.base64 }))
-      );
+      .map((it) => dispatch(addTabAndSetActive({ id: uuid(), title: it.name, base64Image: it.base64 })));
   };
 
   return (
