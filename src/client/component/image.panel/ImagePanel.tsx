@@ -1,11 +1,12 @@
-import React, { MouseEvent, useRef, useState, WheelEvent } from 'react';
+import React, { MouseEvent, useState, WheelEvent, DragEvent } from 'react';
 import styles from './ImagePanel.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/rootReducer';
 import { v4 as uuid } from 'uuid';
 import SLZoom from '../../class/SLZoom';
 import VALID_FILE_TYPES from '../../constant/SLImageFileTypes';
-import DragAndDrop from './DropDown';
+import DragAndDrop from '../image.drop/DragAndDrop';
+import { handleDragIn, handleDragOut, handleDrag, handleDragDrop } from '../../redux/slices/drag.slice';
 import {
   changeImageSize,
   setActiveTabImage,
@@ -16,7 +17,6 @@ import {
 } from '../../redux/slices/tab.slice';
 
 const ImagePanel = (): JSX.Element => {
-  const dropRef = useRef<HTMLDivElement>(null);
   const [isAnimated, setAnimated] = useState<boolean>(false);
 
   const dispatch = useDispatch();
@@ -34,6 +34,14 @@ const ImagePanel = (): JSX.Element => {
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
+
+  const handleDrop = async (e: DragEvent) => {
+    dispatch(handleDragDrop(e));
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      await handleDroppedFiles(e.dataTransfer.files);
+      e.dataTransfer.clearData();
+    }
+  };
 
   const handleDroppedFiles = async (files: FileList) => {
     const { length, 0: firstDroppedFile, ...otherDroppedFiles } = files;
@@ -105,8 +113,11 @@ const ImagePanel = (): JSX.Element => {
       onDoubleClick={onDoubleClick}
       onMouseLeave={onMouseLeave}
       onWheel={onWheel}
-      ref={dropRef}>
-      <DragAndDrop handleDrop={handleDroppedFiles} dropRef={dropRef} />
+      onDragEnter={(e) => dispatch(handleDragIn(e))}
+      onDragLeave={(e) => dispatch(handleDragOut(e))}
+      onDragOver={(e) => dispatch(handleDrag(e))}
+      onDrop={handleDrop}>
+      <DragAndDrop />
       {activeTab?.base64Image ? (
         <div className={styles.imageContainer}>
           <img src={activeTab?.base64Image} alt="" style={transform} onMouseMove={onMouseMove} />
