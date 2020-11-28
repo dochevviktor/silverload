@@ -20,6 +20,8 @@ const loadInitListeners = () => {
   mainWindow.webContents.on('closed', () => (mainWindow = null));
   mainWindow.webContents.on('context-menu', (e, props) => mainContext(e, props));
   const db = new Database('storage.db');
+
+  console.log(db.prepare('SELECT * FROM sqlite_master').all());
 };
 
 const loadFrameManipulationListeners = () => {

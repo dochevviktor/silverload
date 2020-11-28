@@ -1,18 +1,18 @@
 .contentContainer {
-  height: calc(100vh - 70px);//100% view height
+  height: calc(100vh - 70px); //100% view height
   overflow: hidden;
 
   .imageContainer {
-    height: calc(100vh - 70px);//100% view height
+    height: calc(100vh - 70px); //100% view height
     display: flex;
     justify-content: center; /* align horizontal */
     align-items: center; /* align vertical */
     user-select: none;
-    img{
+    img {
       -webkit-user-drag: none;
       will-change: transform;
       filter: contrast(1.1);
-      image-rendering: high-quality
+      image-rendering: high-quality;
     }
   }
 }
@@ -24,7 +24,7 @@
   justify-content: center;
   margin: 100px;
   width: calc(100vw - 200px);
-  height: calc(100vh - 300px);//100% view height
+  height: calc(100vh - 300px); //100% view height
   min-width: 300px;
   min-height: 200px;
   border: 4px dashed silver;

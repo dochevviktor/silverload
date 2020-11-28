@@ -1,4 +1,4 @@
-@mixin highlightButton($background1: #646464, $background2: #4e4e4e, $shadow: rgba(114, 114, 114, 0.3)){
+@mixin highlightButton($background1: #646464, $background2: #4e4e4e, $shadow: rgba(114, 114, 114, 0.3)) {
   background: linear-gradient(45deg, $background1 30%, $background2 90%);
   box-shadow: 0 3px 5px 2px $shadow;
   color: white;

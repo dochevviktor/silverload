@@ -24,6 +24,9 @@ yarn-error.log*
 
 .idea
 *.iml
-*.db
 /tsconfig.tsbuildinfo
 /out/
+
+*.db
+/storage.db-wal
+/storage.db-shm
