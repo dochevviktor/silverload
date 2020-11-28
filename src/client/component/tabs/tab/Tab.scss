@@ -11,7 +11,7 @@
   max-width: 160px;
   min-width: 33px;
   color: silver;
-  border: solid 2px #36393f;
+  border-top: solid 2px #36393f;
   background-color: #36393f;
   box-sizing: border-box;
   white-space: nowrap;
@@ -28,7 +28,8 @@
   }
 
   &.tabActive {
-    border-bottom: solid 2px silver;
+    border-top: solid 2px silver;
+    box-shadow: inset 0 10px 15px -15px silver;
 
     svg {
       display: initial;
@@ -46,12 +47,14 @@
     }
 
     &:hover {
-      border-bottom-color: white;
+      border-top-color: white;
+      box-shadow: inset 0 10px 15px -15px white;
     }
   }
 
   &:hover {
-    border-bottom: solid 2px grey;
+    border-top: solid 2px grey;
+    box-shadow: inset 0 10px 15px -15px grey;
   }
 
   p {
