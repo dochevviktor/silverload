@@ -24,9 +24,9 @@ This project will be written entirely in TypeScript, where possible.
 :verAntDesign: ^4.8.6
 :verESLint: ^7.14.0
 :verStyleLint: ^13.8.0
-:verPrettier: ^2.2.0
-:verWebpack: ^5.8.0
-:verRollup: ^2.33.3
+:verPrettier: ^2.2.1
+:verWebpack: ^5.9.0
+:verRollup: ^2.34.0
 // LINK_VARIABLES_END
 
 // IMG_VARIABLES_START
