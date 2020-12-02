@@ -1,11 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import SLTab from '../../interface/SLTab';
 import { v4 as uuid } from 'uuid';
-import SLImagePos from '../../interface/SLImagePos';
 
 interface SLTabListSlice {
   activeTab: SLTab;
   tabList: SLTab[];
+}
+
+interface SLImagePos {
+  translateX: number;
+  translateY: number;
 }
 
 const initialTabListState: SLTabListSlice = {

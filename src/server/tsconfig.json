@@ -20,6 +20,7 @@
     "declaration": false,
     "removeComments": true,
     "experimentalDecorators": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": false,

@@ -5,8 +5,10 @@ import { basename } from 'path';
 import { SLFile } from '../../common/interface/SLFile';
 import Database from 'better-sqlite3';
 import { SLEvent } from '../../common/constant/SLEvent';
+import { databaseInit } from '../database/databaseInit';
 
 let mainWindow = null;
+let db = null;
 
 const loadInitListeners = () => {
   mainWindow.webContents.on('did-finish-load', () => {
@@ -20,9 +22,6 @@ const loadInitListeners = () => {
 
   mainWindow.webContents.on('closed', () => (mainWindow = null));
   mainWindow.webContents.on('context-menu', (e, props) => mainContext(e, props));
-  const db = new Database('storage.db');
-
-  console.log(db.prepare('SELECT * FROM sqlite_master').all());
 };
 
 const loadFrameManipulationListeners = () => {
@@ -34,7 +33,7 @@ const loadFrameManipulationListeners = () => {
   ipcMain.on(SLEvent.GET_FILE_ARGUMENTS, (event) => (event.returnValue = getSLFilesFromArgs(process.argv)));
 
   mainWindow.on('maximize', () => mainWindow.webContents.send(SLEvent.WINDOW_MAXIMIZED));
-  mainWindow.on('unmaximize', () => mainWindow.webContents.send(SLEvent.WINDOW_MAXIMIZED));
+  mainWindow.on('unmaximize', () => mainWindow.webContents.send(SLEvent.WINDOW_UN_MAXIMIZED));
 };
 
 const getSLFilesFromArgs = (argList: string[]): SLFile[] => {
@@ -70,7 +69,7 @@ const mainContext = (e, props) => {
   ]).popup({ window: mainWindow });
 };
 
-export const createWindow = (startUrl: string): void => {
+export const createWindow = (startUrl: string, dbPathIsLocalDev?: boolean): void => {
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
@@ -88,10 +87,16 @@ export const createWindow = (startUrl: string): void => {
 
   loadInitListeners();
   loadFrameManipulationListeners();
+
+  const dbPath = dbPathIsLocalDev ? 'storage.db' : `${process.resourcesPath}\\storage.db`;
+
+  db = new Database(dbPath);
+
+  databaseInit(db);
 };
 
 export const createDevWindow = (startUrl: string): void => {
-  createWindow(startUrl);
+  createWindow(startUrl, true);
   mainWindow.webContents.openDevTools();
 };
 
