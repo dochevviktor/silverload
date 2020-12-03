@@ -21,12 +21,12 @@ This project will be written entirely in TypeScript, where possible.
 :verTypescript: ^4.1.2
 :verSass: ^1.29.0
 :verFontAwesome: ^0.1.13
-:verAntDesign: ^4.8.6
+:verAntDesign: ^4.9.1
 :verESLint: ^7.14.0
 :verStyleLint: ^13.8.0
 :verPrettier: ^2.2.1
 :verWebpack: ^5.9.0
-:verRollup: ^2.34.0
+:verRollup: ^2.34.1
 // LINK_VARIABLES_END
 
 // IMG_VARIABLES_START
