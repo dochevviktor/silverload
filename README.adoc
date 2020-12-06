@@ -194,7 +194,7 @@ a|image::{imgNodeJS}[link={ghNodeJS},40,40]
 |NodeJS
 a|
 ----
-node: v15.0.1
+node: v14.15.1
 ----
 |Libs, Dev Server, Task Launcher, etc...
 

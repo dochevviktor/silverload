@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import SLTab from '../../interface/SLTab';
+import SLTab from '../../../common/class/SLTab';
 import { v4 as uuid } from 'uuid';
 
 interface SLTabListSlice {

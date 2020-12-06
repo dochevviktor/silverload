@@ -3,7 +3,7 @@ import styles from './Tab.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import SLTab from '../../../interface/SLTab';
+import SLTab from '../../../../common/class/SLTab';
 import { removeTab, setActiveTab } from '../../../redux/slices/tab.slice';
 import { RootState } from '../../../redux/rootReducer';
 
