@@ -1,11 +1,11 @@
 import { Database } from 'better-sqlite3';
 import { SLTable } from '../../common/class/SLTable';
 import { SLSettingsTable } from '../../common/class/SLSettings';
-import SLVersion, { SLVersionEntity } from '../../common/class/SLVersion';
+import SLVersion, { SLVersionTable } from '../../common/class/SLVersion';
 import { SLTabTable } from '../../common/class/SLTab';
 import { SLSetting } from '../../common/constant/SLSetting';
 
-const listOfEntities: SLTable[] = [SLSettingsTable.prototype, SLVersionEntity.prototype, SLTabTable.prototype];
+const listOfEntities: SLTable[] = [SLSettingsTable.prototype, SLVersionTable.prototype, SLTabTable.prototype];
 
 const createTable = (it: SLTable) => {
   const query: string[] = [];
@@ -85,30 +85,30 @@ const prepareInsertIfExists = (table: SLTable): string => {
 };
 
 const iniVersion = (db: Database) => {
-  const versionCheckStmt = db?.prepare(`SELECT * FROM ${SLVersionEntity.prototype.className}`);
+  const versionCheckStmt = db?.prepare(`SELECT * FROM ${SLVersionTable.prototype.className}`);
   const versionInDb: SLVersion[] = versionCheckStmt?.all() || [];
   const queries: string[] = [];
 
   versionInDb.map((ver) => {
     listOfEntities.map((table) => {
       if (table.className === ver.tableName && table.hash !== ver.tableHash) {
-        new SLVersionEntity({ tableName: table.className, tableHash: table.hash });
+        new SLVersionTable({ tableName: table.className, tableHash: table.hash });
         queries.push(`DROP TABLE ${table.className};`);
         queries.push(createTable(table));
-        queries.push(prepareUpdateReplace(new SLVersionEntity({ tableName: table.className, tableHash: table.hash })));
+        queries.push(prepareUpdateReplace(new SLVersionTable({ tableName: table.className, tableHash: table.hash })));
       }
     });
     if (!listOfEntities.find((table) => table.className === ver.tableName)) {
-      const verPkCol = SLVersionEntity.prototype.columns.find((it) => it.options?.pk)?.name;
+      const verPkCol = SLVersionTable.prototype.columns.find((it) => it.options?.pk)?.name;
 
       queries.push(`DROP TABLE IF EXISTS ${ver.tableName};`);
-      queries.push(`DELETE FROM ${SLVersionEntity.prototype.className} where ${verPkCol} = '${ver.tableName}';`);
+      queries.push(`DELETE FROM ${SLVersionTable.prototype.className} where ${verPkCol} = '${ver.tableName}';`);
     }
   });
 
   listOfEntities.map((table) => {
     if (!versionInDb.find((ver) => ver.tableName === table.className)) {
-      queries.push(prepareUpdateReplace(new SLVersionEntity({ tableName: table.className, tableHash: table.hash })));
+      queries.push(prepareUpdateReplace(new SLVersionTable({ tableName: table.className, tableHash: table.hash })));
     }
   });
 

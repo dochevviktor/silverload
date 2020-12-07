@@ -6,7 +6,7 @@ export default interface SLVersion {
 }
 
 @Entity
-export class SLVersionEntity extends SLTable<SLVersion> implements SLVersion {
+export class SLVersionTable extends SLTable<SLVersion> implements SLVersion {
   @Column({ pk: true })
   tableName: string;
 

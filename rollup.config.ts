@@ -37,7 +37,9 @@ const prodInputOptions: InputOptions = {
     json({
       compact: true,
     }),
-    terser(),
+    terser({
+      keep_classnames: true,
+    }),
   ],
 };
 
