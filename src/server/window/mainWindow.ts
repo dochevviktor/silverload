@@ -101,7 +101,6 @@ export const createDevWindow = (startUrl: string): void => {
 };
 
 export const handleSecondProcessCall = async (commandLine: string[]): Promise<void> => {
-  console.log(commandLine);
   if (mainWindow) {
     if (mainWindow.isMinimized()) {
       mainWindow.restore();

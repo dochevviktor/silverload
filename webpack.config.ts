@@ -8,7 +8,7 @@ import { DefinePlugin, EnvironmentPlugin, Configuration } from 'webpack';
 import { Application, Request, Response, NextFunction } from 'express';
 import merge from 'webpack-merge';
 import CompressionPlugin from 'compression-webpack-plugin';
-import { exec } from 'child_process';
+import { ChildProcess, exec } from 'child_process';
 import CspHtmlWebpackPlugin from 'csp-html-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 
@@ -29,11 +29,14 @@ const devConfig: Configuration = {
     // Launch electron after webpack dev server is deployed
     {
       apply: (compiler) => {
-        let electronProcess = null;
+        let electronProcess: ChildProcess = null;
 
         compiler.hooks.afterEmit.tap('AfterEmitPlugin', () => {
           if (!electronProcess) {
-            electronProcess = exec('yarn run electron:run ');
+            electronProcess = exec('yarn run electron:run');
+            electronProcess.stdout.on('data', (data) => console.log(data.toString()));
+            electronProcess.stderr.on('data', (data) => console.log(data.toString()));
+            electronProcess.on('exit', () => process.exit(0));
           }
         });
       },

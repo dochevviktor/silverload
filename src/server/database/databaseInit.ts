@@ -101,7 +101,6 @@ const iniVersion = (db: Database) => {
     if (!listOfEntities.find((table) => table.className === ver.tableName)) {
       const verPkCol = SLVersionEntity.prototype.columns.find((it) => it.options?.pk)?.name;
 
-      console.log(ver);
       queries.push(`DROP TABLE IF EXISTS ${ver.tableName};`);
       queries.push(`DELETE FROM ${SLVersionEntity.prototype.className} where ${verPkCol} = '${ver.tableName}';`);
     }
@@ -114,7 +113,6 @@ const iniVersion = (db: Database) => {
   });
 
   if (queries.length > 0) {
-    console.log(queries.join(' '));
     db?.exec(queries.join(' '));
   }
 };
