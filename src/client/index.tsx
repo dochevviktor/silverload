@@ -1,7 +1,7 @@
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import './index.scss';
-import store from './redux/store';
+import store from './store/store';
 import App from './container/App';
 
 const renderIndex = () => {

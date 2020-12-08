@@ -3,11 +3,11 @@ import styles from './Main.scss';
 import Tabs from './tabs/Tabs';
 import ImagePanel from './image.panel/ImagePanel';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/rootReducer';
+import { RootState } from '../store/rootReducer';
 import { SLFile } from '../../common/interface/SLFile';
 import { v4 as uuid } from 'uuid';
 import VALID_FILE_TYPES from '../constant/SLImageFileTypes';
-import { addTabAndSetActive } from '../redux/slices/tab.slice';
+import { addTabAndSetActive } from '../store/slices/tab.slice';
 import { SLEvent } from '../../common/constant/SLEvent';
 
 const { ipcRenderer } = window.require('electron');

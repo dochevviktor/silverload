@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import SLTab from '../../../../common/class/SLTab';
-import { removeTab, setActiveTab } from '../../../redux/slices/tab.slice';
-import { RootState } from '../../../redux/rootReducer';
+import { removeTab, setActiveTab } from '../../../store/slices/tab.slice';
+import { RootState } from '../../../store/rootReducer';
 
 interface TabParams {
   tab: SLTab;

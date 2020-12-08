@@ -1,12 +1,12 @@
-import React, { useRef, WheelEvent } from 'react';
+import { useRef, WheelEvent } from 'react';
 import styles from './Tabs.scss';
 import Tab from './tab/Tab';
 import SLScroll from '../../class/SLScroll';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux/rootReducer';
-import { addTabAndSetActive } from '../../redux/slices/tab.slice';
+import { RootState } from '../../store/rootReducer';
+import { addTabAndSetActive } from '../../store/slices/tab.slice';
 import SLDrawer from '../drawer/SLDrawer';
 
 const Tabs = (): JSX.Element => {

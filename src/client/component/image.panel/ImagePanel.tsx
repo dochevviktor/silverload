@@ -1,12 +1,12 @@
 import { MouseEvent, useState, WheelEvent, DragEvent } from 'react';
 import styles from './ImagePanel.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux/rootReducer';
+import { RootState } from '../../store/rootReducer';
 import { v4 as uuid } from 'uuid';
 import SLZoom from '../../class/SLZoom';
 import VALID_FILE_TYPES from '../../constant/SLImageFileTypes';
 import DragAndDrop from '../image.drop/DragAndDrop';
-import { handleDragIn, handleDragOut, handleDrag, handleDragDrop } from '../../redux/slices/drag.slice';
+import { handleDragIn, handleDragOut, handleDrag, handleDragDrop } from '../../store/slices/drag.slice';
 import {
   changeImageSize,
   setActiveTabImage,
@@ -14,7 +14,7 @@ import {
   addTab,
   setImagePosition,
   resetImageSizeAndPos,
-} from '../../redux/slices/tab.slice';
+} from '../../store/slices/tab.slice';
 
 const ImagePanel = (): JSX.Element => {
   const [isAnimated, setAnimated] = useState<boolean>(false);
