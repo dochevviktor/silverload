@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './DragAndDrop.scss';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/rootReducer';

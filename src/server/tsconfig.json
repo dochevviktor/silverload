@@ -29,7 +29,6 @@
     "target": "es2017",
     "sourceMap": false,
     "baseUrl": "./",
-    "jsx": "react"
   },
   // This will include the common/shared ts files b/w electron and react
   "include": ["./../common/**/*", "./**/*"],

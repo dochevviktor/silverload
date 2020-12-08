@@ -1,4 +1,4 @@
-import React, { MouseEvent, useState, WheelEvent, DragEvent } from 'react';
+import { MouseEvent, useState, WheelEvent, DragEvent } from 'react';
 import styles from './ImagePanel.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/rootReducer';

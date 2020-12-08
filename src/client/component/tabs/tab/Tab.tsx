@@ -1,4 +1,4 @@
-import React, { MouseEvent } from 'react';
+import { MouseEvent } from 'react';
 import styles from './Tab.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';

@@ -1,5 +1,5 @@
 import { Drawer } from 'antd';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from './SLDrawer.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGripLines, faBars } from '@fortawesome/free-solid-svg-icons';

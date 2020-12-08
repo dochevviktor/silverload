@@ -25,7 +25,7 @@
     "sourceMap": true,
     "baseUrl": "./",
     "incremental": true,
-    "jsx": "react"
+    "jsx": "react-jsx"
   },
   "exclude": [
     "node_modules/*"

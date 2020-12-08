@@ -19,13 +19,13 @@ This project will be written entirely in TypeScript, where possible.
 :verReact: ^17.0.1
 :verRedux: ^4.0.5
 :verTypescript: ^4.1.2
-:verSass: ^1.29.0
+:verSass: ^1.30.0
 :verFontAwesome: ^0.1.13
-:verAntDesign: ^4.9.1
-:verESLint: ^7.14.0
+:verAntDesign: ^4.9.2
+:verESLint: ^7.15.0
 :verStyleLint: ^13.8.0
 :verPrettier: ^2.2.1
-:verWebpack: ^5.9.0
+:verWebpack: ^5.10.0
 :verRollup: ^2.34.1
 // LINK_VARIABLES_END
 

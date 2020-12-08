@@ -4,13 +4,28 @@ import InlineChunkHtmlPlugin from 'inline-chunk-html-plugin';
 import HTMLInlineCSSWebpackPlugin from 'html-inline-css-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-import { DefinePlugin, EnvironmentPlugin, Configuration } from 'webpack';
+import { DefinePlugin, EnvironmentPlugin, Configuration, Compiler } from 'webpack';
 import { Application, Request, Response, NextFunction } from 'express';
 import merge from 'webpack-merge';
 import CompressionPlugin from 'compression-webpack-plugin';
 import { ChildProcess, exec } from 'child_process';
 import CspHtmlWebpackPlugin from 'csp-html-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+
+class ElectronDevPlugin {
+  apply(compiler: Compiler) {
+    let electronProcess: ChildProcess = null;
+
+    compiler.hooks.afterEmit.tap('AfterEmitPlugin', () => {
+      if (!electronProcess) {
+        electronProcess = exec('yarn run electron:run');
+        electronProcess.stdout.on('data', (data) => console.log(data.toString()));
+        electronProcess.stderr.on('data', (data) => console.log(data.toString()));
+        electronProcess.on('exit', () => process.exit(0));
+      }
+    });
+  }
+}
 
 const devConfig: Configuration = {
   mode: 'development',
@@ -27,20 +42,7 @@ const devConfig: Configuration = {
     }),
     new CompressionPlugin(),
     // Launch electron after webpack dev server is deployed
-    {
-      apply: (compiler) => {
-        let electronProcess: ChildProcess = null;
-
-        compiler.hooks.afterEmit.tap('AfterEmitPlugin', () => {
-          if (!electronProcess) {
-            electronProcess = exec('yarn run electron:run');
-            electronProcess.stdout.on('data', (data) => console.log(data.toString()));
-            electronProcess.stderr.on('data', (data) => console.log(data.toString()));
-            electronProcess.on('exit', () => process.exit(0));
-          }
-        });
-      },
-    },
+    new ElectronDevPlugin(),
   ],
   devServer: {
     contentBase: path.join(__dirname, 'build'),

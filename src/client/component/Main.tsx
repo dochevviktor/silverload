@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import styles from './Main.scss';
 import Tabs from './tabs/Tabs';
 import ImagePanel from './image.panel/ImagePanel';
