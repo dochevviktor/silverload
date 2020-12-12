@@ -6,9 +6,9 @@ import { SLFile } from '../../common/interface/SLFile';
 import Database from 'better-sqlite3';
 import { SLEvent } from '../../common/constant/SLEvent';
 import { databaseInit } from '../database/databaseInit';
+import { getSettings, saveSettings, SLSettingEvent } from '../../common/class/SLSettings';
 
 let mainWindow = null;
-let db = null;
 
 const loadInitListeners = () => {
   mainWindow.webContents.on('did-finish-load', () => {
@@ -69,6 +69,21 @@ const mainContext = (e, props) => {
   ]).popup({ window: mainWindow });
 };
 
+const loadInitDbListeners = (dbPathIsLocalDev?: boolean) => {
+  let db = null;
+  const dbPath = dbPathIsLocalDev ? 'storage.db' : `${process.resourcesPath}\\storage.db`;
+
+  try {
+    db = new Database(dbPath);
+    databaseInit(db);
+  } catch (e) {
+    console.log(e);
+  }
+
+  ipcMain.on(SLSettingEvent.LOAD, (event) => (event.returnValue = getSettings(db)));
+  ipcMain.on(SLSettingEvent.SAVE, (event, arg) => (event.returnValue = saveSettings(db, arg)));
+};
+
 export const createWindow = (startUrl: string, dbPathIsLocalDev?: boolean): void => {
   mainWindow = new BrowserWindow({
     show: false,
@@ -87,12 +102,7 @@ export const createWindow = (startUrl: string, dbPathIsLocalDev?: boolean): void
 
   loadInitListeners();
   loadFrameManipulationListeners();
-
-  const dbPath = dbPathIsLocalDev ? 'storage.db' : `${process.resourcesPath}\\storage.db`;
-
-  db = new Database(dbPath);
-
-  databaseInit(db);
+  loadInitDbListeners(dbPathIsLocalDev);
 };
 
 export const createDevWindow = (startUrl: string): void => {

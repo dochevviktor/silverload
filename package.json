@@ -15,7 +15,7 @@
     "electron:package": "yarn run electron:bundle & electron-forge package",
     "electron:make": "yarn run electron:bundle & electron-forge make",
     "electron:build": "ts-node --project src/server/tsconfig.json rollup.config.ts",
-    "electron:bundle": "cross-env production=true ts-node --project src/server/tsconfig.json rollup.config.ts",
+    "electron:bundle": "cross-env production=true ts-node -P src/server/tsconfig.json rollup.config.ts",
     "clean": "rimraf build",
     "lint": "run-p -n -l lint:eslint lint:stylelint",
     "lint:eslint": "eslint \"src/**/*.{ts,tsx}\"",
@@ -78,6 +78,8 @@
     "html-inline-css-webpack-plugin": "^1.9.1",
     "html-webpack-plugin": "^4.5.0",
     "inline-chunk-html-plugin": "^1.1.1",
+    "less": "^3.12.2",
+    "less-loader": "^7.1.0",
     "mime-types": "^2.1.27",
     "object-hash": "^2.0.3",
     "pre-commit": "^1.2.2",
@@ -211,7 +213,8 @@
     ],
     "rules": {
       "at-rule-no-unknown": null,
-      "scss/at-rule-no-unknown": true
+      "scss/at-rule-no-unknown": true,
+      "no-descending-specificity": null
     },
     "syntax": "scss"
   },

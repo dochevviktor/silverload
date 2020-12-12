@@ -9,6 +9,7 @@ import { v4 as uuid } from 'uuid';
 import VALID_FILE_TYPES from '../constant/SLImageFileTypes';
 import { addTabAndSetActive } from '../store/slices/tab.slice';
 import { SLEvent } from '../../common/constant/SLEvent';
+import SLSettingsModal from './settings/SLSettingsModal';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -38,6 +39,7 @@ const Main = (): JSX.Element => {
         <Tabs />
       </div>
       <div>{tabListSize > 0 ? <ImagePanel /> : null}</div>
+      <SLSettingsModal />
     </>
   );
 };

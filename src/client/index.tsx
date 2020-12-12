@@ -1,6 +1,7 @@
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import './index.scss';
+import 'antd/dist/antd.less';
 import store from './store/store';
 import App from './container/App';
 

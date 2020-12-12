@@ -1,15 +1,72 @@
 .drawerFrame {
-  color: silver;
   margin-top: 70px;
   div {
     div {
-      background-color: #292d33;
+      overflow: hidden;
+      min-height: 30px;
     }
   }
 }
 
+@mixin section($direction) {
+  display: flex;
+  height: calc(50vh - 60px);
+  flex-direction: $direction;
+}
+
+.topSection {
+  @include section(column);
+}
+
+.bottomSection {
+  @include section(column-reverse);
+}
+
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.tooltip {
+  width: 300px;
+}
+
+button.buttonStyle {
+  color: silver;
+  display: flex;
+
+  svg {
+    align-self: center;
+  }
+
+  &:focus {
+    color: silver;
+  }
+
+  &:hover {
+    color: white;
+    background-color: #36393f;
+  }
+
+  &AnimateSpin {
+    @extend .buttonStyle;
+
+    &:hover {
+      svg {
+        animation: spin 4s linear infinite;
+      }
+    }
+  }
+
+  p {
+    flex-grow: 1;
+  }
+}
+
 .drawerButton {
-  padding: 10px 29px 29px 12px;
+  padding: 10px 29px 29px 7px;
   height: 20px;
   width: 40px;
 

@@ -103,6 +103,30 @@ const commonConfig: Configuration = {
         ],
       },
       {
+        test: /\.less$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'less-loader', // compiles Less to CSS
+            options: {
+              lessOptions: {
+                javascriptEnabled: true,
+                modifyVars: {
+                  '@primary-color': 'silver',
+                  '@body-background': '#292d33',
+                  '@component-background': '@body-background',
+                  '@white': '#000',
+                  '@black': '@primary-color',
+                  '@btn-primary-color': '@body-background',
+                  '@modal-mask-bg': 'fade(@white, 45%)',
+                },
+              },
+            },
+          },
+        ],
+      },
+      {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
