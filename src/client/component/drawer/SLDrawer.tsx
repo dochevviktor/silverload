@@ -2,17 +2,17 @@ import { Drawer, Button, Popover } from 'antd';
 import { useState } from 'react';
 import styles from './SLDrawer.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretSquareLeft, faCaretSquareRight } from '@fortawesome/free-regular-svg-icons';
-import { faCog, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { useDispatch } from 'react-redux';
+import { faCaretSquareLeft, faCaretSquareRight, faSave as faSaveReg } from '@fortawesome/free-regular-svg-icons';
+import { faCog, faInfoCircle, faTrash, faSave as faSaveSol } from '@fortawesome/free-solid-svg-icons';
+import { useDispatch, useSelector } from 'react-redux';
 import { toggleVisibility } from '../../store/slices/settings.slice';
+import { loadTabs, saveTabs, deleteTabs } from '../../store/slices/tab.slice';
+import { RootState } from '../../store/rootReducer';
 
 const SLDrawer = (): JSX.Element => {
   const [isVisible, updateVisible] = useState(false);
 
-  const showDrawer = () => updateVisible(!isVisible);
-
-  const onClose = () => updateVisible(false);
+  const tabList = useSelector((state: RootState) => state.tabsSlice.tabList);
 
   const drawerButtonIcon = isVisible ? faCaretSquareLeft : faCaretSquareRight;
 
@@ -29,20 +29,28 @@ const SLDrawer = (): JSX.Element => {
 
   return (
     <div className="site-drawer-render-in-current-wrapper">
-      <div className={styles.drawerButton} onClick={showDrawer}>
+      <div className={styles.drawerButton} onClick={() => updateVisible(!isVisible)}>
         <FontAwesomeIcon icon={drawerButtonIcon} size="2x" />
       </div>
       <Drawer
         className={styles.drawerFrame}
         placement="left"
         closable={false}
-        onClose={onClose}
+        onClose={() => updateVisible(false)}
         visible={isVisible}
         width="170px">
         <div className={styles.topSection}>
-          <Button type="text" onClick={showSettingsModal} className={styles.buttonStyleAnimateSpin} block>
-            <FontAwesomeIcon icon={faCog} size="lg" />
-            <p>Settings</p>
+          <Button type="text" onClick={() => dispatch(saveTabs(tabList))} className={styles.buttonStyle} block>
+            <FontAwesomeIcon icon={faSaveSol} size="lg" />
+            <p>Save Tabs</p>
+          </Button>
+          <Button type="text" onClick={() => dispatch(loadTabs())} className={styles.buttonStyle} block>
+            <FontAwesomeIcon icon={faSaveReg} size="lg" />
+            <p>Load Tabs</p>
+          </Button>
+          <Button type="text" onClick={() => dispatch(deleteTabs())} className={styles.buttonStyle} block>
+            <FontAwesomeIcon icon={faTrash} size="lg" />
+            <p>Delete Tabs</p>
           </Button>
         </div>
         <div className={styles.bottomSection}>
@@ -58,6 +66,10 @@ const SLDrawer = (): JSX.Element => {
               <p>About</p>
             </Button>
           </Popover>
+          <Button type="text" onClick={showSettingsModal} className={styles.buttonStyleAnimateSpin} block>
+            <FontAwesomeIcon icon={faCog} size="lg" />
+            <p>Settings</p>
+          </Button>
         </div>
       </Drawer>
     </div>

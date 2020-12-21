@@ -7,10 +7,11 @@ import SLZoom from '../../class/SLZoom';
 import VALID_FILE_TYPES from '../../constant/SLImageFileTypes';
 import DragAndDrop from '../image.drop/DragAndDrop';
 import { handleDragIn, handleDragOut, handleDrag, handleDragDrop } from '../../store/slices/drag.slice';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import {
   changeImageSize,
-  setActiveTabImage,
-  setActiveTabTitle,
+  setActiveTabData,
   addTab,
   setImagePosition,
   resetImageSizeAndPos,
@@ -50,9 +51,9 @@ const ImagePanel = (): JSX.Element => {
 
     const result = await getBase64(firstDroppedFile);
 
-    dispatch(setActiveTabImage(result.toString()));
-    dispatch(setActiveTabTitle(firstDroppedFile.name));
-    dispatch(resetImageSizeAndPos());
+    dispatch(
+      setActiveTabData({ title: firstDroppedFile.name, path: firstDroppedFile.path, base64Image: result.toString() })
+    );
 
     if (length === 1) return;
 
@@ -61,7 +62,7 @@ const ImagePanel = (): JSX.Element => {
       .map(async (it) => {
         const iteratedResult = await getBase64(it);
 
-        dispatch(addTab({ id: uuid(), title: it.name, base64Image: iteratedResult.toString() }));
+        dispatch(addTab({ id: uuid(), title: it.name, base64Image: iteratedResult.toString(), path: it.path }));
       });
   };
 
@@ -124,6 +125,7 @@ const ImagePanel = (): JSX.Element => {
         </div>
       ) : (
         <div className={styles.dropMessage}>
+          <FontAwesomeIcon icon={faUpload} />
           <p>Drag & Drop images here</p>
         </div>
       )}

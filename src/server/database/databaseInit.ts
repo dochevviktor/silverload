@@ -45,7 +45,7 @@ const initSettings = (db: Database) => {
   const queries: string[] = [];
 
   Object.keys(SLSetting).map((it) => {
-    queries.push(prepareInsertIfExists(new SLSettingsTable({ code: it, title: SLSetting[it] })));
+    queries.push(prepareInsertIfExists(new SLSettingsTable({ code: it })));
   });
   db?.exec(queries.join(' '));
 };

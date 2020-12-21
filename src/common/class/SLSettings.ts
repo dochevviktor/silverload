@@ -1,10 +1,10 @@
 import { Column, Entity, SLTable } from './SLTable';
 import { Database } from 'better-sqlite3';
-import { getAllFromTable, prepareSaveQuery, saveTable } from '../database/databaseOperations';
+import { getAllFromTable, saveTable } from '../database/databaseOperations';
 
 export enum SLSettingEvent {
-  SAVE = 'SAVE',
-  LOAD = 'LOAD',
+  SAVE_SETTINGS = 'SAVE_SETTINGS',
+  LOAD_SETTINGS = 'LOAD_SETTINGS',
 }
 
 export enum SLSetting {
@@ -13,7 +13,6 @@ export enum SLSetting {
 
 export default interface SLSettings {
   code: string;
-  title: string;
   value?: string;
   flag?: boolean;
 }
@@ -34,9 +33,6 @@ export const saveSettings = (db: Database, settings: SLSettings[]): string => {
 export class SLSettingsTable extends SLTable<SLSettings> implements SLSettings {
   @Column({ pk: true })
   code: string;
-
-  @Column()
-  title: string;
 
   @Column({ nullable: true })
   value: string;

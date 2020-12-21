@@ -45,6 +45,10 @@ export const prepareSaveQuery = (table: SLTable): string => {
   return `REPLACE INTO ${table.className}(${columns.join(',')}) VALUES(${values.join(',')});`;
 };
 
+export const truncateTable = (db: Database, table: SLTable): void => {
+  db?.prepare(`DELETE FROM ${table.className}`)?.run();
+};
+
 export const saveTable = (db: Database, tables: SLTable | SLTable[]): void => {
   if (db && tables) {
     if (Array.isArray(tables)) {

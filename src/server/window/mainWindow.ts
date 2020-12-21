@@ -7,6 +7,7 @@ import Database from 'better-sqlite3';
 import { SLEvent } from '../../common/constant/SLEvent';
 import { databaseInit } from '../database/databaseInit';
 import { getSettings, saveSettings, SLSettingEvent } from '../../common/class/SLSettings';
+import { deleteTabs, getTabs, saveTabs, SLTabEvent } from '../../common/class/SLTab';
 
 let mainWindow = null;
 
@@ -46,7 +47,7 @@ const getSLFilesFromArgs = (argList: string[]): SLFile[] => {
       const mimeType = lookup(it);
       const base64 = readFileSync(it, { encoding: 'base64' });
       const name = basename(it);
-      const file: SLFile = { name: name, base64: `data:${mimeType};base64,${base64}`, mimeType: mimeType };
+      const file: SLFile = { name: name, base64: `data:${mimeType};base64,${base64}`, mimeType: mimeType, path: it };
 
       resultList.push(file);
     });
@@ -80,8 +81,12 @@ const loadInitDbListeners = (dbPathIsLocalDev?: boolean) => {
     console.log(e);
   }
 
-  ipcMain.on(SLSettingEvent.LOAD, (event) => (event.returnValue = getSettings(db)));
-  ipcMain.on(SLSettingEvent.SAVE, (event, arg) => (event.returnValue = saveSettings(db, arg)));
+  ipcMain.on(SLSettingEvent.LOAD_SETTINGS, (event) => (event.returnValue = getSettings(db)));
+  ipcMain.on(SLSettingEvent.SAVE_SETTINGS, (event, arg) => (event.returnValue = saveSettings(db, arg)));
+
+  ipcMain.on(SLTabEvent.LOAD_TABS, (event) => (event.returnValue = getTabs(db)));
+  ipcMain.on(SLTabEvent.SAVE_TABS, (event, arg) => (event.returnValue = saveTabs(db, arg)));
+  ipcMain.on(SLTabEvent.DELETE_TABS, (event) => (event.returnValue = deleteTabs(db)));
 };
 
 export const createWindow = (startUrl: string, dbPathIsLocalDev?: boolean): void => {

@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
 import { Modal, Switch } from 'antd';
 import { loadSettings, saveSettings, toggleVisibility, toggleSetting } from '../../store/slices/settings.slice';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { SLSetting } from '../../../common/class/SLSettings';
 import styles from './SLSettingsModal.scss';
 
 const SLSettingsModal = (): JSX.Element => {
@@ -20,8 +23,8 @@ const SLSettingsModal = (): JSX.Element => {
   };
 
   const handleCancel = (): void => {
-    dispatch(loadSettings());
     dispatch(toggleVisibility());
+    dispatch(loadSettings());
   };
 
   const toggleSet = (index: number): void => {
@@ -40,9 +43,13 @@ const SLSettingsModal = (): JSX.Element => {
       okText="Save"
       onCancel={handleCancel}>
       {settings.map((setting, index) => (
-        <div key={index} className={styles.setting}>
-          <p>{setting.title}</p>
-          <Switch checked={setting.flag} onClick={() => toggleSet(index)} />
+        <div key={index} className={styles.setting} onClick={() => toggleSet(index)}>
+          <p>{SLSetting[setting.code]}</p>
+          <Switch
+            checked={setting.flag}
+            checkedChildren={<FontAwesomeIcon icon={faCheck} />}
+            unCheckedChildren={<FontAwesomeIcon icon={faTimes} color="silver" />}
+          />
         </div>
       ))}
     </Modal>

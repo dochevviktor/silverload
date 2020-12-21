@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import SLTab from '../../../common/class/SLTab';
+import SLTab, { SLTabEvent } from '../../../common/class/SLTab';
 import { v4 as uuid } from 'uuid';
+
+const { ipcRenderer } = window.require('electron');
 
 interface SLTabListSlice {
   activeTab: SLTab;
@@ -12,9 +14,22 @@ interface SLImagePos {
   translateY: number;
 }
 
+interface SLImageData {
+  title: string;
+  path: string;
+  base64Image: string;
+}
+
 const initialTabListState: SLTabListSlice = {
   activeTab: null,
   tabList: [],
+};
+
+const setData = (tab: SLTab, data: SLImageData) => {
+  tab.title = data.title;
+  tab.path = data.path;
+  tab.base64Image = data.base64Image;
+  resetSizeAndPos(tab);
 };
 
 const setPosition = (tab: SLTab, position: SLImagePos) => {
@@ -57,6 +72,7 @@ const TabListSlice = createSlice({
       const tabIndex = action.payload;
 
       state.tabList[tabIndex].base64Image = null;
+      state.tabList[tabIndex].path = null;
       state.tabList.splice(tabIndex, 1);
 
       const nextPos = state.tabList.length - 1 >= tabIndex ? tabIndex : state.tabList.length - 1;
@@ -70,13 +86,12 @@ const TabListSlice = createSlice({
     setActiveTab(state, action: PayloadAction<SLTab>) {
       state.activeTab = action.payload;
     },
-    setActiveTabImage(state, action: PayloadAction<string>) {
-      state.activeTab.base64Image = action.payload;
-      state.tabList.find((it) => it.id === state.activeTab.id).base64Image = action.payload;
-    },
-    setActiveTabTitle(state, action: PayloadAction<string>) {
-      state.activeTab.title = action.payload;
-      state.tabList.find((it) => it.id === state.activeTab.id).title = action.payload;
+    setActiveTabData(state, action: PayloadAction<SLImageData>) {
+      setData(state.activeTab, action.payload);
+      setData(
+        state.tabList.find((it) => it.id === state.activeTab.id),
+        action.payload
+      );
     },
     setImagePosition(state, action: PayloadAction<SLImagePos>) {
       setPosition(state.activeTab, action.payload);
@@ -96,6 +111,24 @@ const TabListSlice = createSlice({
         action.payload
       );
     },
+    loadTabs(state) {
+      const loadedIds: string[] = state.tabList.map((it) => it.id);
+
+      ipcRenderer
+        .sendSync(SLTabEvent.LOAD_TABS)
+        .filter((it) => !loadedIds.find((id) => id === it.id))
+        .forEach((it) => state.tabList.push(it));
+
+      if (state.tabList.length > 0) {
+        state.activeTab = state.tabList[0];
+      }
+    },
+    saveTabs(state, action: PayloadAction<SLTab[]>) {
+      ipcRenderer.sendSync(SLTabEvent.SAVE_TABS, action.payload);
+    },
+    deleteTabs() {
+      ipcRenderer.sendSync(SLTabEvent.DELETE_TABS);
+    },
   },
 });
 
@@ -104,11 +137,13 @@ export const {
   addTabAndSetActive,
   removeTab,
   setActiveTab,
-  setActiveTabImage,
-  setActiveTabTitle,
+  setActiveTabData,
   setImagePosition,
   resetImageSizeAndPos,
   changeImageSize,
+  loadTabs,
+  saveTabs,
+  deleteTabs,
 } = TabListSlice.actions;
 
 export default TabListSlice.reducer;

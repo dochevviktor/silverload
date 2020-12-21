@@ -24,11 +24,11 @@ const SettingsModal = createSlice({
       state.settings[action.payload].flag = !state.settings[action.payload].flag;
     },
     loadSettings(state) {
-      state.settings = ipcRenderer.sendSync(SLSettingEvent.LOAD);
+      state.settings = ipcRenderer.sendSync(SLSettingEvent.LOAD_SETTINGS);
     },
     saveSettings(state, action: PayloadAction<SLSettings[]>) {
       state.settings = action.payload;
-      ipcRenderer.sendSync(SLSettingEvent.SAVE, action.payload);
+      ipcRenderer.sendSync(SLSettingEvent.SAVE_SETTINGS, action.payload);
     },
   },
 });
