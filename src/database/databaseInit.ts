@@ -1,10 +1,10 @@
 import { Database } from 'better-sqlite3';
-import { SLTable } from '../../common/class/SLTable';
-import { SLSettingsTable } from '../../common/class/SLSettings';
-import SLVersion, { SLVersionTable } from '../../common/class/SLVersion';
-import { SLTabTable } from '../../common/class/SLTab';
-import { SLSetting } from '../../common/class/SLSettings';
-import { createTable, prepareInsertIfExists, prepareSaveQuery } from '../../common/database/databaseOperations';
+import { SLTable } from '../common/class/SLTable';
+import { SLSettingsTable } from '../common/class/SLSettings';
+import SLVersion, { SLVersionTable } from '../common/class/SLVersion';
+import { SLTabTable } from '../common/class/SLTab';
+import { SLSetting } from '../common/class/SLSettings';
+import { createTableQuery, prepareInsertIfExists, prepareSaveQuery } from './databaseOperations';
 
 const listOfEntities: SLTable[] = [SLSettingsTable.prototype, SLVersionTable.prototype, SLTabTable.prototype];
 
@@ -18,7 +18,7 @@ const iniVersion = (db: Database) => {
       if (table.className === ver.tableName && table.hash !== ver.tableHash) {
         new SLVersionTable({ tableName: table.className, tableHash: table.hash });
         queries.push(`DROP TABLE ${table.className};`);
-        queries.push(createTable(table));
+        queries.push(createTableQuery(table));
         queries.push(prepareSaveQuery(new SLVersionTable({ tableName: table.className, tableHash: table.hash })));
       }
     });
@@ -53,7 +53,7 @@ const initSettings = (db: Database) => {
 const initTables = (db: Database) => {
   const queries: string[] = [];
 
-  listOfEntities.map((it) => queries.push(createTable(it)));
+  listOfEntities.map((it) => queries.push(createTableQuery(it)));
   db?.exec(queries.join(' '));
 };
 

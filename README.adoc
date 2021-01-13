@@ -21,7 +21,7 @@ This project will be written entirely in TypeScript, where possible.
 :verTypescript: ^4.1.2
 :verSass: ^1.30.0
 :verFontAwesome: ^0.1.13
-:verAntDesign: ^4.9.2
+:verAntDesign: 4.9.2
 :verESLint: ^7.15.0
 :verStyleLint: ^13.8.0
 :verPrettier: ^2.2.1

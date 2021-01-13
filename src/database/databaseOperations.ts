@@ -1,7 +1,7 @@
 import { Database } from 'better-sqlite3';
-import { SLTable } from '../class/SLTable';
+import { SLTable } from '../common/class/SLTable';
 
-export const createTable = (it: SLTable) => {
+export const createTableQuery = (it: SLTable): string => {
   const query: string[] = [];
 
   query.push(`CREATE TABLE IF NOT EXISTS ${it.className} (`);
@@ -51,11 +51,13 @@ export const truncateTable = (db: Database, table: SLTable): void => {
 
 export const saveTable = (db: Database, tables: SLTable | SLTable[]): void => {
   if (db && tables) {
-    if (Array.isArray(tables)) {
-      db?.exec(tables.map((it) => prepareSaveQuery(it)).join(' '));
-    } else {
-      db?.exec(prepareSaveQuery(tables));
-    }
+    db.transaction(() => {
+      if (Array.isArray(tables)) {
+        tables.map((it) => db?.prepare(prepareSaveQuery(it))?.run());
+      } else {
+        db?.prepare(prepareSaveQuery(tables))?.run();
+      }
+    })();
   }
 };
 

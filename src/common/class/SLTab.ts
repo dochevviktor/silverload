@@ -1,7 +1,7 @@
 import { Column, Entity, SLTable } from './SLTable';
 import { Database } from 'better-sqlite3';
-import { getAllFromTable, saveTable, truncateTable } from '../database/databaseOperations';
 import { sha1 } from 'object-hash';
+import { getAllFromTable, saveTable, truncateTable } from '../../database/databaseOperations';
 
 export default interface SLTab {
   id: string;

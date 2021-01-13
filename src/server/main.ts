@@ -1,13 +1,19 @@
-import { app } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import url from 'url';
 import { createDevWindow, createWindow, handleSecondProcessCall } from './window/mainWindow';
+import { createDevDbWindow, createDbWindow } from './window/databaseWindow';
+import { SLEvent } from '../common/constant/SLEvent';
+
+let mainWindow: BrowserWindow = null;
+let dbWindow: BrowserWindow = null;
 
 const createMainWindow = () => {
   let startURL = process.env.ELECTRON_START_URL;
 
   if (startURL) {
-    createDevWindow(startURL);
+    mainWindow = createDevWindow(startURL);
+    dbWindow = createDevDbWindow(startURL);
   } else {
     startURL = url.format({
       pathname: path.join(__dirname, 'index.html'),
@@ -15,8 +21,16 @@ const createMainWindow = () => {
       slashes: true,
     });
 
-    createWindow(startURL);
+    mainWindow = createWindow(startURL);
+    dbWindow = createDbWindow(startURL);
   }
+
+  ipcMain.on(SLEvent.CLOSE_WINDOW, closeAllWindows);
+};
+
+const closeAllWindows = () => {
+  dbWindow.close();
+  mainWindow.close();
 };
 
 const bootstrap = () => {
@@ -29,7 +43,7 @@ const bootstrap = () => {
   app.on('ready', createMainWindow);
 
   // Handle multiple instances
-  app.on('second-instance', (event, commandLine) => handleSecondProcessCall(commandLine));
+  app.on('second-instance', (event, commandLine) => handleSecondProcessCall(mainWindow, commandLine));
 
   // Quit when all windows are closed.
   app.on('window-all-closed', app.quit);

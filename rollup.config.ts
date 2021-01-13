@@ -70,10 +70,37 @@ const outputOptions: OutputOptions = {
   sourcemap: false,
 };
 
+const workerInputOptions: InputOptions = {
+  input: 'src/database/databaseHandler.ts',
+  plugins: [
+    externals({
+      include: ['electron'],
+      devDeps: false,
+    }),
+    nodeResolve({
+      preferBuiltins: true,
+    }),
+    typescript({
+      tsconfig: 'src/database/tsconfig.json',
+    }),
+    commonjs(),
+  ],
+};
+
+const workerOutputOptions: OutputOptions = {
+  file: 'build/databaseHandler.js',
+  format: 'cjs',
+  sourcemap: false,
+};
+
 const build = (): void => {
   const inputOptions = merge(commonInputOptions, process.env?.production ? prodInputOptions : devInputOptions);
+  const inputOptions2 = merge(workerInputOptions, process.env?.production ? prodInputOptions : devInputOptions);
 
   rollup(inputOptions).then((bundle) => bundle.generate(outputOptions).then(() => bundle.write(outputOptions)));
+  rollup(inputOptions2).then((bundle) =>
+    bundle.generate(workerOutputOptions).then(() => bundle.write(workerOutputOptions))
+  );
 };
 
 build();

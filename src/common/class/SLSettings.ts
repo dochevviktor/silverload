@@ -1,6 +1,6 @@
 import { Column, Entity, SLTable } from './SLTable';
 import { Database } from 'better-sqlite3';
-import { getAllFromTable, saveTable } from '../database/databaseOperations';
+import { getAllFromTable, saveTable } from '../../database/databaseOperations';
 
 export enum SLSettingEvent {
   SAVE_SETTINGS = 'SAVE_SETTINGS',

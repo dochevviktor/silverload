@@ -1,17 +1,11 @@
-import { BrowserWindow, Menu, ipcMain } from 'electron';
+import { BrowserWindow, Menu, ipcMain, ContextMenuParams } from 'electron';
 import { existsSync, lstatSync, readFileSync } from 'fs';
 import { lookup } from 'mime-types';
 import { basename } from 'path';
 import { SLFile } from '../../common/interface/SLFile';
-import Database from 'better-sqlite3';
 import { SLEvent } from '../../common/constant/SLEvent';
-import { databaseInit } from '../database/databaseInit';
-import { getSettings, saveSettings, SLSettingEvent } from '../../common/class/SLSettings';
-import { deleteTabs, getTabs, saveTabs, SLTabEvent } from '../../common/class/SLTab';
 
-let mainWindow = null;
-
-const loadInitListeners = () => {
+const loadInitListeners = (mainWindow: BrowserWindow) => {
   mainWindow.webContents.on('did-finish-load', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
@@ -21,16 +15,15 @@ const loadInitListeners = () => {
     }
   });
 
-  mainWindow.webContents.on('closed', () => (mainWindow = null));
-  mainWindow.webContents.on('context-menu', (e, props) => mainContext(e, props));
+  mainWindow.on('closed', () => (mainWindow = null));
+  mainWindow.webContents.on('context-menu', (e, props) => mainContext(mainWindow, e, props));
 };
 
-const loadFrameManipulationListeners = () => {
+const loadFrameManipulationListeners = (mainWindow: BrowserWindow) => {
   ipcMain.on(SLEvent.MINIMIZE_WINDOW, () => mainWindow.minimize());
   ipcMain.on(SLEvent.MAXIMIZE_WINDOW, () =>
     mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()
   );
-  ipcMain.on(SLEvent.CLOSE_WINDOW, () => mainWindow.close());
   ipcMain.on(SLEvent.GET_FILE_ARGUMENTS, (event) => (event.returnValue = getSLFilesFromArgs(process.argv)));
 
   mainWindow.on('maximize', () => mainWindow.webContents.send(SLEvent.WINDOW_MAXIMIZED));
@@ -55,7 +48,7 @@ const getSLFilesFromArgs = (argList: string[]): SLFile[] => {
   return resultList;
 };
 
-const mainContext = (e, props) => {
+const mainContext = (mainWindow: BrowserWindow, e: Event, props: ContextMenuParams) => {
   const { x, y } = props;
 
   Menu.buildFromTemplate([
@@ -70,27 +63,8 @@ const mainContext = (e, props) => {
   ]).popup({ window: mainWindow });
 };
 
-const loadInitDbListeners = (dbPathIsLocalDev?: boolean) => {
-  let db = null;
-  const dbPath = dbPathIsLocalDev ? 'storage.db' : `${process.resourcesPath}\\storage.db`;
-
-  try {
-    db = new Database(dbPath);
-    databaseInit(db);
-  } catch (e) {
-    console.log(e);
-  }
-
-  ipcMain.on(SLSettingEvent.LOAD_SETTINGS, (event) => (event.returnValue = getSettings(db)));
-  ipcMain.on(SLSettingEvent.SAVE_SETTINGS, (event, arg) => (event.returnValue = saveSettings(db, arg)));
-
-  ipcMain.on(SLTabEvent.LOAD_TABS, (event) => (event.returnValue = getTabs(db)));
-  ipcMain.on(SLTabEvent.SAVE_TABS, (event, arg) => (event.returnValue = saveTabs(db, arg)));
-  ipcMain.on(SLTabEvent.DELETE_TABS, (event) => (event.returnValue = deleteTabs(db)));
-};
-
-export const createWindow = (startUrl: string, dbPathIsLocalDev?: boolean): void => {
-  mainWindow = new BrowserWindow({
+export const createWindow = (startUrl: string): BrowserWindow => {
+  const mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
     height: 728,
@@ -105,17 +79,21 @@ export const createWindow = (startUrl: string, dbPathIsLocalDev?: boolean): void
 
   mainWindow.loadURL(startUrl);
 
-  loadInitListeners();
-  loadFrameManipulationListeners();
-  loadInitDbListeners(dbPathIsLocalDev);
+  loadInitListeners(mainWindow);
+  loadFrameManipulationListeners(mainWindow);
+
+  return mainWindow;
 };
 
-export const createDevWindow = (startUrl: string): void => {
-  createWindow(startUrl, true);
+export const createDevWindow = (startUrl: string): BrowserWindow => {
+  const mainWindow = createWindow(startUrl);
+
   mainWindow.webContents.openDevTools();
+
+  return mainWindow;
 };
 
-export const handleSecondProcessCall = async (commandLine: string[]): Promise<void> => {
+export const handleSecondProcessCall = async (mainWindow: BrowserWindow, commandLine: string[]): Promise<void> => {
   if (mainWindow) {
     if (mainWindow.isMinimized()) {
       mainWindow.restore();

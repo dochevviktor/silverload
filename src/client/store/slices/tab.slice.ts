@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import SLTab, { SLTabEvent } from '../../../common/class/SLTab';
 import { v4 as uuid } from 'uuid';
+import { SLDatabase } from '../../../common/constant/SLDatabase';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -111,23 +112,24 @@ const TabListSlice = createSlice({
         action.payload
       );
     },
-    loadTabs(state) {
+    loadTabs(state, action: PayloadAction<SLTab[]>) {
       const loadedIds: string[] = state.tabList.map((it) => it.id);
 
-      ipcRenderer
-        .sendSync(SLTabEvent.LOAD_TABS)
-        .filter((it) => !loadedIds.find((id) => id === it.id))
-        .forEach((it) => state.tabList.push(it));
+      action.payload.filter((it) => !loadedIds.find((id) => id === it.id)).forEach((it) => state.tabList.push(it));
 
       if (state.tabList.length > 0) {
         state.activeTab = state.tabList[0];
       }
     },
     saveTabs(state, action: PayloadAction<SLTab[]>) {
-      ipcRenderer.sendSync(SLTabEvent.SAVE_TABS, action.payload);
+      const webContentsId = ipcRenderer.sendSync(SLDatabase.GET_DATABASE_HANDLER_CONTENTS_ID);
+
+      ipcRenderer.sendTo(webContentsId, SLTabEvent.SAVE_TABS, action.payload);
     },
     deleteTabs() {
-      ipcRenderer.sendSync(SLTabEvent.DELETE_TABS);
+      const webContentsId = ipcRenderer.sendSync(SLDatabase.GET_DATABASE_HANDLER_CONTENTS_ID);
+
+      ipcRenderer.sendTo(webContentsId, SLTabEvent.DELETE_TABS);
     },
   },
 });

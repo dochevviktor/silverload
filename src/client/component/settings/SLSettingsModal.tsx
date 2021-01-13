@@ -2,11 +2,12 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
 import { Modal, Switch } from 'antd';
-import { loadSettings, saveSettings, toggleVisibility, toggleSetting } from '../../store/slices/settings.slice';
+import { saveSettings, toggleVisibility, toggleSetting } from '../../store/slices/settings.slice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { SLSetting } from '../../../common/class/SLSettings';
 import styles from './SLSettingsModal.scss';
+import { load } from '../../store/thunks/settings.thunk';
 
 const SLSettingsModal = (): JSX.Element => {
   const isVisible = useSelector((state: RootState) => state.settingsModal.isVisible);
@@ -14,7 +15,7 @@ const SLSettingsModal = (): JSX.Element => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(loadSettings());
+    dispatch(load());
   }, []);
 
   const handleOk = (): void => {
@@ -24,7 +25,7 @@ const SLSettingsModal = (): JSX.Element => {
 
   const handleCancel = (): void => {
     dispatch(toggleVisibility());
-    dispatch(loadSettings());
+    dispatch(load());
   };
 
   const toggleSet = (index: number): void => {
@@ -42,7 +43,7 @@ const SLSettingsModal = (): JSX.Element => {
       cancelText="Back"
       okText="Save"
       onCancel={handleCancel}>
-      {settings.map((setting, index) => (
+      {settings?.map((setting, index) => (
         <div key={index} className={styles.setting} onClick={() => toggleSet(index)}>
           <p>{SLSetting[setting.code]}</p>
           <Switch

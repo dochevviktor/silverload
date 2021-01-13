@@ -6,8 +6,9 @@ import { faCaretSquareLeft, faCaretSquareRight, faSave as faSaveReg } from '@for
 import { faCog, faInfoCircle, faTrash, faSave as faSaveSol } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleVisibility } from '../../store/slices/settings.slice';
-import { loadTabs, saveTabs, deleteTabs } from '../../store/slices/tab.slice';
+import { saveTabs, deleteTabs } from '../../store/slices/tab.slice';
 import { RootState } from '../../store/rootReducer';
+import { load } from '../../store/thunks/tab.thunk';
 
 const SLDrawer = (): JSX.Element => {
   const [isVisible, updateVisible] = useState(false);
@@ -44,7 +45,7 @@ const SLDrawer = (): JSX.Element => {
             <FontAwesomeIcon icon={faSaveSol} size="lg" />
             <p>Save Tabs</p>
           </Button>
-          <Button type="text" onClick={() => dispatch(loadTabs())} className={styles.buttonStyle} block>
+          <Button type="text" onClick={() => dispatch(load())} className={styles.buttonStyle} block>
             <FontAwesomeIcon icon={faSaveReg} size="lg" />
             <p>Load Tabs</p>
           </Button>
