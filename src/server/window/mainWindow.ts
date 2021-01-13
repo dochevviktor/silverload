@@ -1,6 +1,6 @@
-import { BrowserWindow, Menu, ipcMain, ContextMenuParams } from 'electron';
+import { BrowserWindow, ContextMenuParams, ipcMain, Menu } from 'electron';
 import { existsSync, lstatSync, readFileSync } from 'fs';
-import { lookup } from 'mime-types';
+import { fromFile } from 'file-type';
 import { basename } from 'path';
 import { SLFile } from '../../common/interface/SLFile';
 import { SLEvent } from '../../common/constant/SLEvent';
@@ -24,28 +24,27 @@ const loadFrameManipulationListeners = (mainWindow: BrowserWindow) => {
   ipcMain.on(SLEvent.MAXIMIZE_WINDOW, () =>
     mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()
   );
-  ipcMain.on(SLEvent.GET_FILE_ARGUMENTS, (event) => (event.returnValue = getSLFilesFromArgs(process.argv)));
+  ipcMain.on(SLEvent.GET_FILE_ARGUMENTS, async (event) => (event.returnValue = await getSLFilesFromArgs(process.argv)));
 
   mainWindow.on('maximize', () => mainWindow.webContents.send(SLEvent.WINDOW_MAXIMIZED));
   mainWindow.on('unmaximize', () => mainWindow.webContents.send(SLEvent.WINDOW_UN_MAXIMIZED));
 };
 
-const getSLFilesFromArgs = (argList: string[]): SLFile[] => {
-  const resultList = [];
-
-  argList
+const getSLFilesFromArgs = (argList: string[]): Promise<SLFile[]> => {
+  const resultPromiseList = argList
     .slice(1) // first element is always the process itself - skip it
     .filter((it) => existsSync(it) && lstatSync(it).isFile())
-    .forEach((it) => {
-      const mimeType = lookup(it);
-      const base64 = readFileSync(it, { encoding: 'base64' });
-      const name = basename(it);
-      const file: SLFile = { name: name, base64: `data:${mimeType};base64,${base64}`, mimeType: mimeType, path: it };
+    .map((path) => readSLFile(path));
 
-      resultList.push(file);
-    });
+  return Promise.all(resultPromiseList);
+};
 
-  return resultList;
+const readSLFile = async (path: string): Promise<SLFile> => {
+  const mimeType = (await fromFile(path))?.mime;
+  const base64 = readFileSync(path, { encoding: 'base64' });
+  const name = basename(path);
+
+  return { name, base64: `data:${mimeType};base64,${base64}`, mimeType, path };
 };
 
 const mainContext = (mainWindow: BrowserWindow, e: Event, props: ContextMenuParams) => {
@@ -99,6 +98,6 @@ export const handleSecondProcessCall = async (mainWindow: BrowserWindow, command
       mainWindow.restore();
     }
     mainWindow.focus();
-    mainWindow.webContents.send(SLEvent.SENT_FILE_ARGUMENTS, getSLFilesFromArgs(commandLine));
+    mainWindow.webContents.send(SLEvent.SENT_FILE_ARGUMENTS, await getSLFilesFromArgs(commandLine));
   }
 };
