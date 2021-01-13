@@ -13,7 +13,7 @@ const createMainWindow = () => {
 
   if (startURL) {
     mainWindow = createDevWindow(startURL);
-    dbWindow = createDevDbWindow(startURL);
+    dbWindow = createDevDbWindow();
   } else {
     startURL = url.format({
       pathname: path.join(__dirname, 'index.html'),
@@ -22,7 +22,7 @@ const createMainWindow = () => {
     });
 
     mainWindow = createWindow(startURL);
-    dbWindow = createDbWindow(startURL);
+    dbWindow = createDbWindow();
   }
 
   ipcMain.on(SLEvent.CLOSE_WINDOW, closeAllWindows);

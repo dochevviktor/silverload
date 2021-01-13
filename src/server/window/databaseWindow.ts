@@ -9,9 +9,9 @@ const loadInitDbListeners = (dbWindow: BrowserWindow, dbPathIsLocalDev?: boolean
   ipcMain.on(SLDatabase.GET_DATABASE_HANDLER_CONTENTS_ID, (event) => (event.returnValue = dbWindow.webContents.id));
 };
 
-export const createDbWindow = (startUrl: string, dbPathIsLocalDev?: boolean): BrowserWindow => {
+export const createDbWindow = (dbPathIsLocalDev?: boolean): BrowserWindow => {
   const dbWindow = new BrowserWindow({
-    show: false,
+    show: dbPathIsLocalDev,
     webPreferences: {
       preload: path.join(__dirname, 'databaseHandler.js'),
     },
@@ -23,8 +23,8 @@ export const createDbWindow = (startUrl: string, dbPathIsLocalDev?: boolean): Br
   return dbWindow;
 };
 
-export const createDevDbWindow = (startUrl: string): BrowserWindow => {
-  const dbWindow = createDbWindow(startUrl, true);
+export const createDevDbWindow = (): BrowserWindow => {
+  const dbWindow = createDbWindow(true);
 
   dbWindow.webContents.openDevTools();
 

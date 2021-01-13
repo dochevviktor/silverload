@@ -18,15 +18,15 @@ This project will be written entirely in TypeScript, where possible.
 :verElectron: ^10.1.6
 :verReact: ^17.0.1
 :verRedux: ^4.0.5
-:verTypescript: ^4.1.2
-:verSass: ^1.30.0
-:verFontAwesome: ^0.1.13
-:verAntDesign: 4.9.2
-:verESLint: ^7.15.0
+:verTypescript: ^4.1.3
+:verSass: ^1.32.4
+:verFontAwesome: ^0.1.14
+:verAntDesign: 4.10.2
+:verESLint: ^7.17.0
 :verStyleLint: ^13.8.0
 :verPrettier: ^2.2.1
-:verWebpack: ^5.10.0
-:verRollup: ^2.34.1
+:verWebpack: ^5.13.0
+:verRollup: ^2.36.1
 // LINK_VARIABLES_END
 
 // IMG_VARIABLES_START
