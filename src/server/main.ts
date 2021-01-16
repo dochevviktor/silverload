@@ -6,14 +6,14 @@ import { createDevDbWindow, createDbWindow } from './window/databaseWindow';
 import { SLEvent } from '../common/constant/SLEvent';
 
 let mainWindow: BrowserWindow = null;
-let dbWindow: BrowserWindow = null;
 
 const createMainWindow = () => {
   let startURL = process.env.ELECTRON_START_URL;
 
   if (startURL) {
+    console.log('Starting in DEV mode');
     mainWindow = createDevWindow(startURL);
-    dbWindow = createDevDbWindow();
+    createDevDbWindow();
   } else {
     startURL = url.format({
       pathname: path.join(__dirname, 'index.html'),
@@ -22,15 +22,16 @@ const createMainWindow = () => {
     });
 
     mainWindow = createWindow(startURL);
-    dbWindow = createDbWindow();
+    createDbWindow();
   }
 
   ipcMain.on(SLEvent.CLOSE_WINDOW, closeAllWindows);
 };
 
 const closeAllWindows = () => {
-  dbWindow.close();
-  mainWindow.close();
+  console.log('Close windows');
+  app.quit();
+  app.exit(0);
 };
 
 const bootstrap = () => {

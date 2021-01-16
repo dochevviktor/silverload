@@ -6,6 +6,7 @@ import { SLFile } from '../../common/interface/SLFile';
 import { SLEvent } from '../../common/constant/SLEvent';
 
 const loadInitListeners = (mainWindow: BrowserWindow) => {
+  console.log('Load Init Listeners');
   mainWindow.webContents.on('did-finish-load', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
@@ -20,6 +21,7 @@ const loadInitListeners = (mainWindow: BrowserWindow) => {
 };
 
 const loadFrameManipulationListeners = (mainWindow: BrowserWindow) => {
+  console.log('Load Frame Manipulation Listeners');
   ipcMain.on(SLEvent.MINIMIZE_WINDOW, () => mainWindow.minimize());
   ipcMain.on(SLEvent.MAXIMIZE_WINDOW, () =>
     mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()
@@ -31,6 +33,7 @@ const loadFrameManipulationListeners = (mainWindow: BrowserWindow) => {
 };
 
 const getSLFilesFromArgs = (argList: string[]): Promise<SLFile[]> => {
+  console.log('Get SLFiles From Application args: ', argList);
   const resultPromiseList = argList
     .slice(1) // first element is always the process itself - skip it
     .filter((it) => existsSync(it) && lstatSync(it).isFile())
@@ -50,6 +53,8 @@ const readSLFile = async (path: string): Promise<SLFile> => {
 const mainContext = (mainWindow: BrowserWindow, e: Event, props: ContextMenuParams) => {
   const { x, y } = props;
 
+  console.log('Call to conext menu at X:', x, ' Y:', y);
+
   Menu.buildFromTemplate([
     {
       label: 'Reload',
@@ -63,6 +68,7 @@ const mainContext = (mainWindow: BrowserWindow, e: Event, props: ContextMenuPara
 };
 
 export const createWindow = (startUrl: string): BrowserWindow => {
+  console.log('Creating Main Window');
   const mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
@@ -81,6 +87,8 @@ export const createWindow = (startUrl: string): BrowserWindow => {
   loadInitListeners(mainWindow);
   loadFrameManipulationListeners(mainWindow);
 
+  console.log('Created Main Window');
+
   return mainWindow;
 };
 
@@ -93,6 +101,7 @@ export const createDevWindow = (startUrl: string): BrowserWindow => {
 };
 
 export const handleSecondProcessCall = async (mainWindow: BrowserWindow, commandLine: string[]): Promise<void> => {
+  console.log('Handling call from second process with args: ', commandLine);
   if (mainWindow) {
     if (mainWindow.isMinimized()) {
       mainWindow.restore();

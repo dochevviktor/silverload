@@ -7,6 +7,7 @@ const { ipcRenderer } = window.require('electron');
 
 interface SLTabListSlice {
   activeTab: SLTab;
+  isSaving: boolean;
   tabList: SLTab[];
 }
 
@@ -23,6 +24,7 @@ interface SLImageData {
 
 const initialTabListState: SLTabListSlice = {
   activeTab: null,
+  isSaving: false,
   tabList: [],
 };
 
@@ -122,9 +124,13 @@ const TabListSlice = createSlice({
       }
     },
     saveTabs(state, action: PayloadAction<SLTab[]>) {
+      state.isSaving = true;
       const webContentsId = ipcRenderer.sendSync(SLDatabase.GET_DATABASE_HANDLER_CONTENTS_ID);
 
       ipcRenderer.sendTo(webContentsId, SLTabEvent.SAVE_TABS, action.payload);
+    },
+    saveTabsDone(state) {
+      state.isSaving = false;
     },
     deleteTabs() {
       const webContentsId = ipcRenderer.sendSync(SLDatabase.GET_DATABASE_HANDLER_CONTENTS_ID);
@@ -145,6 +151,7 @@ export const {
   changeImageSize,
   loadTabs,
   saveTabs,
+  saveTabsDone,
   deleteTabs,
 } = TabListSlice.actions;
 

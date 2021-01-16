@@ -1,7 +1,7 @@
 import { Column, Entity, SLTable } from './SLTable';
 import { Database } from 'better-sqlite3';
 import { sha1 } from 'object-hash';
-import { getAllFromTable, saveTable, truncateTable } from '../../database/databaseOperations';
+import { cleanUpDatabase, getAllFromTable, saveTable, truncateTable } from '../../database/databaseOperations';
 
 export default interface SLTab {
   id: string;
@@ -43,6 +43,7 @@ export const saveTabs = (db: Database, tabs: SLTab[]): string => {
 export const deleteTabs = (db: Database): string => {
   if (db) {
     truncateTable(db, SLTabTable.prototype);
+    cleanUpDatabase(db);
   }
 
   return 'ok';

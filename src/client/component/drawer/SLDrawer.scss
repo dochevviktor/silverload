@@ -50,6 +50,19 @@ button.buttonStyle {
     background-color: #36393f;
   }
 
+  &Processing {
+    @extend .buttonStyle;
+
+    svg {
+      opacity: 50%;
+    }
+
+    span {
+      padding-top: 2px;
+      position: absolute;
+    }
+  }
+
   &AnimateSpin {
     @extend .buttonStyle;
 

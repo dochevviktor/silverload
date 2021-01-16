@@ -5,7 +5,7 @@ import { loadSettings } from '../slices/settings.slice';
 
 const { ipcRenderer } = window.require('electron');
 
-export const load = (): AppThunk => async (dispatch) => {
+export const load = (): AppThunk => (dispatch) => {
   const webContentsId = ipcRenderer.sendSync(SLDatabase.GET_DATABASE_HANDLER_CONTENTS_ID);
 
   ipcRenderer.sendTo(webContentsId, SLSettingEvent.LOAD_SETTINGS);

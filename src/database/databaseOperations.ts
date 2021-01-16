@@ -49,6 +49,10 @@ export const truncateTable = (db: Database, table: SLTable): void => {
   db?.prepare(`DELETE FROM ${table.className}`)?.run();
 };
 
+export const cleanUpDatabase = (db: Database): void => {
+  db?.prepare('VACUUM')?.run();
+};
+
 export const saveTable = (db: Database, tables: SLTable | SLTable[]): void => {
   if (db && tables) {
     db.transaction(() => {
