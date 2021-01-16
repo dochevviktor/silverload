@@ -19,6 +19,8 @@
     margin: 0;
     padding: 2px 2px 2px 5px;
     text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 

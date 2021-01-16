@@ -4,11 +4,15 @@ import { faWindowRestore, faWindowMaximize, faWindowMinimize, faTimes } from '@f
 import { faSuperpowers } from '@fortawesome/free-brands-svg-icons';
 import styles from './Titlebar.scss';
 import { SLEvent } from '../../../common/constant/SLEvent';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/rootReducer';
 
 const { ipcRenderer } = window.require('electron');
 
 const TitleBar = (): JSX.Element => {
   const [isMaximized, updateMaxState] = useState(false);
+
+  const tabTitle = useSelector((state: RootState) => state.tabsSlice.activeTab?.title);
 
   useEffect(() => {
     ipcRenderer.on(SLEvent.WINDOW_MAXIMIZED, () => updateMaxState(true));
@@ -28,6 +32,7 @@ const TitleBar = (): JSX.Element => {
         <FontAwesomeIcon icon={faSuperpowers} size="sm" />
         &nbsp;Sliverload
       </p>
+      <p>{tabTitle}</p>
       <div className={styles.titleBar}>
         <button className={styles.titleBarButton} onClick={() => ipcRenderer.send(SLEvent.MINIMIZE_WINDOW)}>
           <FontAwesomeIcon icon={faWindowMinimize} size="xs" />
