@@ -44,7 +44,7 @@ const prodInputOptions: InputOptions = {
 };
 
 const commonInputOptions: InputOptions = {
-  input: 'src/server/main.ts',
+  input: 'src/electron/main.ts',
   plugins: [
     externals({
       include: ['electron'],
@@ -54,7 +54,7 @@ const commonInputOptions: InputOptions = {
       preferBuiltins: true,
     }),
     typescript({
-      tsconfig: 'src/server/tsconfig.json',
+      tsconfig: 'src/electron/tsconfig.json',
     }),
     commonjs(),
     copy({

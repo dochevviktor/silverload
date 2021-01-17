@@ -70,7 +70,7 @@ const prodConfig: Configuration = {
 };
 
 const commonConfig: Configuration = {
-  entry: './src/client/index.tsx',
+  entry: './src/react/index.tsx',
   output: {
     path: path.resolve('build'),
     filename: 'bundle.[contenthash].js',
@@ -139,7 +139,7 @@ const commonConfig: Configuration = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: 'src/client/index.html',
+      template: 'src/react/index.html',
     }),
     new CspHtmlWebpackPlugin({
       'default-src': "'self'",
