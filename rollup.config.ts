@@ -43,7 +43,7 @@ const prodInputOptions: InputOptions = {
   ],
 };
 
-const commonInputOptions: InputOptions = {
+const elInputOptions: InputOptions = {
   input: 'src/electron/main.ts',
   plugins: [
     externals({
@@ -64,13 +64,13 @@ const commonInputOptions: InputOptions = {
   ],
 };
 
-const outputOptions: OutputOptions = {
+const elOutputOptions: OutputOptions = {
   file: 'build/main.js',
   format: 'cjs',
   sourcemap: false,
 };
 
-const workerInputOptions: InputOptions = {
+const dbInputOptions: InputOptions = {
   input: 'src/database/databaseHandler.ts',
   plugins: [
     externals({
@@ -87,20 +87,46 @@ const workerInputOptions: InputOptions = {
   ],
 };
 
-const workerOutputOptions: OutputOptions = {
+const dbOutputOptions: OutputOptions = {
   file: 'build/databaseHandler.js',
   format: 'cjs',
   sourcemap: false,
 };
 
-const build = (): void => {
-  const inputOptions = merge(commonInputOptions, process.env?.production ? prodInputOptions : devInputOptions);
-  const inputOptions2 = merge(workerInputOptions, process.env?.production ? prodInputOptions : devInputOptions);
-
-  rollup(inputOptions).then((bundle) => bundle.generate(outputOptions).then(() => bundle.write(outputOptions)));
-  rollup(inputOptions2).then((bundle) =>
-    bundle.generate(workerOutputOptions).then(() => bundle.write(workerOutputOptions))
-  );
+const fsInputOptions: InputOptions = {
+  input: 'src/fs-handler/fsHandler.ts',
+  plugins: [
+    externals({
+      include: ['electron'],
+      devDeps: false,
+    }),
+    nodeResolve({
+      preferBuiltins: true,
+    }),
+    typescript({
+      tsconfig: 'src/fs-handler/tsconfig.json',
+    }),
+    commonjs(),
+  ],
 };
 
-build();
+const fsOutputOptions: OutputOptions = {
+  file: 'build/fsHandler.js',
+  format: 'cjs',
+  sourcemap: false,
+};
+
+const build = (input: InputOptions, output: OutputOptions): void => {
+  const inputOptions = merge(input, process.env?.production ? prodInputOptions : devInputOptions);
+
+  rollup(inputOptions).then((bundle) => bundle.generate(output).then(() => bundle.write(output)));
+};
+
+// Build main electron process
+build(elInputOptions, elOutputOptions);
+
+// Build database handler process
+build(dbInputOptions, dbOutputOptions);
+
+// Build file system handler process
+build(fsInputOptions, fsOutputOptions);

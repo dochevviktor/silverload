@@ -1,0 +1,38 @@
+{
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS",
+      "target": "ES5",
+      "esModuleInterop": true,
+      "importHelpers": true,
+      "resolveJsonModule": true,
+    },
+  },
+  "compilerOptions": {
+    "module": "esnext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "types": ["node", "electron"],
+    "moduleResolution": "node",
+    "declaration": false,
+    "removeComments": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
+    "forceConsistentCasingInFileNames": true,
+    "target": "es2017",
+    "sourceMap": false,
+    "baseUrl": "./",
+  },
+  // This will include the common/shared ts files b/w electron and react
+  "include": ["./../common/**/*", "./**/*"],
+  "exclude": [
+    "node_modules/*"
+  ]
+}

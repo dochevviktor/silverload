@@ -1,8 +1,4 @@
 import { BrowserWindow, ContextMenuParams, ipcMain, Menu } from 'electron';
-import { existsSync, lstatSync, readFileSync } from 'fs';
-import { fromFile } from 'file-type';
-import { basename } from 'path';
-import { SLFile } from '../../common/interface/SLFile';
 import { SLEvent } from '../../common/constant/SLEvent';
 
 const loadInitListeners = (mainWindow: BrowserWindow) => {
@@ -18,6 +14,8 @@ const loadInitListeners = (mainWindow: BrowserWindow) => {
 
   mainWindow.on('closed', () => (mainWindow = null));
   mainWindow.webContents.on('context-menu', (e, props) => mainContext(mainWindow, e, props));
+
+  ipcMain.on(SLEvent.GET_MAIN_WINDOW_CONTENTS_ID, (event) => (event.returnValue = mainWindow.webContents.id));
 };
 
 const loadFrameManipulationListeners = (mainWindow: BrowserWindow) => {
@@ -26,28 +24,9 @@ const loadFrameManipulationListeners = (mainWindow: BrowserWindow) => {
   ipcMain.on(SLEvent.MAXIMIZE_WINDOW, () =>
     mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()
   );
-  ipcMain.on(SLEvent.GET_FILE_ARGUMENTS, async (event) => (event.returnValue = await getSLFilesFromArgs(process.argv)));
 
   mainWindow.on('maximize', () => mainWindow.webContents.send(SLEvent.WINDOW_MAXIMIZED));
   mainWindow.on('unmaximize', () => mainWindow.webContents.send(SLEvent.WINDOW_UN_MAXIMIZED));
-};
-
-const getSLFilesFromArgs = (argList: string[]): Promise<SLFile[]> => {
-  console.log('Get SLFiles From Application args: ', argList);
-  const resultPromiseList = argList
-    .slice(1) // first element is always the process itself - skip it
-    .filter((it) => existsSync(it) && lstatSync(it).isFile())
-    .map((path) => readSLFile(path));
-
-  return Promise.all(resultPromiseList);
-};
-
-const readSLFile = async (path: string): Promise<SLFile> => {
-  const mimeType = (await fromFile(path))?.mime;
-  const base64 = readFileSync(path, { encoding: 'base64' });
-  const name = basename(path);
-
-  return { name, base64: `data:${mimeType};base64,${base64}`, mimeType, path };
 };
 
 const mainContext = (mainWindow: BrowserWindow, e: Event, props: ContextMenuParams) => {
@@ -100,13 +79,11 @@ export const createDevWindow = (startUrl: string): BrowserWindow => {
   return mainWindow;
 };
 
-export const handleSecondProcessCall = async (mainWindow: BrowserWindow, commandLine: string[]): Promise<void> => {
-  console.log('Handling call from second process with args: ', commandLine);
+export const restoreMainWindow = (mainWindow: BrowserWindow): void => {
   if (mainWindow) {
     if (mainWindow.isMinimized()) {
       mainWindow.restore();
     }
     mainWindow.focus();
-    mainWindow.webContents.send(SLEvent.SENT_FILE_ARGUMENTS, await getSLFilesFromArgs(commandLine));
   }
 };

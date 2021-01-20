@@ -1,6 +1,6 @@
 import Database from 'better-sqlite3';
 import { databaseInit } from './databaseInit';
-import { SLDatabase } from '../common/constant/SLDatabase';
+import { SLEvent } from '../common/constant/SLEvent';
 import { getSettings, saveSettings, SLSettingEvent } from '../common/class/SLSettings';
 import { deleteTabs, getTabs, saveTabs, SLTabEvent } from '../common/class/SLTab';
 
@@ -31,7 +31,7 @@ ipcRenderer.on(SLTabEvent.LOAD_TABS, (event) => {
 ipcRenderer.on(SLTabEvent.DELETE_TABS, () => deleteTabs(db));
 
 try {
-  db = new Database(ipcRenderer.sendSync(SLDatabase.GET_DB_PATH));
+  db = new Database(ipcRenderer.sendSync(SLEvent.GET_DB_PATH));
   databaseInit(db);
 } catch (e) {
   console.log(e);

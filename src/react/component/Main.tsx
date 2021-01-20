@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import styles from './Main.scss';
 import Tabs from './tabs/Tabs';
-import ImagePanel from './image.panel/ImagePanel';
+import ImagePanel from './image-panel/ImagePanel';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/rootReducer';
 import { SLFile } from '../../common/interface/SLFile';
@@ -19,7 +19,7 @@ const Main = (): JSX.Element => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    openNewTabs(ipcRenderer.sendSync(SLEvent.GET_FILE_ARGUMENTS));
+    ipcRenderer.sendTo(ipcRenderer.sendSync(SLEvent.GET_FS_HANDLER_CONTENTS_ID), SLEvent.GET_FILE_ARGUMENTS);
     ipcRenderer.on(SLEvent.SENT_FILE_ARGUMENTS, (event, fileList: SLFile[]) => openNewTabs(fileList));
 
     return () => {

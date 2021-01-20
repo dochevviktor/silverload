@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import SLTab, { SLTabEvent } from '../../../common/class/SLTab';
 import { v4 as uuid } from 'uuid';
-import { SLDatabase } from '../../../common/constant/SLDatabase';
+import { SLEvent } from '../../../common/constant/SLEvent';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -125,7 +125,7 @@ const TabListSlice = createSlice({
     },
     saveTabs(state, action: PayloadAction<SLTab[]>) {
       state.isSaving = true;
-      const webContentsId = ipcRenderer.sendSync(SLDatabase.GET_DATABASE_HANDLER_CONTENTS_ID);
+      const webContentsId = ipcRenderer.sendSync(SLEvent.GET_DATABASE_HANDLER_CONTENTS_ID);
 
       ipcRenderer.sendTo(webContentsId, SLTabEvent.SAVE_TABS, action.payload);
     },
@@ -133,7 +133,7 @@ const TabListSlice = createSlice({
       state.isSaving = false;
     },
     deleteTabs() {
-      const webContentsId = ipcRenderer.sendSync(SLDatabase.GET_DATABASE_HANDLER_CONTENTS_ID);
+      const webContentsId = ipcRenderer.sendSync(SLEvent.GET_DATABASE_HANDLER_CONTENTS_ID);
 
       ipcRenderer.sendTo(webContentsId, SLTabEvent.DELETE_TABS);
     },

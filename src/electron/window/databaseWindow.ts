@@ -1,14 +1,14 @@
 import { BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
-import { SLDatabase } from '../../common/constant/SLDatabase';
+import { SLEvent } from '../../common/constant/SLEvent';
 
 const loadInitDbListeners = (dbWindow: BrowserWindow, dbPathIsLocalDev?: boolean) => {
   const dbPath = dbPathIsLocalDev ? 'storage.db' : `${process.resourcesPath}\\storage.db`;
 
   console.log('Loading db IPC Main listeners');
 
-  ipcMain.on(SLDatabase.GET_DB_PATH, (event) => (event.returnValue = dbPath));
-  ipcMain.on(SLDatabase.GET_DATABASE_HANDLER_CONTENTS_ID, (event) => (event.returnValue = dbWindow.webContents.id));
+  ipcMain.on(SLEvent.GET_DB_PATH, (event) => (event.returnValue = dbPath));
+  ipcMain.on(SLEvent.GET_DATABASE_HANDLER_CONTENTS_ID, (event) => (event.returnValue = dbWindow.webContents.id));
 };
 
 export const createDbWindow = (dbPathIsLocalDev?: boolean): BrowserWindow => {

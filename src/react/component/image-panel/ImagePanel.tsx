@@ -5,7 +5,7 @@ import { RootState } from '../../store/rootReducer';
 import { v4 as uuid } from 'uuid';
 import SLZoom from '../../class/SLZoom';
 import VALID_FILE_TYPES from '../../constant/SLImageFileTypes';
-import DragAndDrop from '../image.drop/DragAndDrop';
+import DragAndDrop from '../image-drop/DragAndDrop';
 import { handleDragIn, handleDragOut, handleDrag, handleDragDrop } from '../../store/slices/drag.slice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';

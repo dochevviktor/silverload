@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import SLSettings, { SLSettingEvent } from '../../../common/class/SLSettings';
-import { SLDatabase } from '../../../common/constant/SLDatabase';
+import { SLEvent } from '../../../common/constant/SLEvent';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -31,7 +31,7 @@ const SettingsModal = createSlice({
     },
     saveSettings(state, action: PayloadAction<SLSettings[]>) {
       state.isSaving = true;
-      const webContentsId = ipcRenderer.sendSync(SLDatabase.GET_DATABASE_HANDLER_CONTENTS_ID);
+      const webContentsId = ipcRenderer.sendSync(SLEvent.GET_DATABASE_HANDLER_CONTENTS_ID);
 
       state.settings = action.payload;
       ipcRenderer.sendTo(webContentsId, SLSettingEvent.SAVE_SETTINGS, action.payload);
