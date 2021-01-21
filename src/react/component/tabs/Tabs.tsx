@@ -25,7 +25,7 @@ const Tabs = (): JSX.Element => {
   };
 
   const smoothScroll = async (left: number) => {
-    return scroll.scrollLeft(left);
+    return requestAnimationFrame(() => scroll.scrollLeft(left));
   };
 
   return (

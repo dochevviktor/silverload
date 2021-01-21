@@ -11,7 +11,7 @@ export default class SLScroll {
     if (Math.sign(this.nextNumber) !== Math.sign(left)) {
       this.nextNumber = left;
     } else {
-      this.nextNumber += left;
+      this.nextNumber += left / 1.4;
     }
 
     if (!this.waitForMe) {
