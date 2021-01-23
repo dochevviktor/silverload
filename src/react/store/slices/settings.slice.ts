@@ -7,12 +7,14 @@ const { ipcRenderer } = window.require('electron');
 interface SettingsModal {
   isVisible: boolean;
   isSaving: boolean;
+  databaseHandlerId: string;
   settings: SLSettings[];
 }
 
 const initialVisibilityState: SettingsModal = {
   isVisible: false,
   isSaving: false,
+  databaseHandlerId: ipcRenderer.sendSync(SLEvent.GET_DATABASE_HANDLER_CONTENTS_ID),
   settings: [],
 };
 
@@ -31,10 +33,8 @@ const SettingsModal = createSlice({
     },
     saveSettings(state, action: PayloadAction<SLSettings[]>) {
       state.isSaving = true;
-      const webContentsId = ipcRenderer.sendSync(SLEvent.GET_DATABASE_HANDLER_CONTENTS_ID);
-
       state.settings = action.payload;
-      ipcRenderer.sendTo(webContentsId, SLSettingEvent.SAVE_SETTINGS, action.payload);
+      ipcRenderer.sendTo(state.databaseHandlerId, SLSettingEvent.SAVE_SETTINGS, action.payload);
       state.isVisible = !state.isVisible;
     },
     saveSettingsDone(state) {

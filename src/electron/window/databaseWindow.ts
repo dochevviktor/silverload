@@ -16,6 +16,7 @@ export const createDbWindow = (dbPathIsLocalDev?: boolean): BrowserWindow => {
   const dbWindow = new BrowserWindow({
     show: dbPathIsLocalDev,
     closable: false,
+    title: 'Database window',
     webPreferences: {
       nodeIntegration: false,
       javascript: false,
@@ -27,7 +28,7 @@ export const createDbWindow = (dbPathIsLocalDev?: boolean): BrowserWindow => {
     },
   });
 
-  dbWindow.loadFile(path.join(__dirname, 'databaseHandler.js'));
+  dbWindow.loadFile(path.join(__dirname, 'databaseHandler.js')).catch(console.error);
   loadInitDbListeners(dbWindow, dbPathIsLocalDev);
 
   console.log('Created DB browser window');

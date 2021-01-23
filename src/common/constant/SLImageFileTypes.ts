@@ -8,6 +8,10 @@ const validFileTypes = [
   'image/webp',
   'image/bmp',
   'image/x-icon',
+  // for cases where the browser cannot
+  // resolve the mime type, we fall back to the
+  // FS Handler (backend) to resolve it instead
+  '',
 ];
 
 export default validFileTypes;

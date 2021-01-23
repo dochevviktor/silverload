@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
 import { v4 as uuid } from 'uuid';
 import SLZoom from '../../class/SLZoom';
-import VALID_FILE_TYPES from '../../constant/SLImageFileTypes';
+import VALID_FILE_TYPES from '../../../common/constant/SLImageFileTypes';
 import DragAndDrop from '../image-drop/DragAndDrop';
 import { handleDragIn, handleDragOut, handleDrag, handleDragDrop } from '../../store/slices/drag.slice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,6 +12,7 @@ import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import {
   changeImageSize,
   setActiveTabData,
+  requestLoadTabImage,
   addTab,
   setImagePosition,
   resetImageSizeAndPos,
@@ -26,44 +27,27 @@ const ImagePanel = (): JSX.Element => {
   const zoom = new SLZoom((multiplier) => dispatch(changeImageSize(multiplier)));
   const validateFile = (file: File) => VALID_FILE_TYPES.indexOf(file.type) !== -1;
 
-  const getBase64 = async (file: File) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-
-      reader.onload = () => resolve(reader.result);
-      // TODO: add loading spinner on loadstart and remove it on loadend
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-
-  const handleDrop = async (e: DragEvent) => {
+  const handleDrop = (e: DragEvent) => {
     dispatch(handleDragDrop(e));
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      await handleDroppedFiles(e.dataTransfer.files);
+      handleDroppedFiles(e.dataTransfer.files);
       e.dataTransfer.clearData();
     }
   };
 
-  const handleDroppedFiles = async (files: FileList) => {
+  const handleDroppedFiles = (files: FileList) => {
     const { length, 0: firstDroppedFile, ...otherDroppedFiles } = files;
 
     if (!firstDroppedFile || !validateFile(firstDroppedFile)) return;
 
-    const result = await getBase64(firstDroppedFile);
-
-    dispatch(
-      setActiveTabData({ title: firstDroppedFile.name, path: firstDroppedFile.path, base64Image: result.toString() })
-    );
+    dispatch(setActiveTabData({ title: firstDroppedFile.name, path: firstDroppedFile.path }));
+    dispatch(requestLoadTabImage({ tabId: activeTab.id, path: firstDroppedFile.path }));
 
     if (length === 1) return;
 
     Object.values(otherDroppedFiles)
-      .filter((it) => validateFile(it))
-      .map(async (it) => {
-        const iteratedResult = await getBase64(it);
-
-        dispatch(addTab({ id: uuid(), title: it.name, base64Image: iteratedResult.toString(), path: it.path }));
-      });
+      .filter((it: File) => validateFile(it))
+      .map((it: File) => dispatch(addTab({ id: uuid(), title: it.name, path: it.path })));
   };
 
   const onMouseMove = (e: MouseEvent) => {

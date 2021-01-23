@@ -61,7 +61,7 @@ export const createWindow = (startUrl: string): BrowserWindow => {
     },
   });
 
-  mainWindow.loadURL(startUrl);
+  mainWindow.loadURL(startUrl).catch(console.error);
 
   loadInitListeners(mainWindow);
   loadFrameManipulationListeners(mainWindow);

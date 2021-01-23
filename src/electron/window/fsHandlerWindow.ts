@@ -14,6 +14,7 @@ export const createFsWindow = (isLocalDev?: boolean): BrowserWindow => {
   const fsWindow = new BrowserWindow({
     show: isLocalDev,
     closable: false,
+    title: 'File System handler window',
     webPreferences: {
       nodeIntegration: false,
       javascript: false,
@@ -25,7 +26,7 @@ export const createFsWindow = (isLocalDev?: boolean): BrowserWindow => {
     },
   });
 
-  fsWindow.loadFile(path.join(__dirname, 'fsHandler.js'));
+  fsWindow.loadFile(path.join(__dirname, 'fsHandler.js')).catch(console.error);
   loadInitFsListeners(fsWindow);
 
   console.log('Created FS browser window');
