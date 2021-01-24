@@ -1,20 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import SLSettings, { SLSettingEvent } from '../../../common/class/SLSettings';
-import { SLEvent } from '../../../common/constant/SLEvent';
+import SLSettings from '../../../common/class/SLSettings';
+import * as SLEvent from '../../../common/class/SLEvent';
 
 const { ipcRenderer } = window.require('electron');
 
 interface SettingsModal {
   isVisible: boolean;
   isSaving: boolean;
-  databaseHandlerId: string;
+  databaseHandlerId: number;
   settings: SLSettings[];
 }
 
 const initialVisibilityState: SettingsModal = {
   isVisible: false,
   isSaving: false,
-  databaseHandlerId: ipcRenderer.sendSync(SLEvent.GET_DATABASE_HANDLER_CONTENTS_ID),
+  databaseHandlerId: SLEvent.GET_DATABASE_HANDLER_CONTENTS_ID.sendSync(ipcRenderer),
   settings: [],
 };
 
@@ -34,7 +34,7 @@ const SettingsModal = createSlice({
     saveSettings(state, action: PayloadAction<SLSettings[]>) {
       state.isSaving = true;
       state.settings = action.payload;
-      ipcRenderer.sendTo(state.databaseHandlerId, SLSettingEvent.SAVE_SETTINGS, action.payload);
+      SLEvent.SAVE_SETTINGS.sendTo(ipcRenderer, state.databaseHandlerId, action.payload);
       state.isVisible = !state.isVisible;
     },
     saveSettingsDone(state) {

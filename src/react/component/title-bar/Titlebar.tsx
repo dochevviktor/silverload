@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowRestore, faWindowMaximize, faWindowMinimize, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faSuperpowers } from '@fortawesome/free-brands-svg-icons';
 import styles from './Titlebar.scss';
-import { SLEvent } from '../../../common/constant/SLEvent';
+import * as SLEvent from '../../../common/class/SLEvent';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
 
@@ -13,15 +13,15 @@ const TitleBar = (): JSX.Element => {
   const [isMaximized, updateMaxState] = useState(false);
 
   const tabTitle = useSelector((state: RootState) => state.tabsSlice.activeTab?.title);
+  const tabCount = useSelector((state: RootState) => state.tabsSlice.tabList.length);
 
   useEffect(() => {
-    ipcRenderer.on(SLEvent.WINDOW_MAXIMIZED, () => updateMaxState(true));
-    ipcRenderer.on(SLEvent.WINDOW_UN_MAXIMIZED, () => updateMaxState(false));
+    const removeList: (() => void)[] = [];
 
-    return () => {
-      ipcRenderer.removeListener(SLEvent.WINDOW_MAXIMIZED, () => updateMaxState(true));
-      ipcRenderer.removeListener(SLEvent.WINDOW_UN_MAXIMIZED, () => updateMaxState(false));
-    };
+    removeList.push(SLEvent.WINDOW_MAXIMIZED.on(ipcRenderer, () => updateMaxState(true)));
+    removeList.push(SLEvent.WINDOW_UN_MAXIMIZED.on(ipcRenderer, () => updateMaxState(false)));
+
+    return () => removeList.forEach((removeListener) => removeListener());
   }, []);
 
   const getMaximisedButtonIcon = isMaximized ? faWindowRestore : faWindowMaximize;
@@ -32,15 +32,15 @@ const TitleBar = (): JSX.Element => {
         <FontAwesomeIcon icon={faSuperpowers} size="sm" />
         &nbsp;Sliverload
       </p>
-      <p>{tabTitle}</p>
+      <p>{tabCount ? tabTitle : ''}</p>
       <div className={styles.titleBar}>
-        <button className={styles.titleBarButton} onClick={() => ipcRenderer.send(SLEvent.MINIMIZE_WINDOW)}>
+        <button className={styles.titleBarButton} onClick={() => SLEvent.MINIMIZE_WINDOW.send(ipcRenderer)}>
           <FontAwesomeIcon icon={faWindowMinimize} size="xs" />
         </button>
-        <button className={styles.titleBarButton} onClick={() => ipcRenderer.send(SLEvent.MAXIMIZE_WINDOW)}>
+        <button className={styles.titleBarButton} onClick={() => SLEvent.MAXIMIZE_WINDOW.send(ipcRenderer)}>
           <FontAwesomeIcon icon={getMaximisedButtonIcon} size="xs" />
         </button>
-        <button className={styles.titleBarCloseButton} onClick={() => ipcRenderer.send(SLEvent.CLOSE_WINDOW)}>
+        <button className={styles.titleBarCloseButton} onClick={() => SLEvent.CLOSE_WINDOW.send(ipcRenderer)}>
           <FontAwesomeIcon icon={faTimes} />
         </button>
       </div>

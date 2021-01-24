@@ -14,13 +14,11 @@ export default interface SLTab {
   scaleY?: number;
 }
 
-export enum SLTabEvent {
-  SAVE_TABS = 'SAVE_TABS',
-  LOAD_TABS = 'LOAD_TABS',
-  DELETE_TABS = 'DELETE_TABS',
-}
+export const loadTabs = (db: Database): SLTab[] => {
+  console.log('Call to load tabs');
 
-export const getTabs = (db: Database): SLTab[] => getAllFromTable<SLTab>(db, SLTabTable.prototype);
+  return getAllFromTable<SLTab>(db, SLTabTable.prototype);
+};
 
 const convertToTableEntity = (it: SLTab) => {
   const tabTable = new SLTabTable(it);
@@ -30,23 +28,21 @@ const convertToTableEntity = (it: SLTab) => {
   return tabTable;
 };
 
-export const saveTabs = (db: Database, tabs: SLTab[]): string => {
+export const saveTabs = (db: Database, tabs: SLTab[]): void => {
+  console.log('Call to save tabs');
   if (db && tabs && tabs.length > 0) {
     const tableRows = tabs.filter((it) => it.base64Image).map((it) => convertToTableEntity(it));
 
     saveTable(db, tableRows);
   }
-
-  return 'ok';
 };
 
-export const deleteTabs = (db: Database): string => {
+export const deleteTabs = (db: Database): void => {
+  console.log('Call to delete tabs');
   if (db) {
     truncateTable(db, SLTabTable.prototype);
     cleanUpDatabase(db);
   }
-
-  return 'ok';
 };
 
 @Entity

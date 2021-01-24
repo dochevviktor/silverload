@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import SLTab, { SLTabEvent } from '../../../common/class/SLTab';
+import SLTab from '../../../common/class/SLTab';
 import { v4 as uuid } from 'uuid';
-import { SLEvent } from '../../../common/constant/SLEvent';
+import * as SLEvent from '../../../common/class/SLEvent';
 import { SLTabImageData } from '../../../common/interface/SLTabImageData';
 
 const { ipcRenderer } = window.require('electron');
@@ -9,8 +9,8 @@ const { ipcRenderer } = window.require('electron');
 interface SLTabListSlice {
   activeTab: SLTab;
   isSaving: boolean;
-  databaseHandlerId: string;
-  fsHandlerId: string;
+  databaseHandlerId: number;
+  fsHandlerId: number;
   tabList: SLTab[];
 }
 
@@ -27,8 +27,8 @@ interface SLImageData {
 const initialTabListState: SLTabListSlice = {
   activeTab: null,
   isSaving: false,
-  databaseHandlerId: ipcRenderer.sendSync(SLEvent.GET_DATABASE_HANDLER_CONTENTS_ID),
-  fsHandlerId: ipcRenderer.sendSync(SLEvent.GET_FS_HANDLER_CONTENTS_ID),
+  databaseHandlerId: SLEvent.GET_DATABASE_HANDLER_CONTENTS_ID.sendSync(ipcRenderer),
+  fsHandlerId: SLEvent.GET_FS_HANDLER_CONTENTS_ID.sendSync(ipcRenderer),
   tabList: [],
 };
 
@@ -70,24 +70,22 @@ const TabListSlice = createSlice({
   reducers: {
     addTab(state, action: PayloadAction<SLTab>) {
       const newTab: SLTab = addNewTab(state, action.payload);
-      const request: SLTabImageData = { tabId: newTab.id, path: newTab.path };
 
       if (newTab.path && !newTab.base64Image) {
-        ipcRenderer.sendTo(state.fsHandlerId, SLEvent.LOAD_TAB_IMAGE, request);
+        SLEvent.LOAD_TAB_IMAGE.sendTo(ipcRenderer, state.fsHandlerId, { tabId: newTab.id, path: newTab.path });
       }
     },
     addTabAndSetActive(state, action: PayloadAction<SLTab>) {
       const newTab: SLTab = addNewTab(state, action.payload);
-      const request: SLTabImageData = { tabId: newTab.id, path: newTab.path };
 
       state.activeTab = newTab;
 
       if (newTab.path && !newTab.base64Image) {
-        ipcRenderer.sendTo(state.fsHandlerId, SLEvent.LOAD_TAB_IMAGE, request);
+        SLEvent.LOAD_TAB_IMAGE.sendTo(ipcRenderer, state.fsHandlerId, { tabId: newTab.id, path: newTab.path });
       }
     },
     requestLoadTabImage(state, { payload: tabImageData }: PayloadAction<SLTabImageData>) {
-      ipcRenderer.sendTo(state.fsHandlerId, SLEvent.LOAD_TAB_IMAGE, tabImageData);
+      SLEvent.LOAD_TAB_IMAGE.sendTo(ipcRenderer, state.fsHandlerId, tabImageData);
     },
     loadTabImage(state, { payload: tabImageData }: PayloadAction<SLTabImageData>) {
       if (state.activeTab.id === tabImageData.tabId) {
@@ -149,13 +147,13 @@ const TabListSlice = createSlice({
     },
     saveTabs(state, action: PayloadAction<SLTab[]>) {
       state.isSaving = true;
-      ipcRenderer.sendTo(state.databaseHandlerId, SLTabEvent.SAVE_TABS, action.payload);
+      SLEvent.SAVE_TABS.sendTo(ipcRenderer, state.databaseHandlerId, action.payload);
     },
     saveTabsDone(state) {
       state.isSaving = false;
     },
     deleteTabs(state) {
-      ipcRenderer.sendTo(state.databaseHandlerId, SLTabEvent.DELETE_TABS);
+      SLEvent.DELETE_TABS.sendTo(ipcRenderer, state.databaseHandlerId);
     },
   },
 });

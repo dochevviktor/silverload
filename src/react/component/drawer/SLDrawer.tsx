@@ -9,7 +9,7 @@ import { toggleVisibility } from '../../store/slices/settings.slice';
 import { saveTabs, saveTabsDone, deleteTabs } from '../../store/slices/tab.slice';
 import { RootState } from '../../store/rootReducer';
 import { load } from '../../store/thunks/tab.thunk';
-import { SLTabEvent } from '../../../common/class/SLTab';
+import * as SLEvent from '../../../common/class/SLEvent';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -26,10 +26,10 @@ const SLDrawer = (): JSX.Element => {
   const showSettingsModal = () => dispatch(toggleVisibility());
 
   useEffect(() => {
-    ipcRenderer.on(SLTabEvent.SAVE_TABS, () => dispatch(saveTabsDone()));
+    const removeListener = SLEvent.SAVE_TABS.on(ipcRenderer, () => dispatch(saveTabsDone()));
 
     return () => {
-      ipcRenderer.removeListener(SLTabEvent.SAVE_TABS, () => dispatch(saveTabsDone()));
+      removeListener();
     };
   }, []);
 

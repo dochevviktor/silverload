@@ -5,9 +5,10 @@ import { Modal, Switch } from 'antd';
 import { saveSettings, toggleVisibility, toggleSetting, saveSettingsDone } from '../../store/slices/settings.slice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { SLSetting, SLSettingEvent } from '../../../common/class/SLSettings';
+import { SLSetting } from '../../../common/class/SLSettings';
 import styles from './SLSettingsModal.scss';
 import { load } from '../../store/thunks/settings.thunk';
+import * as SLEvent from '../../../common/class/SLEvent';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -19,10 +20,10 @@ const SLSettingsModal = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(load());
-    ipcRenderer.on(SLSettingEvent.SAVE_SETTINGS, () => dispatch(saveSettingsDone()));
+    const removeListener = SLEvent.SAVE_SETTINGS.on(ipcRenderer, () => dispatch(saveSettingsDone()));
 
     return () => {
-      ipcRenderer.removeListener(SLSettingEvent.SAVE_SETTINGS, () => dispatch(saveSettingsDone()));
+      removeListener();
     };
   }, []);
 

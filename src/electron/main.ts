@@ -3,7 +3,7 @@ import path from 'path';
 import url from 'url';
 import { createDevWindow, createWindow, restoreMainWindow } from './window/mainWindow';
 import { createDevDbWindow, createDbWindow } from './window/databaseWindow';
-import { SLEvent } from '../common/constant/SLEvent';
+import * as SLEvent from '../common/class/SLEvent';
 import { createDevFsWindow, createFsWindow, loadAdditionalFiles } from './window/fsHandlerWindow';
 
 let mainWindow: BrowserWindow = null;
@@ -35,7 +35,7 @@ const createMainWindow = () => {
     });
   }
 
-  ipcMain.on(SLEvent.CLOSE_WINDOW, closeAllWindows);
+  SLEvent.CLOSE_WINDOW.on(ipcMain, closeAllWindows);
 };
 
 const closeAllWindows = () => {
