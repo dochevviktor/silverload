@@ -12,6 +12,7 @@ export default interface SLTab {
   translateY?: number;
   scaleX?: number;
   scaleY?: number;
+  isLoading?: boolean;
 }
 
 export const loadTabs = (db: Database): SLTab[] => {

@@ -24,7 +24,7 @@ const Main = (): JSX.Element => {
 
     SLEvent.GET_FILE_ARGUMENTS.sendTo(ipcRenderer, fsHandlerId);
 
-    removeList.push(SLEvent.SENT_FILE_ARGUMENTS.on(ipcRenderer, (fileList) => openNewTabs(fileList)));
+    removeList.push(SLEvent.SEND_SL_FILES.on(ipcRenderer, (fileList) => openNewTabs(fileList)));
     removeList.push(SLEvent.LOAD_TAB_IMAGE.on(ipcRenderer, (tabImageData) => dispatch(loadTabImage(tabImageData))));
 
     return () => removeList.forEach((removeListener) => removeListener());

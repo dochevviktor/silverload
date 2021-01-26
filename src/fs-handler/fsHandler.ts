@@ -31,7 +31,7 @@ const readFileAsync = async (tabImageData): Promise<SLTabImageData> => {
   if (tabImageData?.path) {
     const mimeType = (await fromFile(tabImageData.path))?.mime;
 
-    if (!validateFile(mimeType)) return;
+    if (!validateFile(mimeType)) return tabImageData;
     const base64 = await promises.readFile(tabImageData.path, { encoding: 'base64' });
 
     tabImageData.base64 = `data:${mimeType};base64,${base64}`;
@@ -41,7 +41,7 @@ const readFileAsync = async (tabImageData): Promise<SLTabImageData> => {
 };
 
 const sendSLFiles = async (webContentsId, args) => {
-  SLEvent.SENT_FILE_ARGUMENTS.sendTo(ipcRenderer, webContentsId, await getSLFilesFromArgs(args));
+  SLEvent.SEND_SL_FILES.sendTo(ipcRenderer, webContentsId, await getSLFilesFromArgs(args));
 };
 
 SLEvent.GET_FILE_ARGUMENTS.on(ipcRenderer, async (args, event) =>

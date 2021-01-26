@@ -55,6 +55,13 @@ const resetSizeAndPos = (tab: SLTab) => {
   tab.scaleY = 1;
 };
 
+const setIsLoading = (state, tabId: string, flag: boolean) => {
+  if (tabId === state.activeTab.id) {
+    state.activeTab.isLoading = flag;
+  }
+  state.tabList.find((it) => it.id === tabId).isLoading = flag;
+};
+
 const addNewTab = (state, tab: SLTab): SLTab => {
   const newTab: SLTab = tab ? tab : { id: uuid(), title: 'New Tab' };
 
@@ -72,6 +79,7 @@ const TabListSlice = createSlice({
       const newTab: SLTab = addNewTab(state, action.payload);
 
       if (newTab.path && !newTab.base64Image) {
+        setIsLoading(state, newTab.id, true);
         SLEvent.LOAD_TAB_IMAGE.sendTo(ipcRenderer, state.fsHandlerId, { tabId: newTab.id, path: newTab.path });
       }
     },
@@ -81,13 +89,16 @@ const TabListSlice = createSlice({
       state.activeTab = newTab;
 
       if (newTab.path && !newTab.base64Image) {
+        setIsLoading(state, newTab.id, true);
         SLEvent.LOAD_TAB_IMAGE.sendTo(ipcRenderer, state.fsHandlerId, { tabId: newTab.id, path: newTab.path });
       }
     },
     requestLoadTabImage(state, { payload: tabImageData }: PayloadAction<SLTabImageData>) {
+      setIsLoading(state, tabImageData.tabId, true);
       SLEvent.LOAD_TAB_IMAGE.sendTo(ipcRenderer, state.fsHandlerId, tabImageData);
     },
     loadTabImage(state, { payload: tabImageData }: PayloadAction<SLTabImageData>) {
+      setIsLoading(state, tabImageData.tabId, false);
       if (state.activeTab.id === tabImageData.tabId) {
         state.activeTab.base64Image = tabImageData.base64;
       }

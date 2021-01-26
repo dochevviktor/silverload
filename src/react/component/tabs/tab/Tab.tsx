@@ -1,7 +1,7 @@
 import { MouseEvent } from 'react';
 import styles from './Tab.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import SLTab from '../../../../common/class/SLTab';
 import { removeTab, setActiveTab } from '../../../store/slices/tab.slice';
@@ -35,7 +35,7 @@ const Tab = (props: TabParams): JSX.Element => {
   return (
     <div className={tabStyle.join(' ')} onClick={updateActive}>
       <p>{props.tab.title}</p>
-      <FontAwesomeIcon icon={faTimes} onClick={remove} />
+      <FontAwesomeIcon icon={props.tab.isLoading ? faSpinner : faTimes} onClick={remove} spin={props.tab.isLoading} />
     </div>
   );
 };

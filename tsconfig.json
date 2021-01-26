@@ -28,6 +28,9 @@
     "jsx": "react-jsx"
   },
   "exclude": [
-    "node_modules/*"
+    "node_modules/*",
+    "src/database/*",
+    "src/electron/*",
+    "src/fs-handler/*"
   ]
 }
