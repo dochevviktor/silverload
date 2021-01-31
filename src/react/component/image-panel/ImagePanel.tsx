@@ -9,14 +9,8 @@ import DragAndDrop from '../image-drop/DragAndDrop';
 import { handleDragIn, handleDragOut, handleDrag, handleDragDrop } from '../../store/slices/drag.slice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
-import {
-  changeImageSize,
-  setActiveTabData,
-  requestLoadTabImage,
-  addTab,
-  setImagePosition,
-  resetImageSizeAndPos,
-} from '../../store/slices/tab.slice';
+import { changeImageSize, setActiveTabData, setImagePosition } from '../../store/slices/tab.slice';
+import { addNewTab, requestImageData } from '../../store/thunks/tab.thunk';
 
 const ImagePanel = (): JSX.Element => {
   const [isAnimated, setAnimated] = useState<boolean>(false);
@@ -41,13 +35,13 @@ const ImagePanel = (): JSX.Element => {
     if (!firstDroppedFile || !validateFile(firstDroppedFile)) return;
 
     dispatch(setActiveTabData({ title: firstDroppedFile.name, path: firstDroppedFile.path }));
-    dispatch(requestLoadTabImage({ tabId: activeTab.id, path: firstDroppedFile.path }));
+    dispatch(requestImageData({ tabId: activeTab.id, path: firstDroppedFile.path }));
 
     if (length === 1) return;
 
     Object.values(otherDroppedFiles)
       .filter((it: File) => validateFile(it))
-      .map((it: File) => dispatch(addTab({ id: uuid(), title: it.name, path: it.path })));
+      .map((it: File) => dispatch(addNewTab({ id: uuid(), title: it.name, path: it.path })));
   };
 
   const onMouseMove = (e: MouseEvent) => {
@@ -62,7 +56,7 @@ const ImagePanel = (): JSX.Element => {
   };
 
   const onDoubleClick = (e: MouseEvent) => {
-    dispatch(resetImageSizeAndPos());
+    dispatch(setImagePosition());
     e.stopPropagation();
     e.preventDefault();
   };

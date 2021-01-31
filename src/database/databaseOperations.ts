@@ -17,6 +17,10 @@ export const createTableQuery = (it: SLTable): string => {
         query.push('NOT NULL');
       }
 
+      if (definition.options?.unique) {
+        query.push('UNIQUE');
+      }
+
       if (definition.options?.default !== undefined) {
         query.push(`DEFAULT ${definition.options.default}`);
       }

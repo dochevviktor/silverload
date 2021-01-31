@@ -28,7 +28,7 @@ const Tab = (props: TabParams): JSX.Element => {
     dispatch(setActiveTab(props.tab));
   };
 
-  if (props.tab.id === activeTab.id) {
+  if (props.tab.id === activeTab?.id) {
     tabStyle.push(styles.tabActive);
   }
 

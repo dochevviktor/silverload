@@ -1,16 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import SLTab from '../../../common/class/SLTab';
-import { v4 as uuid } from 'uuid';
-import * as SLEvent from '../../../common/class/SLEvent';
 import { SLTabImageData } from '../../../common/interface/SLTabImageData';
-
-const { ipcRenderer } = window.require('electron');
 
 interface SLTabListSlice {
   activeTab: SLTab;
   isSaving: boolean;
-  databaseHandlerId: number;
-  fsHandlerId: number;
   tabList: SLTab[];
 }
 
@@ -27,8 +21,6 @@ interface SLImageData {
 const initialTabListState: SLTabListSlice = {
   activeTab: null,
   isSaving: false,
-  databaseHandlerId: SLEvent.GET_DATABASE_HANDLER_CONTENTS_ID.sendSync(ipcRenderer),
-  fsHandlerId: SLEvent.GET_FS_HANDLER_CONTENTS_ID.sendSync(ipcRenderer),
   tabList: [],
 };
 
@@ -55,58 +47,34 @@ const resetSizeAndPos = (tab: SLTab) => {
   tab.scaleY = 1;
 };
 
+const getTabById = (state, tabId) => state.tabList.find((it) => it.id === tabId);
+
 const setIsLoading = (state, tabId: string, flag: boolean) => {
   if (tabId === state.activeTab.id) {
     state.activeTab.isLoading = flag;
   }
-  state.tabList.find((it) => it.id === tabId).isLoading = flag;
+  getTabById(state, tabId).isLoading = flag;
 };
 
-const addNewTab = (state, tab: SLTab): SLTab => {
-  const newTab: SLTab = tab ? tab : { id: uuid(), title: 'New Tab' };
-
-  resetSizeAndPos(newTab);
-  state.tabList.push(newTab);
-
-  return newTab;
-};
-
-const TabListSlice = createSlice({
+export const TabListSlice = createSlice({
   name: 'TabListSlice',
   initialState: initialTabListState,
   reducers: {
-    addTab(state, action: PayloadAction<SLTab>) {
-      const newTab: SLTab = addNewTab(state, action.payload);
-
-      if (newTab.path && !newTab.base64Image) {
-        setIsLoading(state, newTab.id, true);
-        SLEvent.LOAD_TAB_IMAGE.sendTo(ipcRenderer, state.fsHandlerId, { tabId: newTab.id, path: newTab.path });
-      }
+    addTab(state, { payload: tab }: PayloadAction<SLTab>) {
+      resetSizeAndPos(tab);
+      state.tabList.push(tab);
     },
-    addTabAndSetActive(state, action: PayloadAction<SLTab>) {
-      const newTab: SLTab = addNewTab(state, action.payload);
-
-      state.activeTab = newTab;
-
-      if (newTab.path && !newTab.base64Image) {
-        setIsLoading(state, newTab.id, true);
-        SLEvent.LOAD_TAB_IMAGE.sendTo(ipcRenderer, state.fsHandlerId, { tabId: newTab.id, path: newTab.path });
-      }
-    },
-    requestLoadTabImage(state, { payload: tabImageData }: PayloadAction<SLTabImageData>) {
-      setIsLoading(state, tabImageData.tabId, true);
-      SLEvent.LOAD_TAB_IMAGE.sendTo(ipcRenderer, state.fsHandlerId, tabImageData);
+    setTabLoading(state, { payload: tabId }: PayloadAction<string>) {
+      setIsLoading(state, tabId, true);
     },
     loadTabImage(state, { payload: tabImageData }: PayloadAction<SLTabImageData>) {
       setIsLoading(state, tabImageData.tabId, false);
       if (state.activeTab.id === tabImageData.tabId) {
         state.activeTab.base64Image = tabImageData.base64;
       }
-      state.tabList.find((it) => it.id === tabImageData.tabId).base64Image = tabImageData.base64;
+      getTabById(state, tabImageData.tabId).base64Image = tabImageData.base64;
     },
-    removeTab(state, action: PayloadAction<number>) {
-      const tabIndex = action.payload;
-
+    removeTab(state, { payload: tabIndex }: PayloadAction<number>) {
       state.tabList[tabIndex].base64Image = null;
       state.tabList[tabIndex].path = null;
       state.tabList.splice(tabIndex, 1);
@@ -119,71 +87,49 @@ const TabListSlice = createSlice({
         state.activeTab = nextActiveTab;
       }
     },
-    setActiveTab(state, action: PayloadAction<SLTab>) {
-      state.activeTab = action.payload;
+    setActiveTab(state, { payload: tab }: PayloadAction<SLTab>) {
+      state.activeTab = tab;
     },
-    setActiveTabData(state, action: PayloadAction<SLImageData>) {
-      setData(state.activeTab, action.payload);
-      setData(
-        state.tabList.find((it) => it.id === state.activeTab.id),
-        action.payload
-      );
+    setActiveTabData(state, { payload: imageData }: PayloadAction<SLImageData>) {
+      setData(state.activeTab, imageData);
+      setData(getTabById(state, state.activeTab.id), imageData);
     },
-    setImagePosition(state, action: PayloadAction<SLImagePos>) {
-      setPosition(state.activeTab, action.payload);
-      setPosition(
-        state.tabList.find((it) => it.id === state.activeTab.id),
-        action.payload
-      );
+    setImagePosition(state, { payload: position }: PayloadAction<SLImagePos>) {
+      if (position) {
+        setPosition(state.activeTab, position);
+        setPosition(getTabById(state, state.activeTab.id), position);
+      } else {
+        resetSizeAndPos(state.activeTab);
+        resetSizeAndPos(getTabById(state, state.activeTab.id));
+      }
     },
-    resetImageSizeAndPos(state) {
-      resetSizeAndPos(state.activeTab);
-      resetSizeAndPos(state.tabList.find((it) => it.id === state.activeTab.id));
+    changeImageSize(state, { payload: size }: PayloadAction<number>) {
+      setSize(state.activeTab, size);
+      setSize(getTabById(state, state.activeTab.id), size);
     },
-    changeImageSize(state, action: PayloadAction<number>) {
-      setSize(state.activeTab, action.payload);
-      setSize(
-        state.tabList.find((it) => it.id === state.activeTab.id),
-        action.payload
-      );
-    },
-    loadTabs(state, action: PayloadAction<SLTab[]>) {
+    loadTabs(state, { payload: tab }: PayloadAction<SLTab[]>) {
       const loadedIds: string[] = state.tabList.map((it) => it.id);
 
-      action.payload.filter((it) => !loadedIds.find((id) => id === it.id)).forEach((it) => state.tabList.push(it));
+      tab.filter((it) => !loadedIds.find((id) => id === it.id)).forEach((it) => state.tabList.push(it));
 
       if (state.tabList.length > 0) {
         state.activeTab = state.tabList[0];
       }
     },
-    saveTabs(state, action: PayloadAction<SLTab[]>) {
+    saveTabs(state) {
       state.isSaving = true;
-      SLEvent.SAVE_TABS.sendTo(ipcRenderer, state.databaseHandlerId, action.payload);
     },
     saveTabsDone(state) {
       state.isSaving = false;
     },
-    deleteTabs(state) {
-      SLEvent.DELETE_TABS.sendTo(ipcRenderer, state.databaseHandlerId);
+    setIsSaving(state, { payload: isSaving }: PayloadAction<boolean>) {
+      state.isSaving = isSaving;
     },
   },
 });
 
-export const {
-  addTab,
-  addTabAndSetActive,
-  loadTabImage,
-  requestLoadTabImage,
-  removeTab,
-  setActiveTab,
-  setActiveTabData,
-  setImagePosition,
-  resetImageSizeAndPos,
-  changeImageSize,
-  loadTabs,
-  saveTabs,
-  saveTabsDone,
-  deleteTabs,
-} = TabListSlice.actions;
+export const { removeTab, setActiveTab, setActiveTabData, setImagePosition, changeImageSize } = TabListSlice.actions;
+
+export const actions = TabListSlice.actions;
 
 export default TabListSlice.reducer;

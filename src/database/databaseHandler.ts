@@ -1,10 +1,9 @@
 import Database from 'better-sqlite3';
+import { ipcRenderer } from 'electron';
 import { databaseInit } from './databaseInit';
 import * as SLEvent from '../common/class/SLEvent';
 import { getSettings, saveSettings } from '../common/class/SLSettings';
 import { deleteTabs, loadTabs, saveTabs } from '../common/class/SLTab';
-
-const { ipcRenderer } = require('electron');
 
 let db = null;
 

@@ -5,8 +5,8 @@ const metadataKey = 'columns';
 
 export interface ColumnOptions {
   pk?: boolean;
-  autoIncremental?: boolean;
   nullable?: boolean;
+  unique?: boolean;
   default?: unknown;
 }
 

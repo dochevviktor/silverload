@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
-import { addTabAndSetActive } from '../../store/slices/tab.slice';
 import SLDrawer from '../drawer/SLDrawer';
+import { addNewActiveTab } from '../../store/thunks/tab.thunk';
 
 const Tabs = (): JSX.Element => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -19,7 +19,7 @@ const Tabs = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const addTab = () => {
-    dispatch(addTabAndSetActive());
+    dispatch(addNewActiveTab());
 
     return scroll.scrollLeft(100, 10);
   };

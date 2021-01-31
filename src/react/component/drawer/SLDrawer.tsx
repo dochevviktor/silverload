@@ -1,37 +1,24 @@
 import { Drawer, Button, Popover } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styles from './SLDrawer.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretSquareLeft, faCaretSquareRight, faSave as faSaveReg } from '@fortawesome/free-regular-svg-icons';
 import { faCog, faInfoCircle, faTrash, faSave as faSaveSol } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleVisibility } from '../../store/slices/settings.slice';
-import { saveTabs, saveTabsDone, deleteTabs } from '../../store/slices/tab.slice';
 import { RootState } from '../../store/rootReducer';
-import { load } from '../../store/thunks/tab.thunk';
-import * as SLEvent from '../../../common/class/SLEvent';
-
-const { ipcRenderer } = window.require('electron');
+import { load, save, deleteTabs } from '../../store/thunks/tab.thunk';
 
 const SLDrawer = (): JSX.Element => {
   const [isVisible, updateVisible] = useState(false);
 
-  const tabList = useSelector((state: RootState) => state.tabsSlice.tabList);
-  const isSavingTabs = useSelector((state: RootState) => state.tabsSlice.isSaving);
+  const { tabList, isSaving } = useSelector((state: RootState) => state.tabsSlice);
 
   const drawerButtonIcon = isVisible ? faCaretSquareLeft : faCaretSquareRight;
 
   const dispatch = useDispatch();
 
   const showSettingsModal = () => dispatch(toggleVisibility());
-
-  useEffect(() => {
-    const removeListener = SLEvent.SAVE_TABS.on(ipcRenderer, () => dispatch(saveTabsDone()));
-
-    return () => {
-      removeListener();
-    };
-  }, []);
 
   const content = (
     <div>
@@ -40,7 +27,7 @@ const SLDrawer = (): JSX.Element => {
     </div>
   );
 
-  const buttonStyle = isSavingTabs ? styles.buttonStyleProcessing : styles.buttonStyle;
+  const buttonStyle = isSaving ? styles.buttonStyleProcessing : styles.buttonStyle;
 
   return (
     <div className="site-drawer-render-in-current-wrapper">
@@ -55,12 +42,7 @@ const SLDrawer = (): JSX.Element => {
         visible={isVisible}
         width="170px">
         <div className={styles.topSection}>
-          <Button
-            type="text"
-            onClick={() => dispatch(saveTabs(tabList))}
-            loading={isSavingTabs}
-            className={buttonStyle}
-            block>
+          <Button type="text" onClick={() => dispatch(save(tabList))} loading={isSaving} className={buttonStyle} block>
             <FontAwesomeIcon icon={faSaveSol} size="lg" />
             <p>Save Tabs</p>
           </Button>

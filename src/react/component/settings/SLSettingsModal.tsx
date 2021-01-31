@@ -2,29 +2,19 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
 import { Modal, Switch } from 'antd';
-import { saveSettings, toggleVisibility, toggleSetting, saveSettingsDone } from '../../store/slices/settings.slice';
+import { toggleVisibility, toggleSetting } from '../../store/slices/settings.slice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { SLSetting } from '../../../common/class/SLSettings';
 import styles from './SLSettingsModal.scss';
-import { load } from '../../store/thunks/settings.thunk';
-import * as SLEvent from '../../../common/class/SLEvent';
-
-const { ipcRenderer } = window.require('electron');
+import { loadSettings, saveSettings } from '../../store/thunks/settings.thunk';
 
 const SLSettingsModal = (): JSX.Element => {
-  const isVisible = useSelector((state: RootState) => state.settingsModal.isVisible);
-  const isSaving = useSelector((state: RootState) => state.settingsModal.isSaving);
-  const settings = useSelector((state: RootState) => state.settingsModal.settings);
+  const { isVisible, isSaving, settings } = useSelector((state: RootState) => state.settingsModal);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(load());
-    const removeListener = SLEvent.SAVE_SETTINGS.on(ipcRenderer, () => dispatch(saveSettingsDone()));
-
-    return () => {
-      removeListener();
-    };
+    dispatch(loadSettings());
   }, []);
 
   const handleOk = (): void => {
@@ -33,7 +23,7 @@ const SLSettingsModal = (): JSX.Element => {
 
   const handleCancel = (): void => {
     dispatch(toggleVisibility());
-    dispatch(load());
+    dispatch(loadSettings());
   };
 
   const toggleSet = (index: number): void => {

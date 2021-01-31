@@ -1,20 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import SLSettings from '../../../common/class/SLSettings';
-import * as SLEvent from '../../../common/class/SLEvent';
-
-const { ipcRenderer } = window.require('electron');
 
 interface SettingsModal {
   isVisible: boolean;
   isSaving: boolean;
-  databaseHandlerId: number;
   settings: SLSettings[];
 }
 
 const initialVisibilityState: SettingsModal = {
   isVisible: false,
   isSaving: false,
-  databaseHandlerId: SLEvent.GET_DATABASE_HANDLER_CONTENTS_ID.sendSync(ipcRenderer),
   settings: [],
 };
 
@@ -25,16 +20,14 @@ const SettingsModal = createSlice({
     toggleVisibility(state) {
       state.isVisible = !state.isVisible;
     },
-    toggleSetting(state, action: PayloadAction<number>) {
-      state.settings[action.payload].flag = !state.settings[action.payload].flag;
+    toggleSetting(state, { payload: index }: PayloadAction<number>) {
+      state.settings[index].flag = !state.settings[index].flag;
     },
-    loadSettings(state, { payload }: PayloadAction<SLSettings[]>) {
-      state.settings = payload;
+    loadSettings(state, { payload: settings }: PayloadAction<SLSettings[]>) {
+      state.settings = settings;
     },
-    saveSettings(state, action: PayloadAction<SLSettings[]>) {
+    saveSettings(state) {
       state.isSaving = true;
-      state.settings = action.payload;
-      SLEvent.SAVE_SETTINGS.sendTo(ipcRenderer, state.databaseHandlerId, action.payload);
       state.isVisible = !state.isVisible;
     },
     saveSettingsDone(state) {
@@ -43,6 +36,8 @@ const SettingsModal = createSlice({
   },
 });
 
-export const { toggleVisibility, toggleSetting, saveSettingsDone, loadSettings, saveSettings } = SettingsModal.actions;
+export const { toggleVisibility, toggleSetting } = SettingsModal.actions;
+
+export const actions = SettingsModal.actions;
 
 export default SettingsModal.reducer;
