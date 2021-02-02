@@ -7,7 +7,7 @@ export const createTableQuery = (it: SLTable): string => {
   query.push(`CREATE TABLE IF NOT EXISTS ${it.className} (`);
   it.columns.map((definition) => {
     query.push(definition.name);
-    query.push(definition.type);
+    query.push(columnType[definition.type] || columnType['default']);
     if (definition.options?.pk) {
       query.push('PRIMARY KEY');
     } else {
@@ -31,6 +31,13 @@ export const createTableQuery = (it: SLTable): string => {
   query.push(') WITHOUT ROWID;');
 
   return query.join(' ');
+};
+
+const columnType = {
+  Boolean: 'NUMERIC',
+  Number: 'NUMERIC',
+  String: 'TEXT',
+  default: 'TEXT',
 };
 
 export const prepareSaveQuery = (table: SLTable): string => {
@@ -69,8 +76,8 @@ export const saveTable = (db: Database, tables: SLTable | SLTable[]): void => {
   }
 };
 
-export const getAllFromTable = <T>(db: Database, table: SLTable<T>): T[] =>
-  db?.prepare(`SELECT * FROM ${table.className}`)?.all();
+export const getAllFromTableOrdered = <T>(db: Database, table: SLTable<T>): T[] =>
+  db?.prepare(`SELECT * FROM ${table.className} ORDER BY sequence`)?.all();
 
 export const prepareInsertIfExists = (table: SLTable): string => {
   const columns = [];

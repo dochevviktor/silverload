@@ -9,6 +9,7 @@ import { createTableQuery, prepareInsertIfExists, prepareSaveQuery } from './dat
 const listOfEntities: SLTable[] = [SLSettingsTable.prototype, SLVersionTable.prototype, SLTabTable.prototype];
 
 const iniVersion = (db: Database) => {
+  console.log('Checking changes in table structure');
   const versionCheckStmt = db?.prepare(`SELECT * FROM ${SLVersionTable.prototype.className}`);
   const versionInDb: SLVersion[] = versionCheckStmt?.all() || [];
   const queries: string[] = [];
@@ -16,6 +17,7 @@ const iniVersion = (db: Database) => {
   versionInDb.map((ver) => {
     listOfEntities.map((table) => {
       if (table.className === ver.tableName && table.hash !== ver.tableHash) {
+        console.log('Change detected - rebuilding table:', ver.tableName);
         new SLVersionTable({ tableName: table.className, tableHash: table.hash });
         queries.push(`DROP TABLE ${table.className};`);
         queries.push(createTableQuery(table));
@@ -23,6 +25,7 @@ const iniVersion = (db: Database) => {
       }
     });
     if (!listOfEntities.find((table) => table.className === ver.tableName)) {
+      console.log('Change detected - removing table:', ver.tableName);
       const verPkCol = SLVersionTable.prototype.columns.find((it) => it.options?.pk)?.name;
 
       queries.push(`DROP TABLE IF EXISTS ${ver.tableName};`);
@@ -32,6 +35,7 @@ const iniVersion = (db: Database) => {
 
   listOfEntities.map((table) => {
     if (!versionInDb.find((ver) => ver.tableName === table.className)) {
+      console.log('Change detected - adding table:', table.className);
       queries.push(prepareSaveQuery(new SLVersionTable({ tableName: table.className, tableHash: table.hash })));
     }
   });
@@ -44,8 +48,8 @@ const iniVersion = (db: Database) => {
 const initSettings = (db: Database) => {
   const queries: string[] = [];
 
-  Object.keys(SLSetting).map((it) => {
-    queries.push(prepareInsertIfExists(new SLSettingsTable({ code: it })));
+  Object.keys(SLSetting).map((it, key) => {
+    queries.push(prepareInsertIfExists(new SLSettingsTable({ code: it, sequence: key })));
   });
   db?.exec(queries.join(' '));
 };

@@ -1,6 +1,6 @@
 import { Column, Entity, SLTable } from './SLTable';
 import { Database } from 'better-sqlite3';
-import { getAllFromTable, saveTable } from '../../database/databaseOperations';
+import { getAllFromTableOrdered, saveTable } from '../../database/databaseOperations';
 
 export enum SLSetting {
   SAVE_ON_EXIT = 'Save tabs on application exit',
@@ -8,6 +8,7 @@ export enum SLSetting {
 
 export default interface SLSettings {
   code: string;
+  sequence?: number;
   value?: string;
   flag?: boolean;
 }
@@ -15,7 +16,7 @@ export default interface SLSettings {
 export const getSettings = (db: Database): SLSettings[] => {
   console.log('Call to load settings');
 
-  return getAllFromTable<SLSettings>(db, SLSettingsTable.prototype);
+  return getAllFromTableOrdered<SLSettings>(db, SLSettingsTable.prototype);
 };
 
 export const saveSettings = (db: Database, settings: SLSettings[]): void => {
@@ -31,6 +32,9 @@ export const saveSettings = (db: Database, settings: SLSettings[]): void => {
 export class SLSettingsTable extends SLTable<SLSettings> implements SLSettings {
   @Column({ pk: true })
   code: string;
+
+  @Column({ default: 0 })
+  sequence: number;
 
   @Column({ nullable: true })
   value: string;

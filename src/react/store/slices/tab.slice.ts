@@ -62,6 +62,7 @@ export const TabListSlice = createSlice({
   reducers: {
     addTab(state, { payload: tab }: PayloadAction<SLTab>) {
       resetSizeAndPos(tab);
+      tab.sequence = state.tabList.length + 1;
       state.tabList.push(tab);
     },
     setTabLoading(state, { payload: tabId }: PayloadAction<string>) {
@@ -82,6 +83,8 @@ export const TabListSlice = createSlice({
       const nextPos = state.tabList.length - 1 >= tabIndex ? tabIndex : state.tabList.length - 1;
 
       const nextActiveTab = nextPos >= 0 ? state.tabList[nextPos] : null;
+
+      state.tabList.forEach((it) => (it.sequence = state.tabList.indexOf(it)));
 
       if (nextActiveTab) {
         state.activeTab = nextActiveTab;

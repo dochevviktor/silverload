@@ -1,11 +1,12 @@
 import { Column, Entity, SLTable } from './SLTable';
 import { Database } from 'better-sqlite3';
 import { sha1 } from 'object-hash';
-import { cleanUpDatabase, getAllFromTable, saveTable, truncateTable } from '../../database/databaseOperations';
+import { cleanUpDatabase, getAllFromTableOrdered, saveTable, truncateTable } from '../../database/databaseOperations';
 
 export default interface SLTab {
   id: string;
   title: string;
+  sequence?: number;
   path?: string;
   base64Image?: string;
   translateX?: number;
@@ -18,7 +19,7 @@ export default interface SLTab {
 export const loadTabs = (db: Database): SLTab[] => {
   console.log('Call to load tabs');
 
-  return getAllFromTable<SLTab>(db, SLTabTable.prototype);
+  return getAllFromTableOrdered<SLTab>(db, SLTabTable.prototype);
 };
 
 const convertToTableEntity = (it: SLTab) => {
@@ -53,6 +54,9 @@ export class SLTabTable extends SLTable<SLTab> implements SLTab {
 
   @Column()
   title: string;
+
+  @Column({ default: 0 })
+  sequence: number;
 
   @Column({ nullable: true })
   path: string;
