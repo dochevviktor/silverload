@@ -18,6 +18,7 @@ const createMainWindow = () => {
       fsHandlerWindow = createDevFsWindow();
       fsHandlerWindow.webContents.on('did-finish-load', () => {
         mainWindow = createDevWindow(startURL);
+        mainWindow.on('closed', closeAllWindows);
       });
     });
   } else {
@@ -31,6 +32,7 @@ const createMainWindow = () => {
       fsHandlerWindow = createFsWindow();
       fsHandlerWindow.webContents.on('did-finish-load', () => {
         mainWindow = createWindow(startURL);
+        mainWindow.on('closed', closeAllWindows);
       });
     });
   }

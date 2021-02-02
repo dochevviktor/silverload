@@ -6,7 +6,7 @@ import SLSettings from './SLSettings';
 
 const channels = new Set<string>();
 
-export class SLEvent<T = null> {
+export class SLEvent<T = void> {
   public constructor(private readonly channel: string) {
     if (!channels.has(channel)) {
       this.channel = channel;
@@ -61,7 +61,7 @@ export const GET_DB_PATH = new SLEvent<string>('008');
 // Database SLTabs
 export const SAVE_TABS = new SLEvent<SLTab[]>('009');
 export const LOAD_TABS = new SLEvent<SLTab[]>('010');
-export const DELETE_TABS = new SLEvent<void>('011');
+export const DELETE_TABS = new SLEvent('011');
 // Database SLSettings
 export const SAVE_SETTINGS = new SLEvent<SLSettings[]>('012');
 export const LOAD_SETTINGS = new SLEvent<SLSettings[]>('013');

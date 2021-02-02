@@ -12,7 +12,6 @@ const loadInitListeners = (mainWindow: BrowserWindow) => {
     }
   });
 
-  mainWindow.on('closed', () => (mainWindow = null));
   mainWindow.webContents.on('context-menu', (e, props) => mainContext(mainWindow, e, props));
 
   SLEvent.GET_MAIN_WINDOW_CONTENTS_ID.onSync(ipcMain, mainWindow.webContents.id);
