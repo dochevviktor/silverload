@@ -17,6 +17,7 @@ const ImagePanel = (): JSX.Element => {
 
   const dispatch = useDispatch();
   const activeTab = useSelector((state: RootState) => state.tabsSlice.activeTab);
+  const isDragging = useSelector((state: RootState) => state.tabsSlice.isDragging);
 
   const zoom = new SLZoom((multiplier) => dispatch(changeImageSize(multiplier)));
   const validateFile = (file: File) => VALID_FILE_TYPES.indexOf(file.type) !== -1;
@@ -45,7 +46,7 @@ const ImagePanel = (): JSX.Element => {
   };
 
   const onMouseMove = (e: MouseEvent) => {
-    if (e.button !== 0 || e.buttons !== 1) return;
+    if (isDragging || e.button !== 0 || e.buttons !== 1) return;
     setAnimated(false);
     const newX = activeTab?.translateX + e.movementX / activeTab?.scaleX;
     const newY = activeTab?.translateY + e.movementY / activeTab?.scaleY;
