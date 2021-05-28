@@ -159,8 +159,12 @@ export const TabListSlice = createSlice({
       setIsLoading(state, tabImageData.tabId, false);
       if (state.activeTab.id === tabImageData.tabId) {
         state.activeTab.base64Image = tabImageData.base64;
+        state.activeTab.type = tabImageData.type;
       }
-      getTabById(state, tabImageData.tabId).base64Image = tabImageData.base64;
+      const tabById = getTabById(state, tabImageData.tabId);
+
+      tabById.base64Image = tabImageData.base64;
+      tabById.type = tabImageData.type;
     },
     removeTab(state, { payload: tabIndex }: PayloadAction<number>) {
       state.tabList[tabIndex].base64Image = null;

@@ -227,7 +227,8 @@
     "jsxBracketSameLine": true
   },
   "dependencies": {
-    "better-sqlite3": "^7.1.2"
+    "better-sqlite3": "^7.1.2",
+    "ffmpeg-static": "^4.3.0"
   },
   "config": {
     "forge": {
@@ -237,11 +238,13 @@
         "dir": "build",
         "icon": "icon.ico",
         "extraResource": [
-          "build/better_sqlite3.node"
+          "build/better_sqlite3.node",
+          "build/ffmpeg.exe"
         ],
         "ignore": [
           ".idea",
           ".node",
+          ".exe",
           "src",
           "bundle*",
           ".iml",

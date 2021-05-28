@@ -32,9 +32,20 @@ const readFileAsync = async (tabImageData): Promise<SLTabImageData> => {
     const mimeType = (await fromFile(tabImageData.path))?.mime;
 
     if (!validateFile(mimeType)) return tabImageData;
+
+    if (mimeType === 'image/gif') {
+      SLEvent.LOAD_TAB_GIF_VIDEO.sendTo(
+        ipcRenderer,
+        SLEvent.GET_FFMPEG_HANDLER_CONTENTS_ID.sendSync(ipcRenderer),
+        tabImageData
+      );
+
+      return tabImageData;
+    }
     const base64 = await promises.readFile(tabImageData.path, { encoding: 'base64' });
 
     tabImageData.base64 = `data:${mimeType};base64,${base64}`;
+    tabImageData.type = 'image';
   }
 
   return tabImageData;

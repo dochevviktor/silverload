@@ -144,6 +144,7 @@ const commonConfig: Configuration = {
     new CspHtmlWebpackPlugin({
       'default-src': "'self'",
       'img-src': ["'self'", 'data:'],
+      'media-src': ["'self'", 'data:'],
       'object-src': "'none'",
       'base-uri': "'self'",
       'script-src': "'self'",

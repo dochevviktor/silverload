@@ -116,6 +116,33 @@ const fsOutputOptions: OutputOptions = {
   sourcemap: false,
 };
 
+const ffmpegInputOptions: InputOptions = {
+  input: 'src/ffmpeg/ffmpegHandler.ts',
+  plugins: [
+    externals({
+      include: ['electron'],
+      devDeps: false,
+    }),
+    nodeResolve({
+      preferBuiltins: true,
+    }),
+    typescript({
+      tsconfig: 'src/ffmpeg/tsconfig.json',
+    }),
+    commonjs(),
+    copy({
+      targets: [{ src: ['**/ffmpeg-static/*.exe'], dest: 'build' }],
+      verbose: true,
+    }),
+  ],
+};
+
+const ffmpegOutputOptions: OutputOptions = {
+  file: 'build/ffmpegHandler.js',
+  format: 'cjs',
+  sourcemap: false,
+};
+
 const build = (input: InputOptions, output: OutputOptions): void => {
   const inputOptions = merge(input, process.env?.production ? prodInputOptions : devInputOptions);
 
@@ -130,3 +157,6 @@ build(dbInputOptions, dbOutputOptions);
 
 // Build file system handler process
 build(fsInputOptions, fsOutputOptions);
+
+// Build ffmpeg handler process
+build(ffmpegInputOptions, ffmpegOutputOptions);

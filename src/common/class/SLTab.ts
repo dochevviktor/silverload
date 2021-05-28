@@ -17,6 +17,7 @@ export default interface SLTab {
   isDragging?: boolean;
   shiftLeft?: boolean;
   shiftRight?: boolean;
+  type?: string;
 }
 
 export const loadTabs = (db: Database): SLTab[] => {

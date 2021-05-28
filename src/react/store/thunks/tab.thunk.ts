@@ -12,6 +12,7 @@ const { ipcRenderer } = window.require('electron');
 // Variables
 const databaseHandlerId = SLEvent.GET_DATABASE_HANDLER_CONTENTS_ID.sendSync(ipcRenderer);
 const fsHandlerId = SLEvent.GET_FS_HANDLER_CONTENTS_ID.sendSync(ipcRenderer);
+const ffmpegHandlerId = SLEvent.GET_FFMPEG_HANDLER_CONTENTS_ID.sendSync(ipcRenderer);
 const validateFileMimeType = (type: string) => VALID_FILE_TYPES.indexOf(type) !== -1;
 const listeners: (() => void)[] = [];
 

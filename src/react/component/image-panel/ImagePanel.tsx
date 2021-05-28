@@ -56,7 +56,7 @@ const ImagePanel = (): JSX.Element => {
     e.preventDefault();
   };
 
-  const onDoubleClick = (e: MouseEvent) => {
+  let onDoubleClick = (e: MouseEvent) => {
     dispatch(setImagePosition());
     e.stopPropagation();
     e.preventDefault();
@@ -68,7 +68,7 @@ const ImagePanel = (): JSX.Element => {
     e.preventDefault();
   };
 
-  const onWheel = async (e: WheelEvent) => {
+  let onWheel = async (e: WheelEvent) => {
     setAnimated(true);
     if (e.deltaY > 0) {
       if (activeTab?.scaleX > 0.05) await zoom.zoom(false);
@@ -87,6 +87,38 @@ const ImagePanel = (): JSX.Element => {
   const anim = isAnimated ? `transform 0.1s linear` : '';
   const transform = { transform: `${posX} ${posY} ${sclX} ${sclY}`, transition: anim };
 
+  const imageElement = (
+    <div className={styles.imageContainer}>
+      <img src={activeTab?.base64Image} alt="" style={transform} onMouseMove={onMouseMove} />
+    </div>
+  );
+  const videoElement = (
+    <div className={styles.imageContainer}>
+      <video style={transform} autoPlay muted controls loop>
+        <source src={activeTab?.base64Image} type="video/webm" />
+      </video>
+    </div>
+  );
+  const uploadElement = (
+    <div className={styles.dropMessage}>
+      <FontAwesomeIcon icon={faUpload} />
+      <p>Drag & Drop images here</p>
+    </div>
+  );
+  let displayElement;
+
+  if (activeTab?.base64Image) {
+    if (activeTab?.type === 'video') {
+      displayElement = videoElement;
+      onDoubleClick = undefined;
+      onWheel = undefined;
+    } else {
+      displayElement = imageElement;
+    }
+  } else {
+    displayElement = uploadElement;
+  }
+
   return (
     <div
       className={styles.contentContainer}
@@ -98,16 +130,7 @@ const ImagePanel = (): JSX.Element => {
       onDragOver={(e) => dispatch(handleDrag(e))}
       onDrop={handleDrop}>
       <DragAndDrop />
-      {activeTab?.base64Image ? (
-        <div className={styles.imageContainer}>
-          <img src={activeTab?.base64Image} alt="" style={transform} onMouseMove={onMouseMove} />
-        </div>
-      ) : (
-        <div className={styles.dropMessage}>
-          <FontAwesomeIcon icon={faUpload} />
-          <p>Drag & Drop images here</p>
-        </div>
-      )}
+      {displayElement}
     </div>
   );
 };
