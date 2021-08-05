@@ -16,6 +16,8 @@ const validateFileMimeType = (type: string) => VALID_FILE_TYPES.indexOf(type) !=
 const listeners: (() => void)[] = [];
 const ratioPrint = ({ ratio }) => console.log(`Progress: ${ratio * 100.0}%`);
 const ffmpeg = createFFmpeg({ progress: ratioPrint, corePath: './ffmpeg-core.js' });
+const ffmpegQueue: { tabImageData: SLTabImageData; dispatch: (arg) => void }[] = [];
+let ffmpegLock = false;
 
 // Helper functions
 const loadImageData = (newTab: SLTab, dispatch: (arg) => void) => {
@@ -39,7 +41,15 @@ const openNewTabs = (fileList: SLFile[], dispatch: (arg) => void) => {
     .map((it) => dispatch(addNewTab({ id: uuid(), title: it.name, path: it.path })));
 };
 
-const processVideo = async (tabImageData: SLTabImageData, dispatch) => {
+const processVideo = async (tabImageData: SLTabImageData, dispatch, ffmpegCallFromQueue?: boolean) => {
+  if (ffmpegLock && !ffmpegCallFromQueue) {
+    ffmpegQueue.push({ tabImageData, dispatch });
+
+    return;
+  }
+
+  ffmpegLock = true;
+
   if (!ffmpeg.isLoaded()) {
     await ffmpeg.load();
   }
@@ -71,6 +81,14 @@ const processVideo = async (tabImageData: SLTabImageData, dispatch) => {
     // cleanup
     await ffmpeg.FS('unlink', 'file.mp4');
     await ffmpeg.FS('unlink', 'file.gif');
+
+    if (ffmpegQueue.length > 0) {
+      const shift = ffmpegQueue.shift();
+
+      await processVideo(shift.tabImageData, shift.dispatch, true);
+    } else {
+      ffmpegLock = false;
+    }
   }
 };
 
