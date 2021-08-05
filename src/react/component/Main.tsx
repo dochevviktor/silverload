@@ -15,7 +15,9 @@ const Main = (): JSX.Element => {
     dispatch(loadFileArgs());
     dispatch(addListeners());
 
-    return () => dispatch(removeListeners());
+    return () => {
+      dispatch(removeListeners());
+    };
   }, []);
 
   return (

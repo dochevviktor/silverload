@@ -107,23 +107,29 @@ export const loadFileArgs = (): AppThunk => async () => {
   SLEvent.GET_FILE_ARGUMENTS.sendTo(window.ipcRenderer, fsHandlerId);
 };
 
-export const requestImageData = (data: SLTabImageData): AppThunk => async (dispatch) => {
-  dispatch(actions.setTabLoading(data.tabId));
-  SLEvent.LOAD_TAB_IMAGE.sendTo(window.ipcRenderer, fsHandlerId, data);
-};
+export const requestImageData =
+  (data: SLTabImageData): AppThunk =>
+  async (dispatch) => {
+    dispatch(actions.setTabLoading(data.tabId));
+    SLEvent.LOAD_TAB_IMAGE.sendTo(window.ipcRenderer, fsHandlerId, data);
+  };
 
-export const addNewTab = (tab: SLTab): AppThunk => async (dispatch) => {
-  dispatch(actions.addTab(tab));
-  loadImageData(tab, (arg) => dispatch(arg));
-};
+export const addNewTab =
+  (tab: SLTab): AppThunk =>
+  async (dispatch) => {
+    dispatch(actions.addTab(tab));
+    loadImageData(tab, (arg) => dispatch(arg));
+  };
 
-export const addNewActiveTab = (tab: SLTab = null): AppThunk => async (dispatch) => {
-  const newTab: SLTab = tab ? tab : { id: uuid(), title: 'New Tab' };
+export const addNewActiveTab =
+  (tab: SLTab = null): AppThunk =>
+  async (dispatch) => {
+    const newTab: SLTab = tab ? tab : { id: uuid(), title: 'New Tab' };
 
-  dispatch(actions.addTab(newTab));
-  dispatch(actions.setActiveTab(newTab));
-  loadImageData(newTab, (arg) => dispatch(arg));
-};
+    dispatch(actions.addTab(newTab));
+    dispatch(actions.setActiveTab(newTab));
+    loadImageData(newTab, (arg) => dispatch(arg));
+  };
 
 // Database calls
 export const load = (): AppThunk => async (dispatch) => {
@@ -131,11 +137,13 @@ export const load = (): AppThunk => async (dispatch) => {
   SLEvent.LOAD_TABS.once(window.ipcRenderer, (args) => dispatch(actions.loadTabs(args)));
 };
 
-export const save = (tabs: SLTab[]): AppThunk => async (dispatch) => {
-  dispatch(actions.setIsSaving(true));
-  SLEvent.SAVE_TABS.sendTo(window.ipcRenderer, databaseHandlerId, tabs);
-  SLEvent.SAVE_TABS.once(window.ipcRenderer, () => dispatch(actions.setIsSaving(false)));
-};
+export const save =
+  (tabs: SLTab[]): AppThunk =>
+  async (dispatch) => {
+    dispatch(actions.setIsSaving(true));
+    SLEvent.SAVE_TABS.sendTo(window.ipcRenderer, databaseHandlerId, tabs);
+    SLEvent.SAVE_TABS.once(window.ipcRenderer, () => dispatch(actions.setIsSaving(false)));
+  };
 
 export const deleteTabs = (): AppThunk => async () => {
   SLEvent.DELETE_TABS.sendTo(window.ipcRenderer, databaseHandlerId);

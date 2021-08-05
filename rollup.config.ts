@@ -13,6 +13,7 @@ const devInputOptions: InputOptions = {
   plugins: [
     replace({
       delimiters: ['', ''],
+      preventAssignment: true,
       values: {
         'exports.getRoot(exports.getFileName());': "exports.getRoot('package.json');",
         ': commonjsRequire;': ': require;',
@@ -28,6 +29,7 @@ const prodInputOptions: InputOptions = {
   plugins: [
     replace({
       delimiters: ['', ''],
+      preventAssignment: true,
       values: {
         'exports.getRoot(exports.getFileName());': 'process.resourcesPath',
         ': commonjsRequire;': ': require;',

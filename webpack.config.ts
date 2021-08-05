@@ -67,6 +67,9 @@ const prodConfig: Configuration = {
     minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
   },
   plugins: [new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/.*/]), new HTMLInlineCSSWebpackPlugin()],
+  performance: {
+    hints: 'error',
+  },
 };
 
 const commonConfig: Configuration = {

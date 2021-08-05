@@ -5,19 +5,21 @@ import 'antd/dist/antd.less';
 import store from './store/store';
 import App from './container/App';
 
-const root = document.body.appendChild(Object.assign(document.createElement('div'), { id: 'root' }));
+window.addEventListener('load', () => {
+  const root = document.body.appendChild(Object.assign(document.createElement('div'), { id: 'root' }));
 
-const renderIndex = () => {
-  render(
-    <Provider store={store}>
-      <App />
-    </Provider>,
-    root
-  );
-};
+  const renderIndex = () => {
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>,
+      root
+    );
+  };
 
-renderIndex();
+  renderIndex();
 
-if (process.env.NODE_ENV === 'development' && module.hot) {
-  module.hot.accept('./container/App', renderIndex);
-}
+  if (process.env.NODE_ENV === 'development' && module.hot) {
+    module.hot.accept('./container/App', renderIndex);
+  }
+});

@@ -21,15 +21,17 @@ export interface ColumnWithValue {
   value: unknown;
 }
 
-export const Column = (options: ColumnOptions = {}): PropertyDecorator => (target, name: string) => {
-  const columns: ColumnDefinition[] = Reflect.getOwnMetadata(metadataKey, target) || [];
-  const { name: type } = Reflect.getOwnMetadata('design:type', target, name);
+export const Column =
+  (options: ColumnOptions = {}): PropertyDecorator =>
+  (target, name: string) => {
+    const columns: ColumnDefinition[] = Reflect.getOwnMetadata(metadataKey, target) || [];
+    const { name: type } = Reflect.getOwnMetadata('design:type', target, name);
 
-  if (!columns.find((it) => it.name === name)) {
-    columns.push({ name, type, options });
-  }
-  Reflect.defineMetadata(metadataKey, columns, target);
-};
+    if (!columns.find((it) => it.name === name)) {
+      columns.push({ name, type, options });
+    }
+    Reflect.defineMetadata(metadataKey, columns, target);
+  };
 
 export const Entity: ClassDecorator = (target) => {
   const columns = Reflect.getOwnMetadata(metadataKey, target.prototype) || [];

@@ -22,9 +22,7 @@ const loadFrameManipulationListeners = (mainWindow: BrowserWindow) => {
   console.log('Load Frame Manipulation Listeners');
 
   SLEvent.MINIMIZE_WINDOW.on(ipcMain, () => mainWindow.minimize());
-  SLEvent.MAXIMIZE_WINDOW.on(ipcMain, () =>
-    mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()
-  );
+  SLEvent.MAXIMIZE_WINDOW.on(ipcMain, () => (mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()));
 
   mainWindow.on('maximize', () => SLEvent.WINDOW_MAXIMIZED.send(mainWindow.webContents));
   mainWindow.on('unmaximize', () => SLEvent.WINDOW_UN_MAXIMIZED.send(mainWindow.webContents));
@@ -61,6 +59,7 @@ export const createWindow = (startUrl: string): BrowserWindow => {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
       enableRemoteModule: false,
+      contextIsolation: false,
       preload: path.join(__dirname, 'preload.js'),
     },
   });

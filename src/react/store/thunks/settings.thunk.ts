@@ -10,8 +10,10 @@ export const loadSettings = (): AppThunk => (dispatch) => {
   SLEvent.LOAD_SETTINGS.once(window.ipcRenderer, (args) => dispatch(actions.loadSettings(args)));
 };
 
-export const saveSettings = (settings: SLSettings[]): AppThunk => (dispatch) => {
-  dispatch(actions.saveSettings());
-  SLEvent.SAVE_SETTINGS.sendTo(window.ipcRenderer, databaseHandlerId, settings);
-  SLEvent.SAVE_SETTINGS.once(window.ipcRenderer, () => dispatch(actions.saveSettingsDone()));
-};
+export const saveSettings =
+  (settings: SLSettings[]): AppThunk =>
+  (dispatch) => {
+    dispatch(actions.saveSettings());
+    SLEvent.SAVE_SETTINGS.sendTo(window.ipcRenderer, databaseHandlerId, settings);
+    SLEvent.SAVE_SETTINGS.once(window.ipcRenderer, () => dispatch(actions.saveSettingsDone()));
+  };
