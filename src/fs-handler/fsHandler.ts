@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import * as SLEvent from '../common/class/SLEvent';
 import { SLFile } from '../common/interface/SLFile';
 import { existsSync, lstatSync, promises } from 'fs';
@@ -27,20 +27,20 @@ const readSLFile = async (path: string): Promise<SLFile> => {
   return { name, mimeType, path };
 };
 
-const readFileAsync = async (tabImageData): Promise<SLTabImageData> => {
+const readFileAsync = async (tabImageData: SLTabImageData, event: IpcRendererEvent): Promise<void> => {
   if (tabImageData?.path) {
     const mimeType = (await fromFile(tabImageData.path))?.mime;
 
-    if (!validateFile(mimeType)) return tabImageData;
+    if (!validateFile(mimeType)) {
+      SLEvent.LOAD_TAB_IMAGE.sendTo(ipcRenderer, event.senderId, tabImageData);
+    }
 
     if (mimeType === 'image/gif') {
-      SLEvent.LOAD_TAB_GIF_VIDEO.sendTo(
-        ipcRenderer,
-        SLEvent.GET_FFMPEG_HANDLER_CONTENTS_ID.sendSync(ipcRenderer),
-        tabImageData
-      );
+      tabImageData.rawImage = await promises.readFile(tabImageData.path);
+      tabImageData.type = 'video';
+      SLEvent.LOAD_TAB_GIF_VIDEO.sendTo(ipcRenderer, event.senderId, await tabImageData);
 
-      return tabImageData;
+      return;
     }
     const base64 = await promises.readFile(tabImageData.path, { encoding: 'base64' });
 
@@ -48,7 +48,7 @@ const readFileAsync = async (tabImageData): Promise<SLTabImageData> => {
     tabImageData.type = 'image';
   }
 
-  return tabImageData;
+  SLEvent.LOAD_TAB_IMAGE.sendTo(ipcRenderer, event.senderId, tabImageData);
 };
 
 const sendSLFiles = async (webContentsId, args) => {
@@ -63,4 +63,4 @@ SLEvent.GET_ADDITIONAL_FILE_ARGUMENTS.on(ipcRenderer, async (args) =>
   sendSLFiles(SLEvent.GET_MAIN_WINDOW_CONTENTS_ID.sendSync(ipcRenderer), args)
 );
 
-SLEvent.LOAD_TAB_IMAGE.sendBack(ipcRenderer, readFileAsync);
+SLEvent.LOAD_TAB_IMAGE.on(ipcRenderer, readFileAsync);

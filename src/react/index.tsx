@@ -5,12 +5,14 @@ import 'antd/dist/antd.less';
 import store from './store/store';
 import App from './container/App';
 
+const root = document.body.appendChild(Object.assign(document.createElement('div'), { id: 'root' }));
+
 const renderIndex = () => {
   render(
     <Provider store={store}>
       <App />
     </Provider>,
-    document.getElementById('root')
+    root
   );
 };
 

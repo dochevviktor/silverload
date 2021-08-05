@@ -50,7 +50,7 @@ const devConfig: Configuration = {
     hot: true,
     before(app: Application) {
       // Add Content-Encoding so that browser can read gzip-ed files
-      app.get('*.js', (req: Request, res: Response, next: NextFunction) => {
+      app.get('bundle.*.js', (req: Request, res: Response, next: NextFunction) => {
         req.url = req.url + '.gz';
         res.set('Content-Encoding', 'gzip');
         res.set('Content-Type', 'text/javascript');
@@ -139,7 +139,11 @@ const commonConfig: Configuration = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: 'src/react/index.html',
+      title: 'Silverload',
+      meta: {
+        viewport: 'width=device-width, initial-scale=1',
+        description: 'Silverload Image Browser',
+      },
     }),
     new CspHtmlWebpackPlugin({
       'default-src': "'self'",
@@ -148,7 +152,9 @@ const commonConfig: Configuration = {
       'object-src': "'none'",
       'base-uri': "'self'",
       'script-src': "'self'",
-      'worker-src': "'self'",
+      'script-src-elem': ["'self'", 'blob:', "'unsafe-inline'"],
+      'connect-src': ["'self'", 'blob:', "'unsafe-inline'"],
+      'worker-src': ["'self'", 'blob:', "'unsafe-inline'"],
       'style-src': ["'self'", "'unsafe-inline'"],
     }),
   ],

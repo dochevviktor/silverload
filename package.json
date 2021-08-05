@@ -1,7 +1,7 @@
 {
   "name": "silverload",
   "homepage": "./",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "private": true,
   "author": "Viktor Dochev",
   "description": "A thin and lite Image Browser app",
@@ -10,7 +10,7 @@
     "start:dev": "webpack serve",
     "build:prod": "webpack --env production & yarn electron:package & yarn run clean",
     "build:install": "webpack --env production & yarn electron:make & yarn run clean",
-    "electron:run": "yarn run electron:build & cross-env ELECTRON_START_URL=http://localhost:8080 electron . & yarn run clean",
+    "electron:run": "yarn run electron:build & cross-env ELECTRON_START_URL=http://localhost:8080 electron --js-flags=\"--experimental-wasm-threads --experimental-wasm-bulk-memory\" . & yarn run clean",
     "electron:install": "electron-rebuild",
     "electron:package": "yarn run electron:bundle & electron-forge package",
     "electron:make": "yarn run electron:bundle & electron-forge make",
@@ -35,6 +35,7 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.54",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
+    "@ffmpeg/ffmpeg": "^0.10.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
@@ -63,7 +64,6 @@
     "antd": "4.10.2",
     "clean-webpack-plugin": "^3.0.0",
     "compression-webpack-plugin": "^7.1.2",
-    "copy-webpack-plugin": "^7.0.0",
     "cross-env": "^7.0.3",
     "csp-html-webpack-plugin": "^5.1.0",
     "css-loader": "^5.0.1",
@@ -227,8 +227,8 @@
     "jsxBracketSameLine": true
   },
   "dependencies": {
-    "better-sqlite3": "^7.1.2",
-    "ffmpeg-static": "^4.3.0"
+    "@ffmpeg/core": "^0.10.0",
+    "better-sqlite3": "^7.1.2"
   },
   "config": {
     "forge": {
@@ -238,13 +238,11 @@
         "dir": "build",
         "icon": "icon.ico",
         "extraResource": [
-          "build/better_sqlite3.node",
-          "build/ffmpeg.exe"
+          "build/better_sqlite3.node"
         ],
         "ignore": [
           ".idea",
           ".node",
-          ".exe",
           "src",
           "bundle*",
           ".iml",

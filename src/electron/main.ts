@@ -5,7 +5,6 @@ import { createDevWindow, createWindow, restoreMainWindow } from './window/mainW
 import { createDevDbWindow, createDbWindow } from './window/databaseWindow';
 import * as SLEvent from '../common/class/SLEvent';
 import { createDevFsWindow, createFsWindow, loadAdditionalFiles } from './window/fsHandlerWindow';
-import { createDevFfmpegWindow, createFfmpegWindow } from './window/ffmpegHandlerWindow';
 
 let mainWindow: BrowserWindow = null;
 let fsHandlerWindow: BrowserWindow = null;
@@ -22,7 +21,6 @@ const createMainWindow = () => {
         mainWindow.on('closed', closeAllWindows);
       });
     });
-    createDevFfmpegWindow();
   } else {
     startURL = url.format({
       pathname: path.join(__dirname, 'index.html'),
@@ -37,7 +35,6 @@ const createMainWindow = () => {
         mainWindow.on('closed', closeAllWindows);
       });
     });
-    createFfmpegWindow();
   }
 
   SLEvent.CLOSE_WINDOW.on(ipcMain, closeAllWindows);

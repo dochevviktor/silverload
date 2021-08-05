@@ -7,8 +7,6 @@ import * as SLEvent from '../../../common/class/SLEvent';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
 
-const { ipcRenderer } = window.require('electron');
-
 const TitleBar = (): JSX.Element => {
   const [isMaximized, updateMaxState] = useState(false);
 
@@ -18,8 +16,8 @@ const TitleBar = (): JSX.Element => {
   useEffect(() => {
     const removeList: (() => void)[] = [];
 
-    removeList.push(SLEvent.WINDOW_MAXIMIZED.on(ipcRenderer, () => updateMaxState(true)));
-    removeList.push(SLEvent.WINDOW_UN_MAXIMIZED.on(ipcRenderer, () => updateMaxState(false)));
+    removeList.push(SLEvent.WINDOW_MAXIMIZED.on(window.ipcRenderer, () => updateMaxState(true)));
+    removeList.push(SLEvent.WINDOW_UN_MAXIMIZED.on(window.ipcRenderer, () => updateMaxState(false)));
 
     return () => removeList.forEach((removeListener) => removeListener());
   }, []);
@@ -34,13 +32,13 @@ const TitleBar = (): JSX.Element => {
       </p>
       <p>{tabCount ? tabTitle : ''}</p>
       <div className={styles.titleBar}>
-        <button className={styles.titleBarButton} onClick={() => SLEvent.MINIMIZE_WINDOW.send(ipcRenderer)}>
+        <button className={styles.titleBarButton} onClick={() => SLEvent.MINIMIZE_WINDOW.send(window.ipcRenderer)}>
           <FontAwesomeIcon icon={faWindowMinimize} size="xs" />
         </button>
-        <button className={styles.titleBarButton} onClick={() => SLEvent.MAXIMIZE_WINDOW.send(ipcRenderer)}>
+        <button className={styles.titleBarButton} onClick={() => SLEvent.MAXIMIZE_WINDOW.send(window.ipcRenderer)}>
           <FontAwesomeIcon icon={getMaximisedButtonIcon} size="xs" />
         </button>
-        <button className={styles.titleBarCloseButton} onClick={() => SLEvent.CLOSE_WINDOW.send(ipcRenderer)}>
+        <button className={styles.titleBarCloseButton} onClick={() => SLEvent.CLOSE_WINDOW.send(window.ipcRenderer)}>
           <FontAwesomeIcon icon={faTimes} />
         </button>
       </div>

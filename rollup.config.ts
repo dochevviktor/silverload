@@ -116,8 +116,8 @@ const fsOutputOptions: OutputOptions = {
   sourcemap: false,
 };
 
-const ffmpegInputOptions: InputOptions = {
-  input: 'src/ffmpeg/ffmpegHandler.ts',
+const preloadInputOptions: InputOptions = {
+  input: 'src/preload/preload.ts',
   plugins: [
     externals({
       include: ['electron'],
@@ -127,18 +127,18 @@ const ffmpegInputOptions: InputOptions = {
       preferBuiltins: true,
     }),
     typescript({
-      tsconfig: 'src/ffmpeg/tsconfig.json',
+      tsconfig: 'src/preload/tsconfig.json',
     }),
     commonjs(),
     copy({
-      targets: [{ src: ['**/ffmpeg-static/*.exe'], dest: 'build' }],
+      targets: [{ src: ['**/@ffmpeg/core/dist/*'], dest: 'build' }],
       verbose: true,
     }),
   ],
 };
 
-const ffmpegOutputOptions: OutputOptions = {
-  file: 'build/ffmpegHandler.js',
+const preloadOutputOptions: OutputOptions = {
+  file: 'build/preload.js',
   format: 'cjs',
   sourcemap: false,
 };
@@ -158,5 +158,5 @@ build(dbInputOptions, dbOutputOptions);
 // Build file system handler process
 build(fsInputOptions, fsOutputOptions);
 
-// Build ffmpeg handler process
-build(ffmpegInputOptions, ffmpegOutputOptions);
+// Build preload handler process
+build(preloadInputOptions, preloadOutputOptions);

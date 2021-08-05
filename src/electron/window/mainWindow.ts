@@ -1,5 +1,6 @@
 import { BrowserWindow, ContextMenuParams, ipcMain, Menu } from 'electron';
 import * as SLEvent from '../../common/class/SLEvent';
+import path from 'path';
 
 const loadInitListeners = (mainWindow: BrowserWindow) => {
   console.log('Load Init Listeners');
@@ -57,7 +58,10 @@ export const createWindow = (startUrl: string): BrowserWindow => {
     frame: false,
     icon: 'icon.ico',
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false,
+      nodeIntegrationInWorker: false,
+      enableRemoteModule: false,
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
