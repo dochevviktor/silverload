@@ -27,6 +27,8 @@ This project will be written entirely in TypeScript, where possible.
 :verPrettier: ^2.3.2
 :verWebpack: ^5.49.0
 :verRollup: ^2.56.0
+:verFfmpeg: ^0.10.1
+:verSqlite: ^7.4.3
 // LINK_VARIABLES_END
 
 // IMG_VARIABLES_START
@@ -42,6 +44,8 @@ This project will be written entirely in TypeScript, where possible.
 :imgPrettier: https://cdn.worldvectorlogo.com/logos/prettier-1.svg
 :imgWebpack: https://cdn.worldvectorlogo.com/logos/webpack-icon.svg
 :imgRollup: https://seeklogo.com/images/R/rollup-js-logo-F3925E2546-seeklogo.com.png
+:imgFfmpeg: https://upload.wikimedia.org/wikipedia/commons/7/76/FFmpeg_icon.svg
+:imgSqlite: https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Sqlite-square-icon.svg/1024px-Sqlite-square-icon.svg.png
 // IMG_VARIABLES_END
 
 // GH_VARIABLES_START
@@ -57,6 +61,8 @@ This project will be written entirely in TypeScript, where possible.
 :ghPrettier: https://github.com/prettier/prettier
 :ghWebpack: https://github.com/webpack/webpack
 :ghRollup: https://github.com/webpack/webpack
+:ghFfmpeg: https://github.com/ffmpegwasm/ffmpeg.wasm
+:ghSqlite: https://github.com/JoshuaWise/better-sqlite3
 // GH_VARIABLES_END
 
 
@@ -76,7 +82,7 @@ a|[source, subs="attributes"]
 ----
 electron: {verElectron}
 ----
-|Main server/host/output of the application
+|Main platform used by the application
 
 a|image::{imgReact}[link={ghReact},50,50]
 [Electron,50,50]
@@ -166,6 +172,22 @@ a|[source, subs="attributes"]
 rollup: {verRollup}
 ----
 |Electron builder and bundler
+
+a|image::{imgFfmpeg}[link={ghFfmpeg},50,50]
+|FFMPEG
+a|[source, subs="attributes"]
+----
+@ffmpeg/ffmpeg: {verFfmpeg}
+----
+|Video & Audio converter (WASM)
+
+a|image::{imgSqlite}[link={ghSqlite},50,50]
+|Better SQLite3
+a|[source, subs="attributes"]
+----
+better-sqlite3: {verSqlite}
+----
+|Small, fast, self-contained SQL database engine (Module)
 
 |======
 [NOTE]

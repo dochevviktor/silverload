@@ -1,5 +1,5 @@
 import { replaceInFileSync } from 'replace-in-file';
-import { devDependencies, asciiDocVariableMap } from './package.json';
+import { devDependencies, asciiDocVariableMap, dependencies } from './package.json';
 
 const replace = (): void => {
   const from = [];
@@ -9,6 +9,11 @@ const replace = (): void => {
     if (devDependencies[packageDependency]) {
       from.push(new RegExp(`${docVariable}.*`));
       to.push(`${docVariable} ${devDependencies[packageDependency]}`);
+    }
+
+    if (dependencies[packageDependency]) {
+      from.push(new RegExp(`${docVariable}.*`));
+      to.push(`${docVariable} ${dependencies[packageDependency]}`);
     }
   });
 

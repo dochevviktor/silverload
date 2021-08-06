@@ -127,7 +127,9 @@
     "stylelint": ":verStyleLint:",
     "prettier": ":verPrettier:",
     "webpack": ":verWebpack:",
-    "rollup": ":verRollup:"
+    "rollup": ":verRollup:",
+    "@ffmpeg/ffmpeg": ":verFfmpeg:",
+    "better-sqlite3": ":verSqlite:"
   },
   "eslintConfig": {
     "extends": [
