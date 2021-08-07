@@ -1,6 +1,7 @@
-import { BrowserWindow, ContextMenuParams, ipcMain, Menu } from 'electron';
+import { BrowserWindow, ContextMenuParams, Menu } from 'electron';
 import * as SLEvent from '../../common/class/SLEvent';
 import path from 'path';
+import { SL_REACT } from '../../common/class/SLPoint';
 
 const loadInitListeners = (mainWindow: BrowserWindow) => {
   console.log('Load Init Listeners');
@@ -14,18 +15,16 @@ const loadInitListeners = (mainWindow: BrowserWindow) => {
   });
 
   mainWindow.webContents.on('context-menu', (e, props) => mainContext(mainWindow, e, props));
-
-  SLEvent.GET_MAIN_WINDOW_CONTENTS_ID.onSync(ipcMain, mainWindow.webContents.id);
 };
 
 const loadFrameManipulationListeners = (mainWindow: BrowserWindow) => {
   console.log('Load Frame Manipulation Listeners');
 
-  SLEvent.MINIMIZE_WINDOW.on(ipcMain, () => mainWindow.minimize());
-  SLEvent.MAXIMIZE_WINDOW.on(ipcMain, () => (mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()));
+  SLEvent.MINIMIZE_WINDOW.onMain(() => mainWindow.minimize());
+  SLEvent.MAXIMIZE_WINDOW.onMain(() => (mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()));
 
-  mainWindow.on('maximize', () => SLEvent.WINDOW_MAXIMIZED.send(mainWindow.webContents));
-  mainWindow.on('unmaximize', () => SLEvent.WINDOW_UN_MAXIMIZED.send(mainWindow.webContents));
+  mainWindow.on('maximize', () => SLEvent.WINDOW_MAXIMIZED.sendMain());
+  mainWindow.on('unmaximize', () => SLEvent.WINDOW_UN_MAXIMIZED.sendMain());
 };
 
 const mainContext = (mainWindow: BrowserWindow, e: Event, props: ContextMenuParams) => {
@@ -64,6 +63,7 @@ export const createWindow = (startUrl: string): BrowserWindow => {
     },
   });
 
+  SL_REACT.webContents = mainWindow.webContents;
   mainWindow.loadURL(startUrl).catch(console.error);
 
   loadInitListeners(mainWindow);

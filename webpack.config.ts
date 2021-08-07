@@ -68,7 +68,7 @@ const prodConfig: Configuration = {
   },
   plugins: [new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/.*/]), new HTMLInlineCSSWebpackPlugin()],
   performance: {
-    hints: 'error',
+    hints: false,
   },
 };
 

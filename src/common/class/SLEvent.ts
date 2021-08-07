@@ -1,78 +1,88 @@
-import { IpcMain, IpcRenderer, WebContents } from 'electron';
+import { IpcRenderer } from 'electron';
 import { SLTabImageData } from '../interface/SLTabImageData';
 import { SLFile } from '../interface/SLFile';
 import SLTab from './SLTab';
 import SLSettings from './SLSettings';
+import { SLPoint, SL_DATABASE, SL_REACT, SL_FILE_SYSTEM } from './SLPoint';
+import { PayloadAction } from '@reduxjs/toolkit';
 
 let lastChannelId = 0;
 
 export class SLEvent<T = void> {
-  public constructor(private readonly channel?: string) {
+  private readonly channel: string;
+  private readonly origin?: SLPoint;
+  private readonly destination?: SLPoint;
+
+  public constructor(origin?: SLPoint, destination?: SLPoint) {
     this.channel = (++lastChannelId).toString();
+    this.origin = origin;
+    this.destination = destination;
   }
 
-  send(ipc: WebContents | IpcRenderer, arg?: T): void {
-    ipc.send(this.channel, arg);
+  send(arg?: T): void {
+    window.ipcRenderer.send(this.channel, arg);
   }
 
-  sendTo(ipc: IpcRenderer, webContentsId: number, arg?: T): void {
-    ipc.sendTo(webContentsId, this.channel, arg);
+  sendMain(arg?: T): void {
+    this.destination?.webContents?.send(this.channel, arg);
   }
 
-  sendSync(ipc: IpcRenderer): T {
-    return ipc.sendSync(this.channel);
+  sendBack(fn: (arg: T, event) => T | Promise<T>): void {
+    window.ipcRenderer.on(this.channel, async (event, arg: T) => this.send(await fn(arg, event)));
   }
 
-  on(ipc: IpcRenderer | IpcMain, fn: (arg: T, event) => void): () => IpcRenderer | IpcMain {
-    ipc.on(this.channel, (event, arg: T) => fn(arg, event));
+  on(fn: (arg: T, event) => T | Promise<T> | void | Promise<void> | PayloadAction<T>): () => IpcRenderer {
+    window.ipcRenderer.on(this.channel, (event, arg: T) => fn(arg, event));
 
-    return () => ipc.removeListener(this.channel, (event, arg: T) => fn(arg, event));
+    return () => window.ipcRenderer.removeListener(this.channel, (event, arg: T) => fn(arg, event));
   }
 
-  once(ipc: IpcRenderer, fn: (arg: T, event) => void): void {
-    ipc.once(this.channel, (event, arg: T) => fn(arg, event));
-  }
-
-  sendBack(ipc: IpcRenderer, fn: (arg: T, event) => T | Promise<T> | void): void {
-    ipc.on(this.channel, async (event, arg: T) => {
-      ipc.sendTo(event.senderId, this.channel, await fn(arg, event));
+  onMain(fn?: (arg: T, event) => T | Promise<T> | void | Promise<void> | PayloadAction<T>): void {
+    global.ipcMain.on(this.channel, async (event, arg: T) => {
+      if (this.destination) {
+        if (event.sender.id !== this.origin?.webContents?.id) {
+          this.origin.webContents.send(this.channel, arg);
+        } else {
+          this.destination.webContents.send(this.channel, arg);
+        }
+      } else {
+        if (this.origin) {
+          this.origin.webContents.send(this.channel, await fn(arg, event));
+        } else {
+          await fn(arg, event);
+        }
+      }
     });
   }
 
-  onSync(ipc: IpcMain, arg: T): void {
-    ipc.on(this.channel, (event) => (event.returnValue = arg));
+  once(fn: (arg: T, event) => void): void {
+    window.ipcRenderer.once(this.channel, (event, arg: T) => fn(arg, event));
   }
 }
 
 // React
-export const GET_MAIN_WINDOW_CONTENTS_ID = new SLEvent<number>();
 export const MINIMIZE_WINDOW = new SLEvent();
 export const MAXIMIZE_WINDOW = new SLEvent();
 export const CLOSE_WINDOW = new SLEvent();
-export const WINDOW_MAXIMIZED = new SLEvent();
-export const WINDOW_UN_MAXIMIZED = new SLEvent();
+export const WINDOW_MAXIMIZED = new SLEvent(null, SL_REACT);
+export const WINDOW_UN_MAXIMIZED = new SLEvent(null, SL_REACT);
 
 // Database Generic
-export const GET_DATABASE_HANDLER_CONTENTS_ID = new SLEvent<number>();
-export const GET_DB_PATH = new SLEvent<string>();
+export const GET_DB_PATH = new SLEvent<string>(SL_DATABASE);
 
 // Database SLTabs
-export const SAVE_TABS = new SLEvent<SLTab[]>();
-export const LOAD_TABS = new SLEvent<SLTab[]>();
-export const DELETE_TABS = new SLEvent();
+export const SAVE_TABS = new SLEvent<SLTab[]>(SL_REACT, SL_DATABASE);
+export const LOAD_TABS = new SLEvent<SLTab[]>(SL_REACT, SL_DATABASE);
+export const DELETE_TABS = new SLEvent(SL_REACT, SL_DATABASE);
 
 // Database SLSettings
-export const SAVE_SETTINGS = new SLEvent<SLSettings[]>();
-export const LOAD_SETTINGS = new SLEvent<SLSettings[]>();
+export const SAVE_SETTINGS = new SLEvent<SLSettings[]>(SL_REACT, SL_DATABASE);
+export const LOAD_SETTINGS = new SLEvent<SLSettings[]>(SL_REACT, SL_DATABASE);
 
 // File System
-export const GET_FS_HANDLER_CONTENTS_ID = new SLEvent<number>();
-export const GET_FILE_ARGUMENTS = new SLEvent<string[]>();
-export const SEND_SL_FILES = new SLEvent<SLFile[]>();
-export const GET_ADDITIONAL_FILE_ARGUMENTS = new SLEvent<string[]>();
-export const LOAD_TAB_IMAGE = new SLEvent<SLTabImageData>();
-
-// FFMPEG
-export const GET_FFMPEG_HANDLER_CONTENTS_ID = new SLEvent<number>();
-export const GET_FFMPEG_EXECUTABLE_PATH = new SLEvent<string>();
-export const LOAD_TAB_GIF_VIDEO = new SLEvent<SLTabImageData>();
+export const LOAD_FILE_ARGUMENTS = new SLEvent<string[]>(SL_REACT, SL_FILE_SYSTEM);
+export const GET_FILE_ARGUMENTS_FROM_MAIN = new SLEvent<string[]>(SL_FILE_SYSTEM);
+export const SEND_SL_FILES = new SLEvent<SLFile[]>(SL_FILE_SYSTEM, SL_REACT);
+export const SEND_ADDITIONAL_FILE_ARGUMENTS = new SLEvent<string[]>(null, SL_FILE_SYSTEM);
+export const LOAD_TAB_IMAGE = new SLEvent<SLTabImageData>(SL_REACT, SL_FILE_SYSTEM);
+export const LOAD_TAB_GIF_VIDEO = new SLEvent<SLTabImageData>(SL_REACT, SL_FILE_SYSTEM);

@@ -19,13 +19,15 @@ export const getSettings = (db: Database): SLSettings[] => {
   return getAllFromTableOrdered<SLSettings>(db, SLSettingsTable.prototype);
 };
 
-export const saveSettings = (db: Database, settings: SLSettings[]): void => {
+export const saveSettings = (db: Database, settings: SLSettings[]): SLSettings[] => {
   console.log('Call to save settings');
   if (db && settings && settings.length > 0) {
     const tableRows = settings.map((it) => new SLSettingsTable(it));
 
     saveTable(db, tableRows);
   }
+
+  return [];
 };
 
 @Entity

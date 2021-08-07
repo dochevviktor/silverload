@@ -34,13 +34,15 @@ const convertToTableEntity = (it: SLTab) => {
   return tabTable;
 };
 
-export const saveTabs = (db: Database, tabs: SLTab[]): void => {
+export const saveTabs = (db: Database, tabs: SLTab[]): SLTab[] => {
   console.log('Call to save tabs');
   if (db && tabs && tabs.length > 0) {
     const tableRows = tabs.filter((it) => it.base64Image).map((it) => convertToTableEntity(it));
 
     saveTable(db, tableRows);
   }
+
+  return [];
 };
 
 export const deleteTabs = (db: Database): void => {

@@ -37,7 +37,7 @@ const createMainWindow = () => {
     });
   }
 
-  SLEvent.CLOSE_WINDOW.on(ipcMain, closeAllWindows);
+  SLEvent.CLOSE_WINDOW.onMain(closeAllWindows);
 };
 
 const closeAllWindows = () => {
@@ -47,6 +47,7 @@ const closeAllWindows = () => {
 };
 
 const bootstrap = () => {
+  global.ipcMain = ipcMain;
   // If a second instance is started - we close it
   if (!app.requestSingleInstanceLock()) {
     app.quit();

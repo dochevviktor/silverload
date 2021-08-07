@@ -1,12 +1,16 @@
-import { BrowserWindow, ipcMain } from 'electron';
+import { BrowserWindow } from 'electron';
 import path from 'path';
 import * as SLEvent from '../../common/class/SLEvent';
+import { SL_FILE_SYSTEM } from '../../common/class/SLPoint';
 
-const loadInitFsListeners = (fsWindow: BrowserWindow) => {
+const loadInitFsListeners = () => {
   console.log('Loading FS Handler handler IPC Main listeners');
 
-  SLEvent.GET_FS_HANDLER_CONTENTS_ID.onSync(ipcMain, fsWindow.webContents.id);
-  SLEvent.GET_FILE_ARGUMENTS.onSync(ipcMain, process.argv);
+  SLEvent.LOAD_FILE_ARGUMENTS.onMain();
+  SLEvent.GET_FILE_ARGUMENTS_FROM_MAIN.onMain(() => process.argv);
+  SLEvent.SEND_SL_FILES.onMain();
+  SLEvent.LOAD_TAB_IMAGE.onMain();
+  SLEvent.LOAD_TAB_GIF_VIDEO.onMain();
 };
 
 export const createFsWindow = (isLocalDev?: boolean): BrowserWindow => {
@@ -26,8 +30,9 @@ export const createFsWindow = (isLocalDev?: boolean): BrowserWindow => {
     },
   });
 
+  SL_FILE_SYSTEM.webContents = fsWindow.webContents;
   fsWindow.loadFile(path.join(__dirname, 'fsHandler.js')).catch(console.error);
-  loadInitFsListeners(fsWindow);
+  loadInitFsListeners();
 
   console.log('Created FS Handler browser window');
 
@@ -44,5 +49,5 @@ export const createDevFsWindow = (): BrowserWindow => {
 
 export const loadAdditionalFiles = async (fsWindow: BrowserWindow, commandLine: string[]): Promise<void> => {
   console.log('Handling call from second process with args: ', commandLine);
-  SLEvent.GET_ADDITIONAL_FILE_ARGUMENTS.send(fsWindow.webContents, commandLine);
+  SLEvent.SEND_ADDITIONAL_FILE_ARGUMENTS.sendMain(commandLine);
 };

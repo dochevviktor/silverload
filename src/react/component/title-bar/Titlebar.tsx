@@ -16,8 +16,8 @@ const TitleBar = (): JSX.Element => {
   useEffect(() => {
     const removeList: (() => void)[] = [];
 
-    removeList.push(SLEvent.WINDOW_MAXIMIZED.on(window.ipcRenderer, () => updateMaxState(true)));
-    removeList.push(SLEvent.WINDOW_UN_MAXIMIZED.on(window.ipcRenderer, () => updateMaxState(false)));
+    removeList.push(SLEvent.WINDOW_MAXIMIZED.on(() => updateMaxState(true)));
+    removeList.push(SLEvent.WINDOW_UN_MAXIMIZED.on(() => updateMaxState(false)));
 
     return () => removeList.forEach((removeListener) => removeListener());
   }, []);
@@ -32,13 +32,13 @@ const TitleBar = (): JSX.Element => {
       </p>
       <p>{tabCount ? tabTitle : ''}</p>
       <div className={styles.titleBar}>
-        <button className={styles.titleBarButton} onClick={() => SLEvent.MINIMIZE_WINDOW.send(window.ipcRenderer)}>
+        <button className={styles.titleBarButton} onClick={() => SLEvent.MINIMIZE_WINDOW.send()}>
           <FontAwesomeIcon icon={faWindowMinimize} size="xs" />
         </button>
-        <button className={styles.titleBarButton} onClick={() => SLEvent.MAXIMIZE_WINDOW.send(window.ipcRenderer)}>
+        <button className={styles.titleBarButton} onClick={() => SLEvent.MAXIMIZE_WINDOW.send()}>
           <FontAwesomeIcon icon={getMaximisedButtonIcon} size="xs" />
         </button>
-        <button className={styles.titleBarCloseButton} onClick={() => SLEvent.CLOSE_WINDOW.send(window.ipcRenderer)}>
+        <button className={styles.titleBarCloseButton} onClick={() => SLEvent.CLOSE_WINDOW.send()}>
           <FontAwesomeIcon icon={faTimes} />
         </button>
       </div>

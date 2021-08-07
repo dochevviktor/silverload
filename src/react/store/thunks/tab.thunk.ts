@@ -10,8 +10,6 @@ import bytesToBase64 from '../../../common/constant/SLBase64Converters';
 import { createFFmpeg } from '@ffmpeg/ffmpeg';
 
 // Variables
-const databaseHandlerId = SLEvent.GET_DATABASE_HANDLER_CONTENTS_ID.sendSync(window.ipcRenderer);
-const fsHandlerId = SLEvent.GET_FS_HANDLER_CONTENTS_ID.sendSync(window.ipcRenderer);
 const validateFileMimeType = (type: string) => VALID_FILE_TYPES.indexOf(type) !== -1;
 const listeners: (() => void)[] = [];
 const ratioPrint = ({ ratio }) => console.log(`Progress: ${ratio * 100.0}%`);
@@ -23,7 +21,7 @@ let ffmpegLock = false;
 const loadImageData = (newTab: SLTab, dispatch: (arg) => void) => {
   if (newTab.path && !newTab.base64Image) {
     dispatch(actions.setTabLoading(newTab.id));
-    SLEvent.LOAD_TAB_IMAGE.sendTo(window.ipcRenderer, fsHandlerId, { tabId: newTab.id, path: newTab.path });
+    SLEvent.LOAD_TAB_IMAGE.send({ tabId: newTab.id, path: newTab.path });
   }
 };
 
@@ -94,24 +92,22 @@ const processVideo = async (tabImageData: SLTabImageData, dispatch, ffmpegCallFr
 
 // File system calls
 export const addListeners = (): AppThunk => async (dispatch) => {
-  listeners.push(SLEvent.SEND_SL_FILES.on(window.ipcRenderer, (files) => openNewTabs(files, (arg) => dispatch(arg))));
-  listeners.push(SLEvent.LOAD_TAB_IMAGE.on(window.ipcRenderer, (data) => dispatch(actions.loadTabImage(data))));
-  listeners.push(SLEvent.LOAD_TAB_GIF_VIDEO.on(window.ipcRenderer, (data) => processVideo(data, dispatch)));
+  listeners.push(SLEvent.SEND_SL_FILES.on((files) => openNewTabs(files, (arg) => dispatch(arg))));
+  listeners.push(SLEvent.LOAD_TAB_IMAGE.on((data) => dispatch(actions.loadTabImage(data))));
+  listeners.push(SLEvent.LOAD_TAB_GIF_VIDEO.on((data) => processVideo(data, dispatch)));
 };
 
 export const removeListeners = (): AppThunk => async () => {
   while (listeners.length) listeners.pop()();
 };
 
-export const loadFileArgs = (): AppThunk => async () => {
-  SLEvent.GET_FILE_ARGUMENTS.sendTo(window.ipcRenderer, fsHandlerId);
-};
+export const loadFileArgs = (): AppThunk => async () => SLEvent.LOAD_FILE_ARGUMENTS.send();
 
 export const requestImageData =
   (data: SLTabImageData): AppThunk =>
   async (dispatch) => {
     dispatch(actions.setTabLoading(data.tabId));
-    SLEvent.LOAD_TAB_IMAGE.sendTo(window.ipcRenderer, fsHandlerId, data);
+    SLEvent.LOAD_TAB_IMAGE.send(data);
   };
 
 export const addNewTab =
@@ -133,18 +129,18 @@ export const addNewActiveTab =
 
 // Database calls
 export const load = (): AppThunk => async (dispatch) => {
-  SLEvent.LOAD_TABS.sendTo(window.ipcRenderer, databaseHandlerId);
-  SLEvent.LOAD_TABS.once(window.ipcRenderer, (args) => dispatch(actions.loadTabs(args)));
+  SLEvent.LOAD_TABS.once((args) => dispatch(actions.loadTabs(args)));
+  SLEvent.LOAD_TABS.send();
 };
 
 export const save =
   (tabs: SLTab[]): AppThunk =>
   async (dispatch) => {
     dispatch(actions.setIsSaving(true));
-    SLEvent.SAVE_TABS.sendTo(window.ipcRenderer, databaseHandlerId, tabs);
-    SLEvent.SAVE_TABS.once(window.ipcRenderer, () => dispatch(actions.setIsSaving(false)));
+    SLEvent.SAVE_TABS.once(() => dispatch(actions.setIsSaving(false)));
+    SLEvent.SAVE_TABS.send(tabs);
   };
 
 export const deleteTabs = (): AppThunk => async () => {
-  SLEvent.DELETE_TABS.sendTo(window.ipcRenderer, databaseHandlerId);
+  SLEvent.DELETE_TABS.send();
 };

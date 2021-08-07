@@ -1,14 +1,21 @@
-import { BrowserWindow, ipcMain } from 'electron';
+import { BrowserWindow } from 'electron';
 import path from 'path';
 import * as SLEvent from '../../common/class/SLEvent';
+import { SL_DATABASE } from '../../common/class/SLPoint';
 
 const loadInitDbListeners = (dbWindow: BrowserWindow, dbPathIsLocalDev?: boolean) => {
   const dbPath = dbPathIsLocalDev ? 'storage.db' : `${process.resourcesPath}\\storage.db`;
 
   console.log('Loading db IPC Main listeners');
 
-  SLEvent.GET_DB_PATH.onSync(ipcMain, dbPath);
-  SLEvent.GET_DATABASE_HANDLER_CONTENTS_ID.onSync(ipcMain, dbWindow.webContents.id);
+  SLEvent.GET_DB_PATH.onMain(() => dbPath);
+
+  SLEvent.LOAD_SETTINGS.onMain();
+  SLEvent.SAVE_SETTINGS.onMain();
+
+  SLEvent.LOAD_TABS.onMain();
+  SLEvent.SAVE_TABS.onMain();
+  SLEvent.DELETE_TABS.onMain();
 };
 
 export const createDbWindow = (dbPathIsLocalDev?: boolean): BrowserWindow => {
@@ -28,6 +35,7 @@ export const createDbWindow = (dbPathIsLocalDev?: boolean): BrowserWindow => {
     },
   });
 
+  SL_DATABASE.webContents = dbWindow.webContents;
   dbWindow.loadFile(path.join(__dirname, 'databaseHandler.js')).catch(console.error);
   loadInitDbListeners(dbWindow, dbPathIsLocalDev);
 

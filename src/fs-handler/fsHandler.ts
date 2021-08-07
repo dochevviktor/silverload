@@ -1,4 +1,4 @@
-import { ipcRenderer, IpcRendererEvent } from 'electron';
+import { ipcRenderer } from 'electron';
 import * as SLEvent from '../common/class/SLEvent';
 import { SLFile } from '../common/interface/SLFile';
 import { existsSync, lstatSync, promises } from 'fs';
@@ -6,6 +6,8 @@ import { fromFile } from 'file-type';
 import { basename } from 'path';
 import VALID_FILE_TYPES from '../common/constant/SLImageFileTypes';
 import { SLTabImageData } from '../common/interface/SLTabImageData';
+
+window.ipcRenderer = ipcRenderer;
 
 const validateFile = (type: string) => VALID_FILE_TYPES.indexOf(type) !== -1;
 
@@ -27,18 +29,18 @@ const readSLFile = async (path: string): Promise<SLFile> => {
   return { name, mimeType, path };
 };
 
-const readFileAsync = async (tabImageData: SLTabImageData, event: IpcRendererEvent): Promise<void> => {
+const readFileAsync = async (tabImageData: SLTabImageData): Promise<void> => {
   if (tabImageData?.path) {
     const mimeType = (await fromFile(tabImageData.path))?.mime;
 
     if (!validateFile(mimeType)) {
-      SLEvent.LOAD_TAB_IMAGE.sendTo(ipcRenderer, event.senderId, tabImageData);
+      SLEvent.LOAD_TAB_IMAGE.send(tabImageData);
     }
 
     if (mimeType === 'image/gif') {
       tabImageData.rawImage = await promises.readFile(tabImageData.path);
       tabImageData.type = 'video';
-      SLEvent.LOAD_TAB_GIF_VIDEO.sendTo(ipcRenderer, event.senderId, await tabImageData);
+      SLEvent.LOAD_TAB_GIF_VIDEO.send(tabImageData);
 
       return;
     }
@@ -48,19 +50,12 @@ const readFileAsync = async (tabImageData: SLTabImageData, event: IpcRendererEve
     tabImageData.type = 'image';
   }
 
-  SLEvent.LOAD_TAB_IMAGE.sendTo(ipcRenderer, event.senderId, tabImageData);
+  SLEvent.LOAD_TAB_IMAGE.send(tabImageData);
 };
 
-const sendSLFiles = async (webContentsId, args) => {
-  SLEvent.SEND_SL_FILES.sendTo(ipcRenderer, webContentsId, await getSLFilesFromArgs(args));
-};
+const sendSLFiles = async (args) => SLEvent.SEND_SL_FILES.send(await getSLFilesFromArgs(args));
 
-SLEvent.GET_FILE_ARGUMENTS.on(ipcRenderer, async (args, event) =>
-  sendSLFiles(event.senderId, SLEvent.GET_FILE_ARGUMENTS.sendSync(ipcRenderer))
-);
-
-SLEvent.GET_ADDITIONAL_FILE_ARGUMENTS.on(ipcRenderer, async (args) =>
-  sendSLFiles(SLEvent.GET_MAIN_WINDOW_CONTENTS_ID.sendSync(ipcRenderer), args)
-);
-
-SLEvent.LOAD_TAB_IMAGE.on(ipcRenderer, readFileAsync);
+SLEvent.LOAD_FILE_ARGUMENTS.on(() => SLEvent.GET_FILE_ARGUMENTS_FROM_MAIN.send());
+SLEvent.GET_FILE_ARGUMENTS_FROM_MAIN.on(sendSLFiles);
+SLEvent.SEND_ADDITIONAL_FILE_ARGUMENTS.on(sendSLFiles);
+SLEvent.LOAD_TAB_IMAGE.on(readFileAsync);
