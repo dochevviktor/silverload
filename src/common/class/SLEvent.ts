@@ -8,6 +8,20 @@ import { PayloadAction } from '@reduxjs/toolkit';
 
 let lastChannelId = 0;
 
+/**
+ * Event class for wrapping Electron IPC event calls b/w Main and Render processes with type safety.<br>
+ * Type declaration:
+ * - SLEvent() -> type is set to void
+ * - SLEvent<X>() -> type is set to X and the type is check at both source and destination.
+ *
+ * Source and destination logic:
+ * - SLEvent() -> call goes to main process, where some action is done and no return action is done
+ * - SLEvent(A) -> call goes to main process, where some action is done, then result is sent to A
+ * - SLEvent(A, B) -> call goes to B, where some action is done then result is sent to A
+ *
+ * All these calls can be done from any process, not just the involved A or B.<br>
+ * For example, in C we could call SLEvent(A, B), where A could process data sent by C and then return the result to B.
+ */
 export class SLEvent<T = void> {
   private readonly channel: string;
   private readonly origin?: SLPoint;
@@ -19,24 +33,26 @@ export class SLEvent<T = void> {
     this.destination = destination;
   }
 
+  /*
+   * Render Process methods
+   */
   send(arg?: T): void {
     window.ipcRenderer.send(this.channel, arg);
-  }
-
-  sendMain(arg?: T): void {
-    this.destination?.webContents?.send(this.channel, arg);
   }
 
   sendBack(fn: (arg: T, event) => T | Promise<T>): void {
     window.ipcRenderer.on(this.channel, async (event, arg: T) => this.send(await fn(arg, event)));
   }
 
-  on(fn: (arg: T, event) => T | Promise<T> | void | Promise<void> | PayloadAction<T>): () => IpcRenderer {
+  on(fn: (arg: T, event) => T | Promise<T> | void | Promise<void> | PayloadAction<unknown>): () => IpcRenderer {
     window.ipcRenderer.on(this.channel, (event, arg: T) => fn(arg, event));
 
     return () => window.ipcRenderer.removeListener(this.channel, (event, arg: T) => fn(arg, event));
   }
 
+  /*
+   * Main Process methods
+   */
   onMain(fn?: (arg: T, event) => T | Promise<T> | void | Promise<void> | PayloadAction<T>): void {
     global.ipcMain.on(this.channel, async (event, arg: T) => {
       if (this.destination) {
@@ -55,8 +71,12 @@ export class SLEvent<T = void> {
     });
   }
 
-  once(fn: (arg: T, event) => void): void {
-    window.ipcRenderer.once(this.channel, (event, arg: T) => fn(arg, event));
+  sendMain(arg?: T): void {
+    if (this.destination) {
+      this.destination.webContents.send(this.channel, arg);
+    } else {
+      this.origin?.webContents?.send(this.channel, arg);
+    }
   }
 }
 
@@ -64,8 +84,8 @@ export class SLEvent<T = void> {
 export const MINIMIZE_WINDOW = new SLEvent();
 export const MAXIMIZE_WINDOW = new SLEvent();
 export const CLOSE_WINDOW = new SLEvent();
-export const WINDOW_MAXIMIZED = new SLEvent(null, SL_REACT);
-export const WINDOW_UN_MAXIMIZED = new SLEvent(null, SL_REACT);
+export const WINDOW_MAXIMIZED = new SLEvent(SL_REACT);
+export const WINDOW_UN_MAXIMIZED = new SLEvent(SL_REACT);
 
 // Database Generic
 export const GET_DB_PATH = new SLEvent<string>(SL_DATABASE);
@@ -80,9 +100,8 @@ export const SAVE_SETTINGS = new SLEvent<SLSettings[]>(SL_REACT, SL_DATABASE);
 export const LOAD_SETTINGS = new SLEvent<SLSettings[]>(SL_REACT, SL_DATABASE);
 
 // File System
-export const LOAD_FILE_ARGUMENTS = new SLEvent<string[]>(SL_REACT, SL_FILE_SYSTEM);
-export const GET_FILE_ARGUMENTS_FROM_MAIN = new SLEvent<string[]>(SL_FILE_SYSTEM);
+export const LOAD_FILE_ARGUMENTS = new SLEvent<string[]>(SL_FILE_SYSTEM);
 export const SEND_SL_FILES = new SLEvent<SLFile[]>(SL_FILE_SYSTEM, SL_REACT);
-export const SEND_ADDITIONAL_FILE_ARGUMENTS = new SLEvent<string[]>(null, SL_FILE_SYSTEM);
+export const SEND_ADDITIONAL_FILE_ARGUMENTS = new SLEvent<string[]>(SL_FILE_SYSTEM);
 export const LOAD_TAB_IMAGE = new SLEvent<SLTabImageData>(SL_REACT, SL_FILE_SYSTEM);
 export const LOAD_TAB_GIF_VIDEO = new SLEvent<SLTabImageData>(SL_REACT, SL_FILE_SYSTEM);

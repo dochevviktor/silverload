@@ -55,7 +55,6 @@ const readFileAsync = async (tabImageData: SLTabImageData): Promise<void> => {
 
 const sendSLFiles = async (args) => SLEvent.SEND_SL_FILES.send(await getSLFilesFromArgs(args));
 
-SLEvent.LOAD_FILE_ARGUMENTS.on(() => SLEvent.GET_FILE_ARGUMENTS_FROM_MAIN.send());
-SLEvent.GET_FILE_ARGUMENTS_FROM_MAIN.on(sendSLFiles);
+SLEvent.LOAD_FILE_ARGUMENTS.on(sendSLFiles);
 SLEvent.SEND_ADDITIONAL_FILE_ARGUMENTS.on(sendSLFiles);
 SLEvent.LOAD_TAB_IMAGE.on(readFileAsync);

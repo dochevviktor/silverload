@@ -90,14 +90,15 @@ const processVideo = async (tabImageData: SLTabImageData, dispatch, ffmpegCallFr
   }
 };
 
-// File system calls
-export const addListeners = (): AppThunk => async (dispatch) => {
+export const addTabListeners = (): AppThunk => async (dispatch) => {
   listeners.push(SLEvent.SEND_SL_FILES.on((files) => openNewTabs(files, (arg) => dispatch(arg))));
   listeners.push(SLEvent.LOAD_TAB_IMAGE.on((data) => dispatch(actions.loadTabImage(data))));
   listeners.push(SLEvent.LOAD_TAB_GIF_VIDEO.on((data) => processVideo(data, dispatch)));
+  listeners.push(SLEvent.SAVE_TABS.on(() => dispatch(actions.setIsSaving(false))));
+  listeners.push(SLEvent.LOAD_TABS.on((args) => dispatch(actions.loadTabs(args))));
 };
 
-export const removeListeners = (): AppThunk => async () => {
+export const removeTabListeners = (): AppThunk => async () => {
   while (listeners.length) listeners.pop()();
 };
 
@@ -128,19 +129,13 @@ export const addNewActiveTab =
   };
 
 // Database calls
-export const load = (): AppThunk => async (dispatch) => {
-  SLEvent.LOAD_TABS.once((args) => dispatch(actions.loadTabs(args)));
-  SLEvent.LOAD_TABS.send();
-};
+export const loadTabs = (): AppThunk => async () => SLEvent.LOAD_TABS.send();
 
-export const save =
+export const saveTabs =
   (tabs: SLTab[]): AppThunk =>
   async (dispatch) => {
     dispatch(actions.setIsSaving(true));
-    SLEvent.SAVE_TABS.once(() => dispatch(actions.setIsSaving(false)));
     SLEvent.SAVE_TABS.send(tabs);
   };
 
-export const deleteTabs = (): AppThunk => async () => {
-  SLEvent.DELETE_TABS.send();
-};
+export const deleteTabs = (): AppThunk => async () => SLEvent.DELETE_TABS.send();

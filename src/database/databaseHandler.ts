@@ -27,5 +27,5 @@ const bootstrapDatabase = (dbPath: string) => {
   }
 };
 
-SLEvent.GET_DB_PATH.once(bootstrapDatabase);
+SLEvent.GET_DB_PATH.on(bootstrapDatabase);
 SLEvent.GET_DB_PATH.send();

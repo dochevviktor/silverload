@@ -7,7 +7,7 @@ import { faCog, faInfoCircle, faTrash, faSave as faSaveSol } from '@fortawesome/
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleVisibility } from '../../store/slices/settings.slice';
 import { RootState } from '../../store/rootReducer';
-import { load, save, deleteTabs } from '../../store/thunks/tab.thunk';
+import { loadTabs, saveTabs, deleteTabs } from '../../store/thunks/tab.thunk';
 
 const SLDrawer = (): JSX.Element => {
   const [isVisible, updateVisible] = useState(false);
@@ -42,11 +42,11 @@ const SLDrawer = (): JSX.Element => {
         visible={isVisible}
         width="170px">
         <div className={styles.topSection}>
-          <Button type="text" onClick={() => dispatch(save(tabList))} loading={isSaving} className={buttonStyle} block>
+          <Button type="text" onClick={() => dispatch(saveTabs(tabList))} loading={isSaving} className={buttonStyle} block>
             <FontAwesomeIcon icon={faSaveSol} size="lg" />
             <p>Save Tabs</p>
           </Button>
-          <Button type="text" onClick={() => dispatch(load())} className={styles.buttonStyle} block>
+          <Button type="text" onClick={() => dispatch(loadTabs())} className={styles.buttonStyle} block>
             <FontAwesomeIcon icon={faSaveReg} size="lg" />
             <p>Load Tabs</p>
           </Button>

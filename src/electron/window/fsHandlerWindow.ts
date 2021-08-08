@@ -6,8 +6,7 @@ import { SL_FILE_SYSTEM } from '../../common/class/SLPoint';
 const loadInitFsListeners = () => {
   console.log('Loading FS Handler handler IPC Main listeners');
 
-  SLEvent.LOAD_FILE_ARGUMENTS.onMain();
-  SLEvent.GET_FILE_ARGUMENTS_FROM_MAIN.onMain(() => process.argv);
+  SLEvent.LOAD_FILE_ARGUMENTS.onMain(() => process.argv);
   SLEvent.SEND_SL_FILES.onMain();
   SLEvent.LOAD_TAB_IMAGE.onMain();
   SLEvent.LOAD_TAB_GIF_VIDEO.onMain();

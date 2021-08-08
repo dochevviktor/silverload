@@ -4,7 +4,8 @@ import Tabs from './tabs/Tabs';
 import ImagePanel from './image-panel/ImagePanel';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/rootReducer';
-import { addListeners, loadFileArgs, removeListeners } from '../store/thunks/tab.thunk';
+import { addTabListeners, loadFileArgs, removeTabListeners } from '../store/thunks/tab.thunk';
+import { addSettingsListeners, removeSettingsListeners } from '../store/thunks/settings.thunk';
 import SLSettingsModal from './settings/SLSettingsModal';
 
 const Main = (): JSX.Element => {
@@ -13,10 +14,12 @@ const Main = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(loadFileArgs());
-    dispatch(addListeners());
+    dispatch(addTabListeners());
+    dispatch(addSettingsListeners());
 
     return () => {
-      dispatch(removeListeners());
+      dispatch(removeTabListeners());
+      dispatch(removeSettingsListeners());
     };
   }, []);
 
