@@ -8,7 +8,7 @@ export default interface SLTab {
   title: string;
   sequence?: number;
   path?: string;
-  base64Image?: string;
+  base64?: string;
   translateX?: number;
   translateY?: number;
   scaleX?: number;
@@ -29,7 +29,7 @@ export const loadTabs = (db: Database): SLTab[] => {
 const convertToTableEntity = (it: SLTab) => {
   const tabTable = new SLTabTable(it);
 
-  tabTable.imageHash = sha1(tabTable.base64Image);
+  tabTable.base64Hash = sha1(tabTable.base64);
 
   return tabTable;
 };
@@ -37,7 +37,7 @@ const convertToTableEntity = (it: SLTab) => {
 export const saveTabs = (db: Database, tabs: SLTab[]): SLTab[] => {
   console.log('Call to save tabs');
   if (db && tabs && tabs.length > 0) {
-    const tableRows = tabs.filter((it) => it.base64Image).map((it) => convertToTableEntity(it));
+    const tableRows = tabs.filter((it) => it.base64).map((it) => convertToTableEntity(it));
 
     saveTable(db, tableRows);
   }
@@ -68,7 +68,7 @@ export class SLTabTable extends SLTable<SLTab> implements SLTab {
   path: string;
 
   @Column({ nullable: true })
-  base64Image: string;
+  base64: string;
 
   @Column({ default: 0 })
   translateX: number;
@@ -82,6 +82,9 @@ export class SLTabTable extends SLTable<SLTab> implements SLTab {
   @Column({ default: 1 })
   scaleY: number;
 
+  @Column({ default: 'image' })
+  type: string;
+
   @Column({ nullable: true })
-  imageHash: string;
+  base64Hash: string;
 }

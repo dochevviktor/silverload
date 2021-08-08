@@ -19,7 +19,7 @@ let ffmpegLock = false;
 
 // Helper functions
 const loadImageData = (newTab: SLTab, dispatch: (arg) => void) => {
-  if (newTab.path && !newTab.base64Image) {
+  if (newTab.path && !newTab.base64) {
     dispatch(actions.setTabLoading(newTab.id));
     SLEvent.LOAD_TAB_IMAGE.send({ tabId: newTab.id, path: newTab.path });
   }
