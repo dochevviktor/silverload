@@ -6,7 +6,7 @@ const replace = (): void => {
   const to = [];
   const asciiDocVariableMap = {
     'electron': ':verElectron:',
-    'react': ':verReact:',
+    'preact': ':verReact:',
     'redux': ':verRedux:',
     'typescript': ':verTypescript:',
     'sass': ':verSass:',

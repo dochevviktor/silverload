@@ -16,7 +16,7 @@ This project will be written entirely in TypeScript, where possible.
 
 // LINK_VARIABLES_START
 :verElectron: ^10.1.6
-:verReact: ^17.0.2
+:verReact: ^10.5.14
 :verRedux: ^4.1.1
 :verTypescript: ^4.3.5
 :verSass: ^1.37.5
@@ -33,7 +33,7 @@ This project will be written entirely in TypeScript, where possible.
 
 // IMG_VARIABLES_START
 :imgElectron: https://upload.wikimedia.org/wikipedia/commons/9/91/Electron_Software_Framework_Logo.svg
-:imgReact: https://cdn.worldvectorlogo.com/logos/react-2.svg
+:imgReact: https://cdn.worldvectorlogo.com/logos/preact.svg
 :imgRedux: https://cdn.worldvectorlogo.com/logos/redux.svg
 :imgTypescript: https://cdn.worldvectorlogo.com/logos/typescript.svg
 :imgSass: https://cdn.worldvectorlogo.com/logos/sass-1.svg
@@ -50,7 +50,7 @@ This project will be written entirely in TypeScript, where possible.
 
 // GH_VARIABLES_START
 :ghElectron: https://github.com/electron/electron
-:ghReact: https://github.com/facebook/react
+:ghReact: https://github.com/preactjs/preact
 :ghRedux: https://github.com/reduxjs/redux
 :ghTypescript: https://github.com/microsoft/TypeScript
 :ghSass: https://github.com/sass/sass
@@ -86,12 +86,12 @@ electron: {verElectron}
 
 a|image::{imgReact}[link={ghReact},50,50]
 [Electron,50,50]
-|React
+|Preact
 a|[source, subs="attributes"]
 ----
-react: {verReact}
+preact: {verReact}
 ----
-|Client side of the application
+|Fast alternative to React with the same modern API
 
 a|image::{imgRedux}[link={ghRedux},50,50]
 |Redux

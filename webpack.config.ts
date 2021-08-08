@@ -81,6 +81,11 @@ const commonConfig: Configuration = {
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.html', '.css', '.scss'],
+    alias: {
+      'react': 'preact/compat',
+      'react-dom/test-utils': 'preact/test-utils',
+      'react-dom': 'preact/compat',
+    },
   },
   module: {
     rules: [
