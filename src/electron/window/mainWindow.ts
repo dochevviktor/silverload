@@ -63,7 +63,7 @@ export const createWindow = (startUrl: string): BrowserWindow => {
     },
   });
 
-  SL_REACT.webContents = mainWindow.webContents;
+  SL_REACT.add(mainWindow.webContents);
   mainWindow.loadURL(startUrl).catch(console.error);
 
   loadInitListeners(mainWindow);

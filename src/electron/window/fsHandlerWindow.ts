@@ -29,7 +29,7 @@ export const createFsWindow = (isLocalDev?: boolean): BrowserWindow => {
     },
   });
 
-  SL_FILE_SYSTEM.webContents = fsWindow.webContents;
+  SL_FILE_SYSTEM.add(fsWindow.webContents);
   fsWindow.loadFile(path.join(__dirname, 'fsHandler.js')).catch(console.error);
   loadInitFsListeners();
 

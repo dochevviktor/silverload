@@ -1,8 +1,20 @@
 import { WebContents } from 'electron';
 
 export class SLPoint {
-  // in the future, we can use an array of contents
-  public webContents?: WebContents;
+  private readonly webContentsList: WebContents[] = [];
+
+  add(webContents: WebContents): void {
+    this.webContentsList.push(webContents);
+  }
+
+  //Round robin load balancing
+  get(): WebContents {
+    const webContents = this.webContentsList.shift();
+
+    this.webContentsList.push(webContents);
+
+    return webContents;
+  }
 }
 
 export const SL_REACT = new SLPoint();

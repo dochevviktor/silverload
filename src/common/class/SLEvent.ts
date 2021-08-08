@@ -56,14 +56,14 @@ export class SLEvent<T = void> {
   onMain(fn?: (arg: T, event) => T | Promise<T> | void | Promise<void> | PayloadAction<T>): void {
     global.ipcMain.on(this.channel, async (event, arg: T) => {
       if (this.destination) {
-        if (event.sender.id !== this.origin?.webContents?.id) {
-          this.origin.webContents.send(this.channel, arg);
+        if (event.sender.id !== this.origin?.get()?.id) {
+          this.origin.get().send(this.channel, arg);
         } else {
-          this.destination.webContents.send(this.channel, arg);
+          this.destination.get().send(this.channel, arg);
         }
       } else {
         if (this.origin) {
-          this.origin.webContents.send(this.channel, await fn(arg, event));
+          this.origin.get().send(this.channel, await fn(arg, event));
         } else {
           await fn(arg, event);
         }
@@ -73,9 +73,9 @@ export class SLEvent<T = void> {
 
   sendMain(arg?: T): void {
     if (this.destination) {
-      this.destination.webContents.send(this.channel, arg);
+      this.destination.get().send(this.channel, arg);
     } else {
-      this.origin?.webContents?.send(this.channel, arg);
+      this.origin?.get()?.send(this.channel, arg);
     }
   }
 }

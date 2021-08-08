@@ -35,7 +35,7 @@ export const createDbWindow = (dbPathIsLocalDev?: boolean): BrowserWindow => {
     },
   });
 
-  SL_DATABASE.webContents = dbWindow.webContents;
+  SL_DATABASE.add(dbWindow.webContents);
   dbWindow.loadFile(path.join(__dirname, 'databaseHandler.js')).catch(console.error);
   loadInitDbListeners(dbWindow, dbPathIsLocalDev);
 
