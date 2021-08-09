@@ -31,6 +31,15 @@ const ImagePanel = (): JSX.Element => {
 
     if (videoRef.current) {
       videoRef.current.load();
+      if (activeTab.currentTime) {
+        videoRef.current.currentTime = activeTab.currentTime;
+      } else {
+        videoRef.current.currentTime = 0;
+      }
+
+      if (activeTab.isPaused) {
+        videoRef.current.pause();
+      }
     }
   }, [activeTab?.base64Hash]);
 
@@ -101,12 +110,12 @@ const ImagePanel = (): JSX.Element => {
 
   const imageElement = (
     <div className={styles.imageContainer}>
-      <img key={activeTab?.id} src={activeTab?.base64} alt="" style={transform} onMouseMove={onMouseMove} />
+      <img id={activeTab?.id} src={activeTab?.base64} alt="" style={transform} onMouseMove={onMouseMove} />
     </div>
   );
   const videoElement = (
     <div className={styles.imageContainer}>
-      <video ref={videoRef} key={activeTab?.id} style={transform} autoPlay muted controls loop>
+      <video ref={videoRef} id={activeTab?.id} style={transform} autoPlay muted controls loop>
         <source src={activeTab?.base64} type="video/mp4" />
       </video>
     </div>

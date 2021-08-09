@@ -58,7 +58,7 @@ const resetSizeAndPos = (tab: SLTab) => {
   tab.scaleY = 1;
 };
 
-const getTabById = (state, tabId) => state.tabList.find((it) => it.id === tabId);
+const getTabById = (state, tabId): SLTab => state.tabList.find((it) => it.id === tabId);
 
 const setIsLoading = (state, tabId: string, flag: boolean) => {
   if (tabId === state.activeTab.id) {
@@ -161,6 +161,8 @@ export const TabListSlice = createSlice({
         state.activeTab.base64 = tabImageData.base64;
         state.activeTab.base64Hash = tabImageData.base64Hash;
         state.activeTab.type = tabImageData.type;
+        state.activeTab.isPaused = false;
+        state.activeTab.currentTime = 0;
       }
       const tabById = getTabById(state, tabImageData.tabId);
 
@@ -185,6 +187,13 @@ export const TabListSlice = createSlice({
       }
     },
     setActiveTab(state, { payload: tab }: PayloadAction<SLTab>) {
+      if (state.activeTab && state.activeTab.type === 'video') {
+        const videoElement = <HTMLVideoElement>document.getElementById(state.activeTab.id);
+        const tabById = getTabById(state, state.activeTab.id);
+
+        tabById.currentTime = videoElement.currentTime;
+        tabById.isPaused = videoElement.paused;
+      }
       state.activeTab = tab;
     },
     setActiveTabData(state, { payload: imageData }: PayloadAction<SLImageData>) {
