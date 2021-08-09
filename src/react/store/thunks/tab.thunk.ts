@@ -52,8 +52,8 @@ const processVideo = async (tabImageData: SLTabImageData, dispatch, ffmpegCallFr
     await ffmpeg.load();
   }
 
-  if (tabImageData?.rawImage) {
-    await ffmpeg.FS('writeFile', 'file.gif', tabImageData.rawImage);
+  if (tabImageData?.rawFile) {
+    await ffmpeg.FS('writeFile', 'file.gif', tabImageData.rawFile);
 
     await ffmpeg.run(
       '-i',

@@ -1,6 +1,5 @@
 import { Column, Entity, SLTable } from './SLTable';
 import { Database } from 'better-sqlite3';
-import { sha1 } from 'object-hash';
 import { cleanUpDatabase, getAllFromTableOrdered, saveTable, truncateTable } from '../../database/databaseOperations';
 
 export default interface SLTab {
@@ -9,6 +8,7 @@ export default interface SLTab {
   sequence?: number;
   path?: string;
   base64?: string;
+  base64Hash?: string;
   translateX?: number;
   translateY?: number;
   scaleX?: number;
@@ -26,18 +26,10 @@ export const loadTabs = (db: Database): SLTab[] => {
   return getAllFromTableOrdered<SLTab>(db, SLTabTable.prototype);
 };
 
-const convertToTableEntity = (it: SLTab) => {
-  const tabTable = new SLTabTable(it);
-
-  tabTable.base64Hash = sha1(tabTable.base64);
-
-  return tabTable;
-};
-
 export const saveTabs = (db: Database, tabs: SLTab[]): SLTab[] => {
   console.log('Call to save tabs');
   if (db && tabs && tabs.length > 0) {
-    const tableRows = tabs.filter((it) => it.base64).map((it) => convertToTableEntity(it));
+    const tableRows = tabs.filter((it) => it.base64).map((it) => new SLTabTable(it));
 
     saveTable(db, tableRows);
   }

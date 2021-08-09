@@ -2,6 +2,7 @@ export interface SLTabImageData {
   tabId: string;
   path: string;
   base64?: string;
-  rawImage?: Uint8Array;
+  base64Hash?: string;
+  rawFile?: Uint8Array;
   type?: string;
 }

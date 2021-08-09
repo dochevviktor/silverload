@@ -6,6 +6,7 @@ import { fromFile } from 'file-type';
 import { basename } from 'path';
 import VALID_FILE_TYPES from '../common/constant/SLImageFileTypes';
 import { SLTabImageData } from '../common/interface/SLTabImageData';
+import { sha1 } from 'object-hash';
 
 window.ipcRenderer = ipcRenderer;
 
@@ -38,7 +39,8 @@ const readFileAsync = async (tabImageData: SLTabImageData): Promise<void> => {
     }
 
     if (mimeType === 'image/gif') {
-      tabImageData.rawImage = await promises.readFile(tabImageData.path);
+      tabImageData.rawFile = await promises.readFile(tabImageData.path);
+      tabImageData.base64Hash = sha1(tabImageData.rawFile);
       tabImageData.type = 'video';
       SLEvent.LOAD_TAB_GIF_VIDEO.send(tabImageData);
 
@@ -47,6 +49,7 @@ const readFileAsync = async (tabImageData: SLTabImageData): Promise<void> => {
     const base64 = await promises.readFile(tabImageData.path, { encoding: 'base64' });
 
     tabImageData.base64 = `data:${mimeType};base64,${base64}`;
+    tabImageData.base64Hash = sha1(tabImageData.base64);
     tabImageData.type = 'image';
   }
 

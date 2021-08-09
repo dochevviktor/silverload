@@ -1,4 +1,4 @@
-import { MouseEvent, useState, WheelEvent, DragEvent } from 'react';
+import { MouseEvent, useState, useRef, useEffect, WheelEvent, DragEvent } from 'react';
 import styles from './ImagePanel.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
@@ -15,12 +15,24 @@ import { addNewTab, requestImageData } from '../../store/thunks/tab.thunk';
 const ImagePanel = (): JSX.Element => {
   const [isAnimated, setAnimated] = useState<boolean>(false);
 
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   const dispatch = useDispatch();
   const activeTab = useSelector((state: RootState) => state.tabsSlice.activeTab);
   const isDragging = useSelector((state: RootState) => state.tabsSlice.isDragging);
 
   const zoom = new SLZoom((multiplier) => dispatch(changeImageSize(multiplier)));
   const validateFile = (file: File) => VALID_FILE_TYPES.indexOf(file.type) !== -1;
+
+  useEffect(() => {
+    if (activeTab?.type !== 'video') {
+      return;
+    }
+
+    if (videoRef.current) {
+      videoRef.current.load();
+    }
+  }, [activeTab?.base64Hash]);
 
   const handleDrop = (e: DragEvent) => {
     dispatch(handleDragDrop(e));
@@ -94,7 +106,7 @@ const ImagePanel = (): JSX.Element => {
   );
   const videoElement = (
     <div className={styles.imageContainer}>
-      <video key={activeTab?.id} style={transform} autoPlay muted controls loop>
+      <video ref={videoRef} key={activeTab?.id} style={transform} autoPlay muted controls loop>
         <source src={activeTab?.base64} type="video/mp4" />
       </video>
     </div>
