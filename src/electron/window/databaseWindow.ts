@@ -1,10 +1,12 @@
-import { BrowserWindow } from 'electron';
-import path from 'path';
 import * as SLEvent from '../../common/class/SLEvent';
+import SLBrowserWindow from '../class/SLBrowserWindow';
 import { SL_DATABASE } from '../../common/class/SLPoint';
+import { BrowserWindowConstructorOptions } from 'electron';
 
-const loadInitDbListeners = (dbWindow: BrowserWindow, dbPathIsLocalDev?: boolean) => {
-  const dbPath = dbPathIsLocalDev ? 'storage.db' : `${process.resourcesPath}\\storage.db`;
+const isDev = process.env.ELECTRON_START_URL != null;
+
+const loadListeners = () => {
+  const dbPath = isDev ? 'storage.db' : `${process.resourcesPath}\\storage.db`;
 
   console.log('Loading db IPC Main listeners');
 
@@ -18,36 +20,19 @@ const loadInitDbListeners = (dbWindow: BrowserWindow, dbPathIsLocalDev?: boolean
   SLEvent.DELETE_TABS.onMain();
 };
 
-export const createDbWindow = (dbPathIsLocalDev?: boolean): BrowserWindow => {
-  console.log('Creating DB browser window');
-  const dbWindow = new BrowserWindow({
-    show: dbPathIsLocalDev,
-    closable: false,
-    title: 'Database window',
+const createDbWindow = (): SLBrowserWindow => {
+  const opt: BrowserWindowConstructorOptions = {
+    show: isDev,
     webPreferences: {
-      nodeIntegration: false,
       javascript: false,
       images: false,
       webgl: false,
       spellcheck: false,
       enableWebSQL: false,
-      preload: path.join(__dirname, 'databaseHandler.js'),
     },
-  });
+  };
 
-  SL_DATABASE.add(dbWindow.webContents);
-  dbWindow.loadFile(path.join(__dirname, 'databaseHandler.js')).catch(console.error);
-  loadInitDbListeners(dbWindow, dbPathIsLocalDev);
-
-  console.log('Created DB browser window');
-
-  return dbWindow;
+  return new SLBrowserWindow('Database window', 'databaseHandler.js', SL_DATABASE, loadListeners, opt);
 };
 
-export const createDevDbWindow = (): BrowserWindow => {
-  const dbWindow = createDbWindow(true);
-
-  dbWindow.webContents.openDevTools();
-
-  return dbWindow;
-};
+export default createDbWindow;

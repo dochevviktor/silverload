@@ -1,30 +1,27 @@
-import { BrowserWindow, ContextMenuParams, Menu } from 'electron';
+import { app, BrowserWindow, BrowserWindowConstructorOptions, ContextMenuParams, Menu } from 'electron';
 import * as SLEvent from '../../common/class/SLEvent';
-import path from 'path';
 import { SL_REACT } from '../../common/class/SLPoint';
+import SLBrowserWindow from '../class/SLBrowserWindow';
 
-const loadInitListeners = (mainWindow: BrowserWindow) => {
-  console.log('Load Init Listeners');
-  mainWindow.webContents.on('did-finish-load', () => {
-    if (!mainWindow) {
-      throw new Error('"mainWindow" is not defined');
+const loadListeners = (win: BrowserWindow) => {
+  win.webContents.on('did-finish-load', () => {
+    if (!win) {
+      throw new Error('"win" is not defined');
     } else {
-      mainWindow.show();
-      mainWindow.focus();
+      win.show();
+      win.focus();
     }
   });
 
-  mainWindow.webContents.on('context-menu', (e, props) => mainContext(mainWindow, e, props));
-};
+  win.webContents.on('context-menu', (e, props) => mainContext(win, e, props));
 
-const loadFrameManipulationListeners = (mainWindow: BrowserWindow) => {
-  console.log('Load Frame Manipulation Listeners');
+  SLEvent.MINIMIZE_WINDOW.onMain(() => win.minimize());
+  SLEvent.MAXIMIZE_WINDOW.onMain(() => (win.isMaximized() ? win.unmaximize() : win.maximize()));
 
-  SLEvent.MINIMIZE_WINDOW.onMain(() => mainWindow.minimize());
-  SLEvent.MAXIMIZE_WINDOW.onMain(() => (mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()));
+  win.on('maximize', () => SLEvent.WINDOW_MAXIMIZED.sendMain());
+  win.on('unmaximize', () => SLEvent.WINDOW_UN_MAXIMIZED.sendMain());
 
-  mainWindow.on('maximize', () => SLEvent.WINDOW_MAXIMIZED.sendMain());
-  mainWindow.on('unmaximize', () => SLEvent.WINDOW_UN_MAXIMIZED.sendMain());
+  app.on('second-instance', () => restoreMainWindow(win));
 };
 
 const mainContext = (mainWindow: BrowserWindow, e: Event, props: ContextMenuParams) => {
@@ -44,45 +41,7 @@ const mainContext = (mainWindow: BrowserWindow, e: Event, props: ContextMenuPara
   ]).popup({ window: mainWindow });
 };
 
-export const createWindow = (startUrl: string): BrowserWindow => {
-  console.log('Creating Main Window');
-  const mainWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728,
-    minWidth: 240,
-    minHeight: 70,
-    frame: false,
-    icon: 'icon.ico',
-    webPreferences: {
-      nodeIntegration: false,
-      nodeIntegrationInWorker: false,
-      enableRemoteModule: false,
-      contextIsolation: false,
-      preload: path.join(__dirname, 'preload.js'),
-    },
-  });
-
-  SL_REACT.add(mainWindow.webContents);
-  mainWindow.loadURL(startUrl).catch(console.error);
-
-  loadInitListeners(mainWindow);
-  loadFrameManipulationListeners(mainWindow);
-
-  console.log('Created Main Window');
-
-  return mainWindow;
-};
-
-export const createDevWindow = (startUrl: string): BrowserWindow => {
-  const mainWindow = createWindow(startUrl);
-
-  mainWindow.webContents.openDevTools();
-
-  return mainWindow;
-};
-
-export const restoreMainWindow = (mainWindow: BrowserWindow): void => {
+const restoreMainWindow = (mainWindow: BrowserWindow): void => {
   if (mainWindow) {
     if (mainWindow.isMinimized()) {
       mainWindow.restore();
@@ -90,3 +49,25 @@ export const restoreMainWindow = (mainWindow: BrowserWindow): void => {
     mainWindow.focus();
   }
 };
+
+const createWindow = (): SLBrowserWindow => {
+  const opt: BrowserWindowConstructorOptions = {
+    width: 1024,
+    height: 728,
+    minWidth: 240,
+    minHeight: 70,
+    frame: false,
+  };
+  const win = new SLBrowserWindow('Main Window', 'preload.js', SL_REACT, loadListeners, opt);
+  const startURL = process.env.ELECTRON_START_URL;
+
+  if (startURL) {
+    win.setLoadUrl(startURL);
+  } else {
+    win.setLoadPath('index.html');
+  }
+
+  return win;
+};
+
+export default createWindow;
