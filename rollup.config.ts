@@ -11,6 +11,7 @@ import externals from 'rollup-plugin-node-externals';
 
 const devInputOptions: InputOptions = {
   plugins: [
+    // we step in and manually adjust the path and importing of the sqlite node module
     replace({
       delimiters: ['', ''],
       preventAssignment: true,
@@ -27,6 +28,7 @@ const devInputOptions: InputOptions = {
 
 const prodInputOptions: InputOptions = {
   plugins: [
+    // for prod, the node module has to be outside the asar pack - adjust accordingly
     replace({
       delimiters: ['', ''],
       preventAssignment: true,
@@ -98,6 +100,14 @@ const dbOutputOptions: OutputOptions = {
 const fsInputOptions: InputOptions = {
   input: 'src/fs-handler/fsHandler.ts',
   plugins: [
+    // steams from file-type are not used, so we can drop this eval
+    replace({
+      delimiters: ['', ''],
+      preventAssignment: true,
+      values: {
+        "eval('require')('stream');": 'null',
+      },
+    }),
     externals({
       include: ['electron'],
       devDeps: false,
@@ -132,6 +142,7 @@ const preloadInputOptions: InputOptions = {
       tsconfig: 'src/preload/tsconfig.json',
     }),
     commonjs(),
+    // get the worker and WASM
     copy({
       targets: [{ src: ['**/@ffmpeg/core/dist/*'], dest: 'build' }],
       verbose: true,

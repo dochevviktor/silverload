@@ -4,7 +4,7 @@ import InlineChunkHtmlPlugin from 'inline-chunk-html-plugin';
 import HTMLInlineCSSWebpackPlugin from 'html-inline-css-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-import { DefinePlugin, EnvironmentPlugin, Configuration, Compiler } from 'webpack';
+import { EnvironmentPlugin, Configuration, Compiler } from 'webpack';
 import { Application, Request, Response, NextFunction } from 'express';
 import merge from 'webpack-merge';
 import CompressionPlugin from 'compression-webpack-plugin';
@@ -35,10 +35,6 @@ const devConfig: Configuration = {
     new EnvironmentPlugin({
       NODE_ENV: 'development',
       DEBUG: false,
-    }),
-    // disable annoying react advertisement
-    new DefinePlugin({
-      __REACT_DEVTOOLS_GLOBAL_HOOK__: '({ isDisabled: true })',
     }),
     new CompressionPlugin(),
     // Launch electron after webpack dev server is deployed
@@ -81,6 +77,7 @@ const commonConfig: Configuration = {
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.html', '.css', '.scss'],
+    // Use Preact compatability layer
     alias: {
       'react': 'preact/compat',
       'react-dom/test-utils': 'preact/test-utils',

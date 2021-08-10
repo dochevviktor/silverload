@@ -22,7 +22,7 @@ export default class SLScroll {
     }
   }
 
-  private setTimeoutPromise(fn: () => void, timeout = 0): Promise<void> {
+  private setTimeoutPromise(fn, timeout = 0): Promise<void> {
     return new Promise((resolve) => setTimeout(() => resolve(fn()), timeout));
   }
 

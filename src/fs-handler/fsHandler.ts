@@ -32,6 +32,7 @@ const readSLFile = async (path: string): Promise<SLFile> => {
 
 const readFileAsync = async (tabImageData: SLTabImageData): Promise<void> => {
   if (tabImageData?.path) {
+    console.log('Loading file: ' + tabImageData.path);
     const mimeType = (await fromFile(tabImageData.path))?.mime;
 
     if (!validateFile(mimeType)) {
