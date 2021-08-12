@@ -6,16 +6,10 @@ import SLTab from '../../../common/class/SLTab';
 import { SLFile } from '../../../common/interface/SLFile';
 import VALID_FILE_TYPES from '../../../common/constant/SLImageFileTypes';
 import { SLTabImageData } from '../../../common/interface/SLTabImageData';
-import bytesToBase64 from '../../../common/constant/SLBase64Converters';
-import { createFFmpeg } from '@ffmpeg/ffmpeg';
 
 // Variables
 const validateFileMimeType = (type: string) => VALID_FILE_TYPES.indexOf(type) !== -1;
 const listeners: (() => void)[] = [];
-const ratioPrint = ({ ratio }) => console.log(`Progress: ${ratio * 100.0}%`);
-const ffmpeg = createFFmpeg({ progress: ratioPrint, corePath: './ffmpeg-core.js' });
-const ffmpegQueue: { tabImageData: SLTabImageData; dispatch: (arg) => void }[] = [];
-let ffmpegLock = false;
 
 // Helper functions
 const loadImageData = (newTab: SLTab, dispatch: (arg) => void) => {
@@ -39,61 +33,10 @@ const openNewTabs = (fileList: SLFile[], dispatch: (arg) => void) => {
     .map((it) => dispatch(addNewTab({ id: uuid(), title: it.name, path: it.path })));
 };
 
-const processVideo = async (tabImageData: SLTabImageData, dispatch, ffmpegCallFromQueue?: boolean) => {
-  if (ffmpegLock && !ffmpegCallFromQueue) {
-    ffmpegQueue.push({ tabImageData, dispatch });
-
-    return;
-  }
-
-  ffmpegLock = true;
-
-  if (!ffmpeg.isLoaded()) {
-    await ffmpeg.load();
-  }
-
-  if (tabImageData?.rawFile) {
-    await ffmpeg.FS('writeFile', 'file.gif', tabImageData.rawFile);
-
-    await ffmpeg.run(
-      '-i',
-      'file.gif',
-      '-movflags',
-      'faststart',
-      '-crf',
-      '23',
-      '-preset',
-      'ultrafast',
-      '-pix_fmt',
-      'yuv420p',
-      '-vf',
-      'scale=trunc(iw/2)*2:trunc(ih/2)*2',
-      'file.mp4'
-    );
-
-    const data = await ffmpeg.FS('readFile', 'file.mp4');
-
-    tabImageData.base64 = `data:video/mp4;base64,${bytesToBase64(data)}`;
-    dispatch(actions.loadTabImage(tabImageData));
-
-    // cleanup
-    await ffmpeg.FS('unlink', 'file.mp4');
-    await ffmpeg.FS('unlink', 'file.gif');
-
-    if (ffmpegQueue.length > 0) {
-      const shift = ffmpegQueue.shift();
-
-      await processVideo(shift.tabImageData, shift.dispatch, true);
-    } else {
-      ffmpegLock = false;
-    }
-  }
-};
-
 export const addTabListeners = (): AppThunk => async (dispatch) => {
   listeners.push(SLEvent.SEND_SL_FILES.on((files) => openNewTabs(files, (arg) => dispatch(arg))));
   listeners.push(SLEvent.LOAD_TAB_IMAGE.on((data) => dispatch(actions.loadTabImage(data))));
-  listeners.push(SLEvent.LOAD_TAB_GIF_VIDEO.on((data) => processVideo(data, dispatch)));
+  listeners.push(SLEvent.LOAD_TAB_GIF_VIDEO.on((data) => dispatch(actions.loadTabImage(data))));
   listeners.push(SLEvent.SAVE_TABS.on(() => dispatch(actions.setIsSaving(false))));
   listeners.push(SLEvent.LOAD_TABS.on((args) => dispatch(actions.loadTabs(args))));
 };

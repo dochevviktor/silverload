@@ -4,6 +4,8 @@ import { SL_DATABASE } from '../../common/class/SLPoint';
 import { BrowserWindowConstructorOptions } from 'electron';
 
 const isDev = process.env.ELECTRON_START_URL != null;
+const title = 'Database window';
+const preload = 'databaseHandler.js';
 
 const loadListeners = () => {
   const dbPath = isDev ? 'storage.db' : `${process.resourcesPath}\\storage.db`;
@@ -32,7 +34,7 @@ const createDbWindow = (): SLBrowserWindow => {
     },
   };
 
-  return new SLBrowserWindow('Database window', 'databaseHandler.js', SL_DATABASE, loadListeners, opt);
+  return new SLBrowserWindow(title, preload, SL_DATABASE, loadListeners, opt);
 };
 
 export default createDbWindow;

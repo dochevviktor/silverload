@@ -2,23 +2,18 @@ import { app, ipcMain } from 'electron';
 import createWindow from './window/mainWindow';
 import createDbWindow from './window/databaseWindow';
 import createFsWindow from './window/fsHandlerWindow';
-import * as SLEvent from '../common/class/SLEvent';
+import createFfmpegWindow from './window/ffmpegWindow';
 
 const createMainWindow = async () => {
   await createDbWindow().load();
   await createFsWindow().load();
+  await createFfmpegWindow().load();
+  await createFfmpegWindow(false).load();
+  await createFfmpegWindow(false).load();
   const mainWindow = createWindow();
 
   await mainWindow.load();
   mainWindow.browserWindow.show();
-
-  SLEvent.CLOSE_WINDOW.onMain(closeAllWindows);
-};
-
-const closeAllWindows = () => {
-  console.log('Closing all windows');
-  app.quit();
-  app.exit(0);
 };
 
 const bootstrap = () => {

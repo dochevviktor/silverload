@@ -1,9 +1,9 @@
-import { IpcRenderer } from 'electron';
+import { IpcRenderer, IpcRendererEvent } from 'electron';
 import { SLTabImageData } from '../interface/SLTabImageData';
 import { SLFile } from '../interface/SLFile';
 import SLTab from './SLTab';
 import SLSettings from './SLSettings';
-import { SLPoint, SL_DATABASE, SL_REACT, SL_FILE_SYSTEM } from './SLPoint';
+import { SLPoint, SL_DATABASE, SL_REACT, SL_FILE_SYSTEM, SL_FFMPEG } from './SLPoint';
 import { PayloadAction } from '@reduxjs/toolkit';
 
 let lastChannelId = 0;
@@ -56,7 +56,7 @@ export class SLEvent<T = void> {
   onMain(fn?: (arg: T, event) => T | Promise<T> | void | Promise<void> | PayloadAction<T>): void {
     global.ipcMain.on(this.channel, async (event, arg: T) => {
       if (this.destination) {
-        if (event.sender.id !== this.origin?.get()?.id) {
+        if (!this.origin?.contains(event.sender.id)) {
           this.origin.get().send(this.channel, arg);
         } else {
           this.destination.get().send(this.channel, arg);
@@ -104,4 +104,6 @@ export const LOAD_FILE_ARGUMENTS = new SLEvent<string[]>(SL_FILE_SYSTEM);
 export const SEND_SL_FILES = new SLEvent<SLFile[]>(SL_FILE_SYSTEM, SL_REACT);
 export const SEND_ADDITIONAL_FILE_ARGUMENTS = new SLEvent<string[]>(SL_FILE_SYSTEM);
 export const LOAD_TAB_IMAGE = new SLEvent<SLTabImageData>(SL_REACT, SL_FILE_SYSTEM);
-export const LOAD_TAB_GIF_VIDEO = new SLEvent<SLTabImageData>(SL_REACT, SL_FILE_SYSTEM);
+
+// FFMPEG
+export const LOAD_TAB_GIF_VIDEO = new SLEvent<SLTabImageData>(SL_FFMPEG, SL_REACT);

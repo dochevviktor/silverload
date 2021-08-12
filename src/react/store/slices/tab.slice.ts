@@ -191,8 +191,10 @@ export const TabListSlice = createSlice({
         const videoElement = <HTMLVideoElement>document.getElementById(state.activeTab.id);
         const tabById = getTabById(state, state.activeTab.id);
 
-        tabById.currentTime = videoElement.currentTime;
-        tabById.isPaused = videoElement.paused;
+        if (tabById && videoElement) {
+          tabById.currentTime = videoElement.currentTime;
+          tabById.isPaused = videoElement.paused;
+        }
       }
       state.activeTab = tab;
     },

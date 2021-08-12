@@ -69,6 +69,8 @@ const prodConfig: Configuration = {
 };
 
 const commonConfig: Configuration = {
+  name: 'reactCommonConfig',
+  dependencies: ['commonFfmpegConfig'],
   entry: './src/react/index.tsx',
   output: {
     path: path.resolve('build'),
@@ -142,7 +144,6 @@ const commonConfig: Configuration = {
     ],
   },
   plugins: [
-    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: 'Silverload',
       meta: {
@@ -165,8 +166,66 @@ const commonConfig: Configuration = {
   ],
 };
 
-export default (env: { production: boolean }): Configuration => {
-  const envConfig = env?.production ? prodConfig : devConfig;
+const devFfmpegConfig: Configuration = {
+  mode: 'development',
+  devtool: 'source-map',
+  plugins: [
+    // use 'development' unless process.env.NODE_ENV is defined
+    new EnvironmentPlugin({
+      NODE_ENV: 'development',
+      DEBUG: false,
+    }),
+    new CompressionPlugin(),
+  ],
+};
 
-  return merge(commonConfig, envConfig);
+const commonFfmpegConfig: Configuration = {
+  name: 'commonFfmpegConfig',
+  entry: './src/ffmpeg/ffmpegHandler.ts',
+  output: {
+    path: path.resolve('build'),
+    filename: 'ffmpegHandler.[contenthash].js',
+    publicPath: '/',
+  },
+  resolve: {
+    extensions: ['.js', '.ts', '.tsx', '.html'],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.ts(x?)$/,
+        exclude: /node_modules/,
+        loader: 'ts-loader',
+      },
+    ],
+  },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: 'FFMPEG',
+      filename: 'ffmpeg.html',
+      meta: {
+        viewport: 'width=device-width, initial-scale=1',
+      },
+    }),
+    new CspHtmlWebpackPlugin({
+      'default-src': "'self'",
+      'base-uri': "'self'",
+      'script-src': "'self'",
+    }),
+  ],
+};
+
+export default (env: { production: boolean }): Configuration[] => {
+  const allConfigurations: Configuration[] = [];
+
+  if (env?.production) {
+    allConfigurations.push(merge(commonFfmpegConfig, prodConfig));
+    allConfigurations.push(merge(commonConfig, prodConfig));
+  } else {
+    allConfigurations.push(merge(commonFfmpegConfig, devFfmpegConfig));
+    allConfigurations.push(merge(commonConfig, devConfig));
+  }
+
+  return allConfigurations;
 };

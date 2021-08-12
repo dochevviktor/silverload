@@ -4,6 +4,8 @@ import { SL_FILE_SYSTEM } from '../../common/class/SLPoint';
 import SLBrowserWindow from '../class/SLBrowserWindow';
 
 const isDev = process.env.ELECTRON_START_URL != null;
+const title = 'File System handler window';
+const preload = 'fsHandler.js';
 
 const loadListeners = (win: BrowserWindow) => {
   console.log('Loading FS Handler handler IPC Main listeners');
@@ -11,7 +13,6 @@ const loadListeners = (win: BrowserWindow) => {
   SLEvent.LOAD_FILE_ARGUMENTS.onMain(() => process.argv);
   SLEvent.SEND_SL_FILES.onMain();
   SLEvent.LOAD_TAB_IMAGE.onMain();
-  SLEvent.LOAD_TAB_GIF_VIDEO.onMain();
 
   app.on('second-instance', (event, commandLine) => loadAdditionalFiles(win, commandLine));
 };
@@ -33,7 +34,7 @@ const createFsWindow = (): SLBrowserWindow => {
     },
   };
 
-  return new SLBrowserWindow('File System handler window', 'fsHandler.js', SL_FILE_SYSTEM, loadListeners, opt);
+  return new SLBrowserWindow(title, preload, SL_FILE_SYSTEM, loadListeners, opt);
 };
 
 export default createFsWindow;

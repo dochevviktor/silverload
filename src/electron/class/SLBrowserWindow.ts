@@ -37,12 +37,13 @@ export default class SLBrowserWindow {
     );
 
     point.add(this.browserWindow.webContents);
-    if (isDev) {
-      this.browserWindow.webContents.openDevTools();
-    }
-    loadListeners(this.browserWindow);
+
+    if (isDev) this.browserWindow.webContents.openDevTools();
+
+    if (loadListeners) loadListeners(this.browserWindow);
+
     this.load = () => this.browserWindow.loadFile(path.join(__dirname, preload));
-    console.log('Created new BrowserWindow for', title);
+    console.log('Created new BrowserWindow for', title, 'id:', this.browserWindow.webContents.id);
   }
 
   setLoadUrl = (url: string): void => {

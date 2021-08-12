@@ -3,6 +3,9 @@ import * as SLEvent from '../../common/class/SLEvent';
 import { SL_REACT } from '../../common/class/SLPoint';
 import SLBrowserWindow from '../class/SLBrowserWindow';
 
+const title = 'Main Window';
+const preload = 'preload.js';
+
 const loadListeners = (win: BrowserWindow) => {
   win.webContents.on('did-finish-load', () => {
     if (!win) {
@@ -17,28 +20,13 @@ const loadListeners = (win: BrowserWindow) => {
 
   SLEvent.MINIMIZE_WINDOW.onMain(() => win.minimize());
   SLEvent.MAXIMIZE_WINDOW.onMain(() => (win.isMaximized() ? win.unmaximize() : win.maximize()));
+  SLEvent.CLOSE_WINDOW.onMain(closeAllWindows);
 
   win.on('maximize', () => SLEvent.WINDOW_MAXIMIZED.sendMain());
   win.on('unmaximize', () => SLEvent.WINDOW_UN_MAXIMIZED.sendMain());
 
   app.on('second-instance', () => restoreMainWindow(win));
-};
-
-const mainContext = (mainWindow: BrowserWindow, e: Event, props: ContextMenuParams) => {
-  const { x, y } = props;
-
-  console.log('Call to context menu at X:', x, ' Y:', y);
-
-  Menu.buildFromTemplate([
-    {
-      label: 'Reload',
-      click: () => mainWindow.reload(),
-    },
-    {
-      label: 'Inspect element',
-      click: () => mainWindow.webContents.inspectElement(x, y),
-    },
-  ]).popup({ window: mainWindow });
+  win.on('closed', closeAllWindows);
 };
 
 const restoreMainWindow = (mainWindow: BrowserWindow): void => {
@@ -58,7 +46,7 @@ const createWindow = (): SLBrowserWindow => {
     minHeight: 70,
     frame: false,
   };
-  const win = new SLBrowserWindow('Main Window', 'preload.js', SL_REACT, loadListeners, opt);
+  const win = new SLBrowserWindow(title, preload, SL_REACT, loadListeners, opt);
   const startURL = process.env.ELECTRON_START_URL;
 
   if (startURL) {
@@ -68,6 +56,29 @@ const createWindow = (): SLBrowserWindow => {
   }
 
   return win;
+};
+
+const closeAllWindows = () => {
+  console.log('Closing all windows');
+  app.quit();
+  app.exit(0);
+};
+
+const mainContext = (mainWindow: BrowserWindow, e: Event, props: ContextMenuParams) => {
+  const { x, y } = props;
+
+  console.log('Call to context menu at X:', x, ' Y:', y);
+
+  Menu.buildFromTemplate([
+    {
+      label: 'Reload',
+      click: () => mainWindow.reload(),
+    },
+    {
+      label: 'Inspect element',
+      click: () => mainWindow.webContents.inspectElement(x, y),
+    },
+  ]).popup({ window: mainWindow });
 };
 
 export default createWindow;
