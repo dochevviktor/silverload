@@ -1,6 +1,6 @@
 import { Column, Entity, SLTable } from './SLTable';
 import { Database } from 'better-sqlite3';
-import { getAllFromTableOrdered, saveTable } from '../../database/databaseOperations';
+import { getAllFromTableOrdered, saveTable } from '../../backend/database/databaseOperations';
 
 export enum SLSetting {
   SAVE_ON_EXIT = 'Save tabs on application exit',

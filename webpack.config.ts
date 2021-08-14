@@ -8,10 +8,17 @@ import { Application, Request, Response, NextFunction } from 'express';
 import merge from 'webpack-merge';
 import CompressionPlugin from 'compression-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
-import { reactConfig } from './src/webpack/react.config';
-import { ffmpegConfig } from './src/webpack/ffmpeg.config';
-import ElectronDevPlugin from './src/webpack/class/ElectronDevPlugin';
+import { reactConfig } from './config/react.config';
+import { ffmpegConfig } from './config/ffmpeg.config';
+import ElectronDevPlugin from './config/class/ElectronDevPlugin';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 
+//Always attach this to the fist config for a proper cleanup on start.
+const cleanOutputConfig: Configuration = {
+  plugins: [new CleanWebpackPlugin()],
+};
+
+// Add this to the last config in development mode for the dev server.
 const devServerConfig: Configuration = {
   plugins: [new ElectronDevPlugin()],
   devServer: {
@@ -59,10 +66,10 @@ export default (env: { production: boolean }): Configuration[] => {
   const configurations: Configuration[] = [];
 
   if (env?.production) {
-    configurations.push(merge(ffmpegConfig, prodConfig));
+    configurations.push(merge(merge(ffmpegConfig, cleanOutputConfig), prodConfig));
     configurations.push(merge(reactConfig, prodConfig));
   } else {
-    configurations.push(merge(ffmpegConfig, devConfig));
+    configurations.push(merge(merge(ffmpegConfig, cleanOutputConfig), devConfig));
     configurations.push(merge(merge(reactConfig, devServerConfig), devConfig));
   }
 

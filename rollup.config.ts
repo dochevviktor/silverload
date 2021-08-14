@@ -48,7 +48,7 @@ const prodInputOptions: InputOptions = {
 };
 
 const elInputOptions: InputOptions = {
-  input: 'src/electron/main.ts',
+  input: 'src/backend/electron/main.ts',
   plugins: [
     externals({
       include: ['electron'],
@@ -58,7 +58,7 @@ const elInputOptions: InputOptions = {
       preferBuiltins: true,
     }),
     typescript({
-      tsconfig: 'src/electron/tsconfig.json',
+      tsconfig: 'src/backend/electron/tsconfig.json',
     }),
     commonjs(),
     copy({
@@ -75,7 +75,7 @@ const elOutputOptions: OutputOptions = {
 };
 
 const dbInputOptions: InputOptions = {
-  input: 'src/database/databaseHandler.ts',
+  input: 'src/backend/database/databaseHandler.ts',
   plugins: [
     externals({
       include: ['electron'],
@@ -85,7 +85,7 @@ const dbInputOptions: InputOptions = {
       preferBuiltins: true,
     }),
     typescript({
-      tsconfig: 'src/database/tsconfig.json',
+      tsconfig: 'src/backend/database/tsconfig.json',
     }),
     commonjs(),
   ],
@@ -98,7 +98,7 @@ const dbOutputOptions: OutputOptions = {
 };
 
 const fsInputOptions: InputOptions = {
-  input: 'src/fs-handler/fsHandler.ts',
+  input: 'src/backend/fs-handler/fsHandler.ts',
   plugins: [
     // steams from file-type are not used, so we can drop this eval
     replace({
@@ -116,7 +116,7 @@ const fsInputOptions: InputOptions = {
       preferBuiltins: true,
     }),
     typescript({
-      tsconfig: 'src/fs-handler/tsconfig.json',
+      tsconfig: 'src/backend/fs-handler/tsconfig.json',
     }),
     commonjs(),
   ],
@@ -129,7 +129,7 @@ const fsOutputOptions: OutputOptions = {
 };
 
 const preloadInputOptions: InputOptions = {
-  input: 'src/preload/preload.ts',
+  input: 'src/backend/preload/preload.ts',
   plugins: [
     externals({
       include: ['electron'],
@@ -139,7 +139,7 @@ const preloadInputOptions: InputOptions = {
       preferBuiltins: true,
     }),
     typescript({
-      tsconfig: 'src/preload/tsconfig.json',
+      tsconfig: 'src/backend/preload/tsconfig.json',
     }),
     commonjs(),
     // get the worker and WASM

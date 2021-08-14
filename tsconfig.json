@@ -7,8 +7,8 @@
   },
   "exclude": [
     "node_modules/*",
-    "src/database/*",
-    "src/electron/*",
-    "src/fs-handler/*"
+    "src/backend/database/*",
+    "src/backend/electron/*",
+    "src/backend/fs-handler/*"
   ]
 }

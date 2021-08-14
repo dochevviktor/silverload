@@ -14,8 +14,8 @@
     "electron:install": "electron-rebuild",
     "electron:package": "yarn run electron:bundle & electron-forge package",
     "electron:make": "yarn run electron:bundle & electron-forge make",
-    "electron:build": "ts-node --project src/electron/tsconfig.json rollup.config.ts",
-    "electron:bundle": "cross-env production=true ts-node -P src/electron/tsconfig.json rollup.config.ts",
+    "electron:build": "ts-node --project src/backend/electron/tsconfig.json rollup.config.ts",
+    "electron:bundle": "cross-env production=true ts-node -P src/backend/electron/tsconfig.json rollup.config.ts",
     "clean": "rimraf build",
     "lint": "run-p -n -l lint:eslint lint:stylelint",
     "lint:eslint": "eslint \"src/**/*.{ts,tsx}\"",
@@ -24,7 +24,7 @@
     "lint:fix:stylelint": "stylelint \"src/**/*.scss\" --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,scss}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,scss}\"",
-    "document:build": "ts-node doc.config.ts"
+    "document:build": "ts-node config/doc.config.ts"
   },
   "precommit": {
     "run": "lint:fix:eslint, lint:fix:stylelint, format, document:build"

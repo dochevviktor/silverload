@@ -1,4 +1,4 @@
-import { IpcRenderer, IpcRendererEvent } from 'electron';
+import { IpcRenderer } from 'electron';
 import { SLTabImageData } from '../interface/SLTabImageData';
 import { SLFile } from '../interface/SLFile';
 import SLTab from './SLTab';

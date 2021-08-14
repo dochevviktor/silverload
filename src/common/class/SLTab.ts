@@ -1,6 +1,11 @@
 import { Column, Entity, SLTable } from './SLTable';
 import { Database } from 'better-sqlite3';
-import { cleanUpDatabase, getAllFromTableOrdered, saveTable, truncateTable } from '../../database/databaseOperations';
+import {
+  cleanUpDatabase,
+  getAllFromTableOrdered,
+  saveTable,
+  truncateTable,
+} from '../../backend/database/databaseOperations';
 
 export default interface SLTab {
   id: string;
