@@ -15,7 +15,7 @@ This project will be written entirely in TypeScript, where possible.
 
 
 // LINK_VARIABLES_START
-:verElectron: ^10.1.6
+:verElectron: ^13.1.9
 :verReact: ^10.5.14
 :verRedux: ^4.1.1
 :verTypescript: ^4.3.5
