@@ -1,0 +1,10 @@
+{
+  "extends": "./../../../tsconfig.json",
+  "compilerOptions": {
+    "sourceMap": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./build/tsconfig.tsbuildinfo",
+    "jsx": "react-jsx"
+  },
+  "include": ["../../common/**/*", "./**/*"]
+}

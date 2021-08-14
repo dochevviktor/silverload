@@ -163,7 +163,7 @@ a|[source, subs="attributes"]
 ----
 webpack: {verWebpack}
 ----
-|React builder, bundler and development server
+|Front end builder, bundler and development server
 
 a|image::{imgRollup}[link={ghRollup},40,40]
 |Rollup
@@ -171,7 +171,7 @@ a|[source, subs="attributes"]
 ----
 rollup: {verRollup}
 ----
-|Electron builder and bundler
+|Back end builder and bundler
 
 a|image::{imgFfmpeg}[link={ghFfmpeg},50,50]
 |FFMPEG
@@ -187,7 +187,7 @@ a|[source, subs="attributes"]
 ----
 better-sqlite3: {verSqlite}
 ----
-|Small, fast, self-contained SQL database engine (Module)
+|Small, fast, self-contained SQL database engine (Native Node.js Module)
 
 |======
 [NOTE]

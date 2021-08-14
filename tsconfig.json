@@ -1,14 +1,30 @@
 {
-  "extends": "./src/common/tsconfig.base.json",
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    },
+  },
   "compilerOptions": {
-    "sourceMap": true,
-    "incremental": true,
-    "jsx": "react-jsx"
+    "module": "esnext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "moduleResolution": "node",
+    "declaration": false,
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
+    "forceConsistentCasingInFileNames": true,
+    "target": "es2017",
+    "baseUrl": "./",
   },
   "exclude": [
-    "node_modules/*",
-    "src/backend/database/*",
-    "src/backend/electron/*",
-    "src/backend/fs-handler/*"
+    "node_modules/*"
   ]
 }

@@ -2,10 +2,11 @@ import { Configuration } from 'webpack';
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CspHtmlWebpackPlugin from 'csp-html-webpack-plugin';
+import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 
 export const reactConfig: Configuration = {
-  name: 'reactCommonConfig',
-  dependencies: ['commonFfmpegConfig'],
+  name: 'reactConfig',
+  dependencies: ['ffmpegConfig'],
   entry: './src/frontend/react/index.tsx',
   output: {
     path: path.resolve('build'),
@@ -14,6 +15,7 @@ export const reactConfig: Configuration = {
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.html', '.css', '.scss'],
+    plugins: [new TsconfigPathsPlugin({ configFile: 'src/frontend/react/tsconfig.json' })],
     // Use Preact compatability layer
     alias: {
       'react': 'preact/compat',

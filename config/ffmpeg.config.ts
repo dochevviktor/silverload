@@ -2,9 +2,10 @@ import { Configuration } from 'webpack';
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CspHtmlWebpackPlugin from 'csp-html-webpack-plugin';
+import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 
 export const ffmpegConfig: Configuration = {
-  name: 'commonFfmpegConfig',
+  name: 'ffmpegConfig',
   entry: './src/frontend/ffmpeg/ffmpegHandler.ts',
   output: {
     path: path.resolve('build'),
@@ -13,6 +14,7 @@ export const ffmpegConfig: Configuration = {
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.html'],
+    plugins: [new TsconfigPathsPlugin({ configFile: 'src/frontend/ffmpeg/tsconfig.json' })],
   },
   module: {
     rules: [
