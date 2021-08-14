@@ -3,43 +3,17 @@ import TerserPlugin from 'terser-webpack-plugin';
 import InlineChunkHtmlPlugin from 'inline-chunk-html-plugin';
 import HTMLInlineCSSWebpackPlugin from 'html-inline-css-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-import { EnvironmentPlugin, Configuration, Compiler } from 'webpack';
+import { EnvironmentPlugin, Configuration } from 'webpack';
 import { Application, Request, Response, NextFunction } from 'express';
 import merge from 'webpack-merge';
 import CompressionPlugin from 'compression-webpack-plugin';
-import { ChildProcess, exec } from 'child_process';
-import CspHtmlWebpackPlugin from 'csp-html-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import { reactConfig } from './src/webpack/react.config';
+import { ffmpegConfig } from './src/webpack/ffmpeg.config';
+import ElectronDevPlugin from './src/webpack/class/ElectronDevPlugin';
 
-class ElectronDevPlugin {
-  apply(compiler: Compiler) {
-    let electronProcess: ChildProcess = null;
-
-    compiler.hooks.afterEmit.tap('AfterEmitPlugin', () => {
-      if (!electronProcess) {
-        electronProcess = exec('yarn run electron:run');
-        electronProcess.stdout.on('data', (data) => console.log(data.toString()));
-        electronProcess.stderr.on('data', (data) => console.log(data.toString()));
-        electronProcess.on('exit', () => process.exit(0));
-      }
-    });
-  }
-}
-
-const devConfig: Configuration = {
-  mode: 'development',
-  devtool: 'source-map',
-  plugins: [
-    // use 'development' unless process.env.NODE_ENV is defined
-    new EnvironmentPlugin({
-      NODE_ENV: 'development',
-      DEBUG: false,
-    }),
-    new CompressionPlugin(),
-    // Launch electron after webpack dev server is deployed
-    new ElectronDevPlugin(),
-  ],
+const devServerConfig: Configuration = {
+  plugins: [new ElectronDevPlugin()],
   devServer: {
     contentBase: path.join(__dirname, 'build'),
     historyApiFallback: true,
@@ -56,117 +30,7 @@ const devConfig: Configuration = {
   },
 };
 
-const prodConfig: Configuration = {
-  mode: 'production',
-  optimization: {
-    minimize: true,
-    minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
-  },
-  plugins: [new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/.*/]), new HTMLInlineCSSWebpackPlugin()],
-  performance: {
-    hints: false,
-  },
-};
-
-const commonConfig: Configuration = {
-  name: 'reactCommonConfig',
-  dependencies: ['commonFfmpegConfig'],
-  entry: './src/react/index.tsx',
-  output: {
-    path: path.resolve('build'),
-    filename: 'bundle.[contenthash].js',
-    publicPath: '/',
-  },
-  resolve: {
-    extensions: ['.js', '.ts', '.tsx', '.html', '.css', '.scss'],
-    // Use Preact compatability layer
-    alias: {
-      'react': 'preact/compat',
-      'react-dom/test-utils': 'preact/test-utils',
-      'react-dom': 'preact/compat',
-    },
-  },
-  module: {
-    rules: [
-      {
-        test: /\.ts(x?)$/,
-        exclude: /node_modules/,
-        loader: 'ts-loader',
-      },
-      {
-        test: /\.s[ac]ss$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                localIdentName: '[local]__[hash:base64:5]',
-              },
-              importLoaders: 1,
-            },
-          },
-          'sass-loader',
-        ],
-      },
-      {
-        test: /\.less$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          {
-            loader: 'less-loader', // compiles Less to CSS
-            options: {
-              lessOptions: {
-                javascriptEnabled: true,
-                modifyVars: {
-                  '@primary-color': 'silver',
-                  '@body-background': '#292d33',
-                  '@component-background': '@body-background',
-                  '@white': '#000',
-                  '@black': '@primary-color',
-                  '@btn-primary-color': '@body-background',
-                  '@modal-mask-bg': 'fade(@white, 45%)',
-                },
-              },
-            },
-          },
-        ],
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.(png|svg|jpg|gif|ico)$/,
-        use: ['file-loader?name=[name].[ext]'],
-      },
-    ],
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      title: 'Silverload',
-      meta: {
-        viewport: 'width=device-width, initial-scale=1',
-        description: 'Silverload Image Browser',
-      },
-    }),
-    new CspHtmlWebpackPlugin({
-      'default-src': "'self'",
-      'img-src': ["'self'", 'data:'],
-      'media-src': ["'self'", 'data:'],
-      'object-src': "'none'",
-      'base-uri': "'self'",
-      'script-src': "'self'",
-      'script-src-elem': ["'self'", 'blob:', "'unsafe-inline'"],
-      'connect-src': ["'self'", 'blob:', "'unsafe-inline'"],
-      'worker-src': ["'self'", 'blob:', "'unsafe-inline'"],
-      'style-src': ["'self'", "'unsafe-inline'"],
-    }),
-  ],
-};
-
-const devFfmpegConfig: Configuration = {
+const devConfig: Configuration = {
   mode: 'development',
   devtool: 'source-map',
   plugins: [
@@ -179,53 +43,28 @@ const devFfmpegConfig: Configuration = {
   ],
 };
 
-const commonFfmpegConfig: Configuration = {
-  name: 'commonFfmpegConfig',
-  entry: './src/ffmpeg/ffmpegHandler.ts',
-  output: {
-    path: path.resolve('build'),
-    filename: 'ffmpegHandler.[contenthash].js',
-    publicPath: '/',
+const prodConfig: Configuration = {
+  mode: 'production',
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
   },
-  resolve: {
-    extensions: ['.js', '.ts', '.tsx', '.html'],
+  plugins: [new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/.*/]), new HTMLInlineCSSWebpackPlugin()],
+  performance: {
+    hints: false,
   },
-  module: {
-    rules: [
-      {
-        test: /\.ts(x?)$/,
-        exclude: /node_modules/,
-        loader: 'ts-loader',
-      },
-    ],
-  },
-  plugins: [
-    new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({
-      title: 'FFMPEG',
-      filename: 'ffmpeg.html',
-      meta: {
-        viewport: 'width=device-width, initial-scale=1',
-      },
-    }),
-    new CspHtmlWebpackPlugin({
-      'default-src': "'self'",
-      'base-uri': "'self'",
-      'script-src': "'self'",
-    }),
-  ],
 };
 
 export default (env: { production: boolean }): Configuration[] => {
-  const allConfigurations: Configuration[] = [];
+  const configurations: Configuration[] = [];
 
   if (env?.production) {
-    allConfigurations.push(merge(commonFfmpegConfig, prodConfig));
-    allConfigurations.push(merge(commonConfig, prodConfig));
+    configurations.push(merge(ffmpegConfig, prodConfig));
+    configurations.push(merge(reactConfig, prodConfig));
   } else {
-    allConfigurations.push(merge(commonFfmpegConfig, devFfmpegConfig));
-    allConfigurations.push(merge(commonConfig, devConfig));
+    configurations.push(merge(ffmpegConfig, devConfig));
+    configurations.push(merge(merge(reactConfig, devServerConfig), devConfig));
   }
 
-  return allConfigurations;
+  return configurations;
 };
