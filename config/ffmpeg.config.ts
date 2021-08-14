@@ -3,6 +3,8 @@ import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CspHtmlWebpackPlugin from 'csp-html-webpack-plugin';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
+import InlineChunkHtmlPlugin from 'inline-chunk-html-plugin';
+import HTMLInlineCSSWebpackPlugin from 'html-inline-css-webpack-plugin';
 
 export const ffmpegConfig: Configuration = {
   name: 'ffmpegConfig',
@@ -45,5 +47,7 @@ export const ffmpegConfig: Configuration = {
       'worker-src': ["'self'", 'blob:', "'unsafe-inline'"],
       'style-src': ["'self'", "'unsafe-inline'"],
     }),
+    new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/.*/]),
+    new HTMLInlineCSSWebpackPlugin(),
   ],
 };

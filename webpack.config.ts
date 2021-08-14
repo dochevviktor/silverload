@@ -66,7 +66,8 @@ export default (env: { production: boolean }): Configuration[] => {
   const configurations: Configuration[] = [];
 
   if (env?.production) {
-    configurations.push(merge(merge(ffmpegConfig, cleanOutputConfig), prodConfig));
+    // because of a resolver bug with FFMPEG WASM lib, we need to use the dev environment var
+    configurations.push(merge(merge(ffmpegConfig, cleanOutputConfig), devConfig));
     configurations.push(merge(reactConfig, prodConfig));
   } else {
     configurations.push(merge(merge(ffmpegConfig, cleanOutputConfig), devConfig));

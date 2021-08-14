@@ -1,19 +1,19 @@
 import { app, ipcMain } from 'electron';
-import createWindow from './window/mainWindow';
+import createReactWindow from './window/reactWindow';
 import createDbWindow from './window/databaseWindow';
 import createFsWindow from './window/fsHandlerWindow';
 import createFfmpegWindow from './window/ffmpegWindow';
 
-const createMainWindow = async () => {
+const loadAllWindows = async () => {
   await createDbWindow().load();
   await createFsWindow().load();
   await createFfmpegWindow().load();
   await createFfmpegWindow(false).load();
   await createFfmpegWindow(false).load();
-  const mainWindow = createWindow();
+  const reactWindow = createReactWindow();
 
-  await mainWindow.load();
-  mainWindow.browserWindow.show();
+  await reactWindow.load();
+  reactWindow.browserWindow.show();
 };
 
 const bootstrap = () => {
@@ -23,8 +23,8 @@ const bootstrap = () => {
     app.quit();
   }
 
-  // Create the main window on start
-  app.on('ready', createMainWindow);
+  // Create load all windows on start
+  app.on('ready', loadAllWindows);
 
   // Quit when all windows are closed.
   app.on('window-all-closed', app.quit);

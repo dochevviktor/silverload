@@ -9,11 +9,9 @@
   "scripts": {
     "start:dev": "webpack serve",
     "build:prod": "webpack --env production & yarn electron:package & yarn run clean",
-    "build:install": "webpack --env production & yarn electron:make & yarn run clean",
     "electron:run": "yarn run electron:build & cross-env ELECTRON_START_URL=http://localhost:8080 electron --js-flags=\"--experimental-wasm-threads --experimental-wasm-bulk-memory\" . & yarn run clean",
     "electron:install": "electron-rebuild",
-    "electron:package": "yarn run electron:bundle & electron-forge package",
-    "electron:make": "yarn run electron:bundle & electron-forge make",
+    "electron:package": "yarn run electron:bundle & ts-node electron-builder.config.ts",
     "electron:build": "ts-node rollup.config.ts",
     "electron:bundle": "cross-env production=true ts-node rollup.config.ts",
     "clean": "rimraf build",
@@ -30,11 +28,6 @@
     "run": "lint:fix:eslint, lint:fix:stylelint, format, document:build"
   },
   "devDependencies": {
-    "@electron-forge/cli": "6.0.0-beta.59",
-    "@electron-forge/maker-deb": "6.0.0-beta.59",
-    "@electron-forge/maker-rpm": "6.0.0-beta.59",
-    "@electron-forge/maker-squirrel": "6.0.0-beta.59",
-    "@electron-forge/maker-zip": "6.0.0-beta.59",
     "@ffmpeg/ffmpeg": "^0.10.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-brands-svg-icons": "^5.15.4",
@@ -69,6 +62,8 @@
     "css-loader": "^6.2.0",
     "css-minimizer-webpack-plugin": "^3.0.2",
     "electron": "^10.1.6",
+    "electron-builder": "^22.11.7",
+    "electron-rebuild": "^3.1.1",
     "electron-squirrel-startup": "^1.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
@@ -117,48 +112,5 @@
   "dependencies": {
     "@ffmpeg/core": "^0.10.0",
     "better-sqlite3": "^7.4.3"
-  },
-  "config": {
-    "forge": {
-      "packagerConfig": {
-        "arch": "x64",
-        "asar": true,
-        "dir": "build",
-        "icon": "icon.ico",
-        "extraResource": [
-          "build/better_sqlite3.node"
-        ],
-        "ignore": [
-          ".idea",
-          ".node",
-          "src",
-          "bundle*",
-          ".iml",
-          ".ts",
-          ".db",
-          ".adoc",
-          ".ico",
-          ".log",
-          ".gitignore",
-          "node_modules",
-          "tsconfig.json",
-          "tsconfig.tsbuildinfo",
-          ".lock"
-        ]
-      },
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "silverload",
-            "setupIcon": "icon.ico",
-            "iconUrl": "file:///D:/Electron/silverload/icon.ico"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip"
-        }
-      ]
-    }
   }
 }
