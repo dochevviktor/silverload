@@ -3,8 +3,7 @@ import bytesToBase64 from './constant/SLBase64Converters';
 import { createFFmpeg } from '@ffmpeg/ffmpeg';
 import * as SLEvent from '../../common/class/SLEvent';
 
-const ratioPrint = ({ ratio }) => console.log(`Progress: ${ratio * 100.0}%`);
-const ffmpeg = createFFmpeg({ progress: ratioPrint, corePath: './ffmpeg-core.js' });
+const ffmpeg = createFFmpeg({ corePath: './ffmpeg-core.js' });
 const ffmpegQueue: SLTabImageData[] = [];
 let ffmpegLock = false;
 
@@ -23,6 +22,11 @@ const processVideo = async (tabImageData: SLTabImageData, ffmpegCallFromQueue?: 
 
   if (tabImageData?.rawFile) {
     ffmpeg.FS('writeFile', 'file.gif', tabImageData.rawFile);
+
+    ffmpeg.setProgress(({ ratio }) => {
+      tabImageData.loadingProgress = Math.round(ratio * 100.0);
+      SLEvent.LOAD_TAB_GIF_VIDEO_PROGRESS.send(tabImageData);
+    });
 
     await ffmpeg.run(
       '-i',

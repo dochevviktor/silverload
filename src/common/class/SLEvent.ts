@@ -107,3 +107,4 @@ export const LOAD_TAB_IMAGE = new SLEvent<SLTabImageData>(SL_REACT, SL_FILE_SYST
 
 // FFMPEG
 export const LOAD_TAB_GIF_VIDEO = new SLEvent<SLTabImageData>(SL_FFMPEG, SL_REACT);
+export const LOAD_TAB_GIF_VIDEO_PROGRESS = new SLEvent<SLTabImageData>(SL_FFMPEG, SL_REACT);

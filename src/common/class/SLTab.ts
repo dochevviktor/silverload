@@ -19,6 +19,7 @@ export default interface SLTab {
   scaleX?: number;
   scaleY?: number;
   isLoading?: boolean;
+  loadingProgress?: number;
   isDragging?: boolean;
   isPaused?: boolean;
   currentTime?: number;

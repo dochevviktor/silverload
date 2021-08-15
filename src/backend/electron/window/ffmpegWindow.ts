@@ -7,7 +7,10 @@ const isDev = process.env.ELECTRON_START_URL != null;
 const title = 'FFMPEG handler window';
 const preload = 'preload.js';
 
-const loadListeners = () => SLEvent.LOAD_TAB_GIF_VIDEO.onMain();
+const loadListeners = () => {
+  SLEvent.LOAD_TAB_GIF_VIDEO.onMain();
+  SLEvent.LOAD_TAB_GIF_VIDEO_PROGRESS.onMain();
+};
 
 const createFfmpegWindow = (addListeners = true): SLBrowserWindow => {
   const opt: BrowserWindowConstructorOptions = { show: isDev };

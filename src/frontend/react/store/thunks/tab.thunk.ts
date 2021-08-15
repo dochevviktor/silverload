@@ -37,6 +37,7 @@ export const addTabListeners = (): AppThunk => async (dispatch) => {
   listeners.push(SLEvent.SEND_SL_FILES.on((files) => openNewTabs(files, (arg) => dispatch(arg))));
   listeners.push(SLEvent.LOAD_TAB_IMAGE.on((data) => dispatch(actions.loadTabImage(data))));
   listeners.push(SLEvent.LOAD_TAB_GIF_VIDEO.on((data) => dispatch(actions.loadTabImage(data))));
+  listeners.push(SLEvent.LOAD_TAB_GIF_VIDEO_PROGRESS.on((data) => dispatch(actions.loadTabProgress(data))));
   listeners.push(SLEvent.SAVE_TABS.on(() => dispatch(actions.setIsSaving(false))));
   listeners.push(SLEvent.LOAD_TABS.on((args) => dispatch(actions.loadTabs(args))));
 };

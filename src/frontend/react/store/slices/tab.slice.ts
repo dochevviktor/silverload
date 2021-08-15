@@ -163,12 +163,21 @@ export const TabListSlice = createSlice({
         state.activeTab.type = tabImageData.type;
         state.activeTab.isPaused = false;
         state.activeTab.currentTime = 0;
+        state.activeTab.loadingProgress = null;
       }
       const tabById = getTabById(state, tabImageData.tabId);
 
       tabById.base64 = tabImageData.base64;
       tabById.base64Hash = tabImageData.base64Hash;
       tabById.type = tabImageData.type;
+      tabById.type = tabImageData.type;
+      tabById.loadingProgress = null;
+    },
+    loadTabProgress(state, { payload: tabImageData }: PayloadAction<SLTabImageData>) {
+      if (state.activeTab.id === tabImageData.tabId) {
+        state.activeTab.loadingProgress = tabImageData.loadingProgress;
+      }
+      getTabById(state, tabImageData.tabId).loadingProgress = tabImageData.loadingProgress;
     },
     removeTab(state, { payload: tabIndex }: PayloadAction<number>) {
       state.tabList[tabIndex].base64 = null;
