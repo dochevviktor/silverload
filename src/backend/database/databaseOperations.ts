@@ -22,7 +22,11 @@ export const createTableQuery = (it: SLTable): string => {
       }
 
       if (definition.options?.default !== undefined) {
-        query.push(`DEFAULT ${definition.options.default}`);
+        if (typeof definition.options.default === 'string') {
+          query.push(`DEFAULT '${definition.options.default}'`);
+        } else {
+          query.push(`DEFAULT ${definition.options.default}`);
+        }
       }
     }
     query.push(',');
