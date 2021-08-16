@@ -35,6 +35,7 @@ const SLSettingsModal = (): JSX.Element => {
       wrapClassName={styles.wrapStyle}
       title="Settings"
       visible={isVisible}
+      destroyOnClose={true}
       onOk={handleOk}
       closable={false}
       confirmLoading={isSaving}
