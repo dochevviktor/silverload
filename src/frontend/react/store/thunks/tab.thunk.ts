@@ -6,6 +6,7 @@ import SLTab from '../../../../common/class/SLTab';
 import { SLFile } from '../../../../common/interface/SLFile';
 import VALID_FILE_TYPES from '../../../../common/constant/SLImageFileTypes';
 import { SLTabImageData } from '../../../../common/interface/SLTabImageData';
+import { RootState } from '../rootReducer';
 
 // Variables
 const validateFileMimeType = (type: string) => VALID_FILE_TYPES.indexOf(type) !== -1;
@@ -33,7 +34,10 @@ const openNewTabs = (fileList: SLFile[], dispatch: (arg) => void) => {
     .map((it) => dispatch(addNewTab({ id: uuid(), title: it.name, path: it.path })));
 };
 
-export const addTabListeners = (): AppThunk => async (dispatch) => {
+export const addTabListeners = (): AppThunk => async (dispatch, getState) => {
+  document.addEventListener('keydown', (event) => changeImage(event, getState(), dispatch));
+  listeners.push(() => document.removeEventListener('keydown', (event) => changeImage(event, getState(), dispatch)));
+
   listeners.push(SLEvent.SEND_SL_FILES.on((files) => openNewTabs(files, (arg) => dispatch(arg))));
   listeners.push(SLEvent.LOAD_TAB_IMAGE.on((data) => dispatch(actions.loadTabImage(data))));
   listeners.push(SLEvent.LOAD_TAB_GIF_VIDEO.on((data) => dispatch(actions.loadTabImage(data))));
@@ -44,6 +48,21 @@ export const addTabListeners = (): AppThunk => async (dispatch) => {
 
 export const removeTabListeners = (): AppThunk => async () => {
   while (listeners.length) listeners.pop()();
+};
+
+const changeImage = (e: KeyboardEvent, state: RootState, dispatch) => {
+  const activeTab = state?.tabsSlice?.activeTab;
+  const isSettingsPanelVisible = state.settingsModal.isVisible === true;
+
+  if (!isSettingsPanelVisible && activeTab?.path && !activeTab.isLoading) {
+    if (e.code === 'ArrowLeft') {
+      dispatch(actions.setIsLoading(true));
+      SLEvent.LOAD_PREV_TAB_IMAGE.send({ tabId: activeTab.id, path: activeTab.path });
+    } else if (e.code === 'ArrowRight') {
+      dispatch(actions.setIsLoading(true));
+      SLEvent.LOAD_NEXT_TAB_IMAGE.send({ tabId: activeTab.id, path: activeTab.path });
+    }
+  }
 };
 
 export const loadFileArgs = (): AppThunk => async () => SLEvent.LOAD_FILE_ARGUMENTS.send();

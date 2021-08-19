@@ -104,6 +104,8 @@ export const LOAD_FILE_ARGUMENTS = new SLEvent<string[]>(SL_FILE_SYSTEM);
 export const SEND_SL_FILES = new SLEvent<SLFile[]>(SL_FILE_SYSTEM, SL_REACT);
 export const SEND_ADDITIONAL_FILE_ARGUMENTS = new SLEvent<string[]>(SL_FILE_SYSTEM);
 export const LOAD_TAB_IMAGE = new SLEvent<SLTabImageData>(SL_REACT, SL_FILE_SYSTEM);
+export const LOAD_NEXT_TAB_IMAGE = new SLEvent<SLTabImageData>(SL_REACT, SL_FILE_SYSTEM);
+export const LOAD_PREV_TAB_IMAGE = new SLEvent<SLTabImageData>(SL_REACT, SL_FILE_SYSTEM);
 
 // FFMPEG
 export const LOAD_TAB_GIF_VIDEO = new SLEvent<SLTabImageData>(SL_FFMPEG, SL_REACT);

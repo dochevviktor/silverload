@@ -13,6 +13,8 @@ const loadListeners = (win: BrowserWindow) => {
   SLEvent.LOAD_FILE_ARGUMENTS.onMain(() => process.argv);
   SLEvent.SEND_SL_FILES.onMain();
   SLEvent.LOAD_TAB_IMAGE.onMain();
+  SLEvent.LOAD_NEXT_TAB_IMAGE.onMain();
+  SLEvent.LOAD_PREV_TAB_IMAGE.onMain();
 
   app.on('second-instance', (event, commandLine) => loadAdditionalFiles(win, commandLine));
 };

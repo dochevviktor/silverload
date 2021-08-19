@@ -98,7 +98,7 @@ const Tab = (props: TabParams): JSX.Element => {
         <FontAwesomeIcon icon={props.tab.isLoading ? faSpinner : faTimes} onClick={remove} spin={props.tab.isLoading} />
       </div>
     ),
-    [transform, props.tab.isLoading, isActiveTab]
+    [transform, props.tab.isLoading, props.tab.title, isActiveTab]
   );
 };
 

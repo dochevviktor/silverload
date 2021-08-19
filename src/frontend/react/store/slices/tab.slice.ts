@@ -159,6 +159,8 @@ export const TabListSlice = createSlice({
       setIsLoading(state, tabImageData.tabId, false);
       if (state.activeTab.id === tabImageData.tabId) {
         state.activeTab.base64 = tabImageData.base64;
+        state.activeTab.path = tabImageData.path;
+        state.activeTab.title = tabImageData.title;
         state.activeTab.base64Hash = tabImageData.base64Hash;
         state.activeTab.type = tabImageData.type;
         state.activeTab.isPaused = false;
@@ -168,6 +170,8 @@ export const TabListSlice = createSlice({
       const tabById = getTabById(state, tabImageData.tabId);
 
       tabById.base64 = tabImageData.base64;
+      tabById.path = tabImageData.path;
+      tabById.title = tabImageData.title;
       tabById.base64Hash = tabImageData.base64Hash;
       tabById.type = tabImageData.type;
       tabById.type = tabImageData.type;
@@ -241,6 +245,9 @@ export const TabListSlice = createSlice({
     },
     setIsSaving(state, { payload: isSaving }: PayloadAction<boolean>) {
       state.isSaving = isSaving;
+    },
+    setIsLoading(state, { payload: isLoading }: PayloadAction<boolean>) {
+      state.activeTab.isLoading = isLoading;
     },
     setDragPosition(state, { payload: dragPosition }: PayloadAction<number>) {
       if (state.dragPosition > state.dragPosition + dragPosition) {

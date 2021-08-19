@@ -2,8 +2,8 @@ import { ipcRenderer } from 'electron';
 import * as SLEvent from '../../common/class/SLEvent';
 import { SLFile } from '../../common/interface/SLFile';
 import { existsSync, lstatSync, promises } from 'fs';
-import { fromFile } from 'file-type';
-import { basename } from 'path';
+import { FileTypeResult, fromFile } from 'file-type';
+import { basename, dirname, join } from 'path';
 import VALID_FILE_TYPES from '../../common/constant/SLImageFileTypes';
 import { SLTabImageData } from '../../common/interface/SLTabImageData';
 import { sha1 } from 'object-hash';
@@ -30,14 +30,16 @@ const readSLFile = async (path: string): Promise<SLFile> => {
   return { name, mimeType, path };
 };
 
-const readFileAsync = async (tabImageData: SLTabImageData): Promise<void> => {
+const readFileAsync = async (tabImageData: SLTabImageData, fileType?: FileTypeResult): Promise<void> => {
   if (tabImageData?.path) {
     console.log('Loading file: ' + tabImageData.path);
-    const mimeType = (await fromFile(tabImageData.path))?.mime;
+    const mimeType = fileType != null ? fileType.mime : (await fromFile(tabImageData.path))?.mime;
 
     if (!validateFile(mimeType)) {
       SLEvent.LOAD_TAB_IMAGE.send(tabImageData);
     }
+
+    tabImageData.title = basename(tabImageData.path);
 
     if (mimeType === 'image/gif') {
       tabImageData.rawFile = await promises.readFile(tabImageData.path);
@@ -57,8 +59,64 @@ const readFileAsync = async (tabImageData: SLTabImageData): Promise<void> => {
   SLEvent.LOAD_TAB_IMAGE.send(tabImageData);
 };
 
+const getDir = async (dirPath: string) => {
+  const results = [];
+  const dir = await promises.readdir(dirPath, { withFileTypes: true });
+
+  dir.forEach((it) => {
+    if (it.isFile()) results.push(it.name);
+  });
+
+  return results;
+};
+
+const readFile = async (data: SLTabImageData, basePath: string, dir: string[], index: number, rev = false) => {
+  if (rev) {
+    dir.unshift(dir.pop());
+  } else {
+    dir.push(dir.shift());
+  }
+
+  const path = join(basePath, dir[index]);
+  const fileType = await fromFile(path);
+
+  if (!validateFile(fileType?.mime)) {
+    return await readFile(data, basePath, dir, index, rev);
+  }
+
+  data.path = path;
+
+  return readFileAsync(data, fileType);
+};
+
+const readNextFileAsync = async (tabImageData: SLTabImageData): Promise<void> => {
+  if (tabImageData?.path) {
+    const basePath = dirname(tabImageData.path);
+    const dir = await getDir(basePath);
+    const index = dir.indexOf(basename(tabImageData.path));
+
+    return await readFile(tabImageData, basePath, dir, index);
+  }
+
+  SLEvent.LOAD_TAB_IMAGE.send(tabImageData);
+};
+
+const readPrevFileAsync = async (tabImageData: SLTabImageData): Promise<void> => {
+  if (tabImageData?.path) {
+    const basePath = dirname(tabImageData.path);
+    const dir = await getDir(basePath);
+    const index = dir.indexOf(basename(tabImageData.path));
+
+    return await readFile(tabImageData, basePath, dir, index, true);
+  }
+
+  SLEvent.LOAD_TAB_IMAGE.send(tabImageData);
+};
+
 const sendSLFiles = async (args) => SLEvent.SEND_SL_FILES.send(await getSLFilesFromArgs(args));
 
 SLEvent.LOAD_FILE_ARGUMENTS.on(sendSLFiles);
 SLEvent.SEND_ADDITIONAL_FILE_ARGUMENTS.on(sendSLFiles);
 SLEvent.LOAD_TAB_IMAGE.on(readFileAsync);
+SLEvent.LOAD_NEXT_TAB_IMAGE.on(readNextFileAsync);
+SLEvent.LOAD_PREV_TAB_IMAGE.on(readPrevFileAsync);
