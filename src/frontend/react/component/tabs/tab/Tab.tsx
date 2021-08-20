@@ -47,7 +47,10 @@ const Tab = (props: TabParams): JSX.Element => {
     }
   };
 
-  const onMouseDown = () => {
+  const onMouseDown = (e) => {
+    if (e.button !== 0) {
+      return;
+    }
     document.addEventListener('mousemove', onMouseMoveOutside);
     document.addEventListener('mouseup', onMouseUp);
     dispatch(setTabDragging(props.tab.id));
