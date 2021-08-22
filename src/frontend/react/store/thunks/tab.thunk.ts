@@ -43,7 +43,8 @@ export const addTabListeners = (): AppThunk => async (dispatch, getState) => {
   listeners.push(SLEvent.LOAD_TAB_GIF_VIDEO.on((data) => dispatch(actions.loadTabImage(data))));
   listeners.push(SLEvent.LOAD_TAB_GIF_VIDEO_PROGRESS.on((data) => dispatch(actions.loadTabProgress(data))));
   listeners.push(SLEvent.SAVE_TABS.on(() => dispatch(actions.setIsSaving(false))));
-  listeners.push(SLEvent.LOAD_TABS.on((args) => dispatch(actions.loadTabs(args))));
+  listeners.push(SLEvent.LOAD_TABS.on((tabs) => dispatch(actions.loadTabs(tabs))));
+  listeners.push(SLEvent.TAB_CTX_MENU.on((data) => data && dispatch(actions.handleContextAction(data))));
 };
 
 export const removeTabListeners = (): AppThunk => async () => {

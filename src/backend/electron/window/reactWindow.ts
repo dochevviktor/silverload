@@ -1,7 +1,9 @@
-import { app, BrowserWindow, BrowserWindowConstructorOptions, ContextMenuParams, Menu } from 'electron';
+import { app, BrowserWindow, BrowserWindowConstructorOptions, Menu, MenuItemConstructorOptions } from 'electron';
 import * as SLEvent from '../../../common/class/SLEvent';
 import { SL_REACT } from '../../../common/class/SLPoint';
 import SLBrowserWindow from '../class/SLBrowserWindow';
+import SLContextMenuItem from '../../../common/constant/SLContextMenu';
+import { reactContext, reactTabContext } from '../menu/reactContextMenu';
 
 const title = 'React Window';
 const preload = 'preload.js';
@@ -16,11 +18,12 @@ const loadListeners = (win: BrowserWindow) => {
     }
   });
 
-  win.webContents.on('context-menu', (e, props) => reactContext(win, e, props));
-
   SLEvent.MINIMIZE_WINDOW.onMain(() => win.minimize());
   SLEvent.MAXIMIZE_WINDOW.onMain(() => (win.isMaximized() ? win.unmaximize() : win.maximize()));
   SLEvent.CLOSE_WINDOW.onMain(closeAllWindows);
+
+  win.webContents.on('context-menu', (e, { x, y }) => reactContext(win, x, y));
+  SLEvent.TAB_CTX_MENU.onMain(({ context, x, y }) => reactContext(win, x, y, reactTabContext(context)));
 
   win.on('maximize', () => SLEvent.WINDOW_MAXIMIZED.sendMain());
   win.on('unmaximize', () => SLEvent.WINDOW_UN_MAXIMIZED.sendMain());
@@ -62,23 +65,6 @@ const closeAllWindows = () => {
   console.log('Closing all windows');
   app.quit();
   app.exit(0);
-};
-
-const reactContext = (reactWindow: BrowserWindow, e: Event, props: ContextMenuParams) => {
-  const { x, y } = props;
-
-  console.log('Call to context menu at X:', x, ' Y:', y);
-
-  Menu.buildFromTemplate([
-    {
-      label: 'Reload',
-      click: () => reactWindow.reload(),
-    },
-    {
-      label: 'Inspect element',
-      click: () => reactWindow.webContents.inspectElement(x, y),
-    },
-  ]).popup({ window: reactWindow });
 };
 
 export default createReactWindow;

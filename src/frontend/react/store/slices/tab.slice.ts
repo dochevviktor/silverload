@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import SLTab from '../../../../common/class/SLTab';
 import { SLTabImageData } from '../../../../common/interface/SLTabImageData';
+import SLContextMenuItem, { SLContextMenuData } from '../../../../common/constant/SLContextMenu';
+import { v4 as uuid } from 'uuid';
 
 interface SLTabListSlice {
   activeTab: SLTab;
@@ -262,6 +264,31 @@ export const TabListSlice = createSlice({
     resetDragPosition(state) {
       state.dragPosition = 0;
       resetAllTabShits(state);
+    },
+    handleContextAction(state, { payload: data }: PayloadAction<SLContextMenuData<string>>) {
+      const contextTab = getTabById(state, data.context);
+
+      if (contextTab.isLoading) {
+        return;
+      }
+
+      if (data.selectedItem === SLContextMenuItem.TAB_DUPLICATE) {
+        const { title, path, base64, base64Hash, type } = contextTab;
+        const newTab: SLTab = { id: uuid(), title, path, base64, base64Hash, type };
+
+        state.tabList.splice(state.tabList.indexOf(contextTab) + 1, 0, newTab);
+        state.tabList.forEach((it, index) => (it.sequence = index));
+      } else if (data.selectedItem === SLContextMenuItem.TAB_CLOSE_OTHERS) {
+        const tab = getTabById(state, state.activeTab);
+
+        state.tabList = [tab];
+        state.tabList.forEach((it, index) => (it.sequence = index));
+      } else if (data.selectedItem === SLContextMenuItem.TAB_CLOSE_LEFT) {
+        const tab = getTabById(state, state.activeTab);
+
+        state.tabList.splice(0, state.tabList.indexOf(tab));
+        state.tabList.forEach((it, index) => (it.sequence = index));
+      }
     },
   },
 });

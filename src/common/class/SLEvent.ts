@@ -1,10 +1,11 @@
-import { IpcRenderer } from 'electron';
+import { IpcRenderer, IpcRendererEvent } from 'electron';
 import { SLTabImageData } from '../interface/SLTabImageData';
 import { SLFile } from '../interface/SLFile';
 import SLTab from './SLTab';
 import SLSettings from './SLSettings';
 import { SLPoint, SL_DATABASE, SL_REACT, SL_FILE_SYSTEM, SL_FFMPEG } from './SLPoint';
 import { PayloadAction } from '@reduxjs/toolkit';
+import { SLContextMenuData } from '../constant/SLContextMenu';
 
 let lastChannelId = 0;
 
@@ -86,6 +87,9 @@ export const MAXIMIZE_WINDOW = new SLEvent();
 export const CLOSE_WINDOW = new SLEvent();
 export const WINDOW_MAXIMIZED = new SLEvent(SL_REACT);
 export const WINDOW_UN_MAXIMIZED = new SLEvent(SL_REACT);
+
+// Context Menu
+export const TAB_CTX_MENU = new SLEvent<SLContextMenuData<string>>(SL_REACT);
 
 // Database Generic
 export const GET_DB_PATH = new SLEvent<string>(SL_DATABASE);

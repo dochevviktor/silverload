@@ -9,7 +9,7 @@
   "scripts": {
     "start:dev": "webpack serve",
     "build:prod": "webpack --env production & yarn electron:package & yarn run clean",
-    "electron:run": "yarn run electron:build & cross-env ELECTRON_START_URL=http://localhost:8080 electron --js-flags=\"--experimental-wasm-threads --experimental-wasm-bulk-memory\" . & yarn run clean",
+    "electron:run": "yarn run electron:build & cross-env ELECTRON_START_URL=http://localhost:8080 electron . & yarn run clean",
     "electron:install": "electron-rebuild",
     "electron:package": "yarn run electron:bundle & ts-node config/electron.config.ts",
     "electron:build": "ts-node rollup.config.ts",

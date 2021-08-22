@@ -16,6 +16,7 @@ import {
   resetTabShift,
 } from '../../../store/slices/tab.slice';
 import { RootState } from '../../../store/rootReducer';
+import * as SLEvent from '../../../../../common/class/SLEvent';
 
 interface TabParams {
   tab: SLTab;
@@ -24,7 +25,7 @@ interface TabParams {
 
 const Tab = (props: TabParams): JSX.Element => {
   const tabStyle = [styles.tabStyle];
-  const tabRef = useRef(null);
+  const tabRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
 
@@ -67,6 +68,13 @@ const Tab = (props: TabParams): JSX.Element => {
   if (isActiveTab) {
     tabStyle.push(styles.tabActive);
   }
+
+  useEffect(() => {
+    tabRef.current.oncontextmenu = (e) => {
+      e.preventDefault();
+      SLEvent.TAB_CTX_MENU.send({ context: props.tab.id, x: e.x, y: e.y });
+    };
+  }, []);
 
   useEffect(() => {
     if (props.tab.isDragging) {
