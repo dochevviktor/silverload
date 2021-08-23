@@ -110,12 +110,12 @@ const ImagePanel = (): JSX.Element => {
 
   const imageElement = (
     <div className={styles.imageContainer}>
-      <img id={activeTab?.id} src={activeTab?.base64} alt="" style={transform} onMouseMove={onMouseMove} />
+      <img id={activeTab?.id + '-img'} src={activeTab?.base64} alt="" style={transform} onMouseMove={onMouseMove} />
     </div>
   );
   const videoElement = (
     <div className={styles.imageContainer}>
-      <video ref={videoRef} id={activeTab?.id} style={transform} autoPlay muted controls loop>
+      <video ref={videoRef} id={activeTab?.id + '-video'} style={transform} autoPlay muted controls loop>
         <source src={activeTab?.base64} type="video/mp4" />
       </video>
     </div>

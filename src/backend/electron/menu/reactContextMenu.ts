@@ -26,7 +26,9 @@ export const reactContext = (win: BrowserWindow, x: number, y: number, extra?: M
 
   if (extra) {
     template.push(...extra);
-  } else if (process.env.ELECTRON_START_URL) {
+  }
+
+  if (process.env.ELECTRON_START_URL) {
     if (template.length > 0) {
       template.push({ type: 'separator' });
     }

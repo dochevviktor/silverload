@@ -117,6 +117,6 @@ const sendSLFiles = async (args) => SLEvent.SEND_SL_FILES.send(await getSLFilesF
 
 SLEvent.LOAD_FILE_ARGUMENTS.on(sendSLFiles);
 SLEvent.SEND_ADDITIONAL_FILE_ARGUMENTS.on(sendSLFiles);
-SLEvent.LOAD_TAB_IMAGE.on(readFileAsync);
+SLEvent.LOAD_TAB_IMAGE.on((arg) => readFileAsync(arg));
 SLEvent.LOAD_NEXT_TAB_IMAGE.on(readNextFileAsync);
 SLEvent.LOAD_PREV_TAB_IMAGE.on(readPrevFileAsync);

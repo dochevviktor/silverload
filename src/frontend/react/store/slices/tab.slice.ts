@@ -23,11 +23,6 @@ interface SLImageData {
   path: string;
 }
 
-interface SLTabShiftPos {
-  tab: SLTab;
-  tabWidth: number;
-}
-
 const initialTabListState: SLTabListSlice = {
   activeTab: null,
   isSaving: false,
@@ -60,7 +55,7 @@ const resetSizeAndPos = (tab: SLTab) => {
   tab.scaleY = 1;
 };
 
-const getTabById = (state, tabId): SLTab => state.tabList.find((it) => it.id === tabId);
+const getTabById = (state, tabId: string): SLTab => state.tabList.find((it) => it.id === tabId);
 
 const setIsLoading = (state, tabId: string, flag: boolean) => {
   if (tabId === state.activeTab.id) {
@@ -109,6 +104,15 @@ const resetAllTabShits = (state) => {
   });
 };
 
+const reorderTabs = (state) => {
+  state.tabList.forEach((it, index) => {
+    it.sequence = index;
+    if (state.activeTab.id === it.id) {
+      state.activeTab.sequence = index;
+    }
+  });
+};
+
 export const TabListSlice = createSlice({
   name: 'TabListSlice',
   initialState: initialTabListState,
@@ -124,25 +128,24 @@ export const TabListSlice = createSlice({
     setTabDragging(state, { payload: tabId }: PayloadAction<string>) {
       setIsDragging(state, tabId, true);
     },
-    setTabNotDragging(state, { payload: tabIt }: PayloadAction<SLTabShiftPos>) {
-      const tabPosition = tabIt.tab.sequence;
-      const tabShift = Math.round(state.dragPosition / tabIt.tabWidth) + tabPosition;
+    setTabNotDragging(state, { payload: tabId }: PayloadAction<string>) {
+      const tab = getTabById(state, tabId);
+      const tabPosition = tab.sequence;
+      const tabRef = document.getElementById(tab.id);
+      const tabShift = Math.round(state.dragPosition / (tabRef.clientWidth + 4)) + tabPosition;
 
-      setIsDragging(state, tabIt.tab.id, false);
+      setIsDragging(state, tab.id, false);
 
       if (tabPosition !== tabShift && tabPosition >= 0 && tabPosition + 1 <= state.tabList.length) {
-        const result = Array.from(state.tabList);
+        const result = [...state.tabList];
         const [removed] = result.splice(tabPosition, 1);
 
         result.splice(tabShift, 0, removed);
-        result.forEach((it) => {
-          it.sequence = result.indexOf(it);
-          if (it.id === state.activeTab.id) {
-            state.activeTab.sequence = result.indexOf(it);
-          }
-        });
         state.tabList = result;
+        reorderTabs(state);
       }
+      state.dragPosition = 0;
+      resetAllTabShits(state);
     },
     setTabShiftLeft(state, { payload: tabPos }: PayloadAction<Array<number>>) {
       tabPos
@@ -195,23 +198,23 @@ export const TabListSlice = createSlice({
 
       const nextActiveTab = nextPos >= 0 ? state.tabList[nextPos] : null;
 
-      state.tabList.forEach((it) => (it.sequence = state.tabList.indexOf(it)));
-
       if (nextActiveTab) {
         state.activeTab = nextActiveTab;
       }
-    },
-    setActiveTab(state, { payload: tab }: PayloadAction<SLTab>) {
-      if (state.activeTab && state.activeTab.type === 'video') {
-        const videoElement = <HTMLVideoElement>document.getElementById(state.activeTab.id);
-        const tabById = getTabById(state, state.activeTab.id);
 
-        if (tabById && videoElement) {
-          tabById.currentTime = videoElement.currentTime;
-          tabById.isPaused = videoElement.paused;
+      reorderTabs(state);
+    },
+    setActiveTab(state, { payload: tabId }: PayloadAction<string>) {
+      if (state.activeTab && state.activeTab.type === 'video') {
+        const videoElement = <HTMLVideoElement>document.getElementById(state.activeTab.id + '-video');
+        const prevTab = getTabById(state, state.activeTab.id);
+
+        if (prevTab && videoElement) {
+          prevTab.currentTime = videoElement.currentTime;
+          prevTab.isPaused = videoElement.paused;
         }
       }
-      state.activeTab = tab;
+      state.activeTab = getTabById(state, tabId);
     },
     setActiveTabData(state, { payload: imageData }: PayloadAction<SLImageData>) {
       setData(state.activeTab, imageData);
@@ -261,10 +264,6 @@ export const TabListSlice = createSlice({
       }
       state.dragPosition += dragPosition;
     },
-    resetDragPosition(state) {
-      state.dragPosition = 0;
-      resetAllTabShits(state);
-    },
     handleContextAction(state, { payload: data }: PayloadAction<SLContextMenuData<string>>) {
       const contextTab = getTabById(state, data.context);
 
@@ -276,18 +275,18 @@ export const TabListSlice = createSlice({
         const { title, path, base64, base64Hash, type } = contextTab;
         const newTab: SLTab = { id: uuid(), title, path, base64, base64Hash, type };
 
-        state.tabList.splice(state.tabList.indexOf(contextTab) + 1, 0, newTab);
-        state.tabList.forEach((it, index) => (it.sequence = index));
+        state.tabList.splice(contextTab.sequence + 1, 0, newTab);
+        reorderTabs(state);
       } else if (data.selectedItem === SLContextMenuItem.TAB_CLOSE_OTHERS) {
-        const tab = getTabById(state, state.activeTab);
+        const tab = getTabById(state, state.activeTab.id);
 
         state.tabList = [tab];
-        state.tabList.forEach((it, index) => (it.sequence = index));
+        reorderTabs(state);
       } else if (data.selectedItem === SLContextMenuItem.TAB_CLOSE_LEFT) {
-        const tab = getTabById(state, state.activeTab);
+        const tab = getTabById(state, state.activeTab.id);
 
-        state.tabList.splice(0, state.tabList.indexOf(tab));
-        state.tabList.forEach((it, index) => (it.sequence = index));
+        state.tabList.splice(0, tab.sequence);
+        reorderTabs(state);
       }
     },
   },
@@ -300,7 +299,6 @@ export const {
   setImagePosition,
   changeImageSize,
   setDragPosition,
-  resetDragPosition,
   setTabDragging,
   setTabNotDragging,
   setTabShiftLeft,

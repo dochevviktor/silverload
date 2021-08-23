@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import SLTab from '../../../../../common/class/SLTab';
 import {
   removeTab,
-  resetDragPosition,
   setActiveTab,
   setDragPosition,
   setTabDragging,
@@ -54,15 +53,14 @@ const Tab = (props: TabParams): JSX.Element => {
     }
     document.addEventListener('mousemove', onMouseMoveOutside);
     document.addEventListener('mouseup', onMouseUp);
+    dispatch(setActiveTab(props.tab.id));
     dispatch(setTabDragging(props.tab.id));
-    dispatch(setActiveTab(props.tab));
   };
 
   const onMouseUp = () => {
     document.removeEventListener('mousemove', onMouseMoveOutside);
     document.removeEventListener('mouseup', onMouseUp);
-    dispatch(setTabNotDragging({ tab: props.tab, tabWidth }));
-    dispatch(resetDragPosition());
+    dispatch(setTabNotDragging(props.tab.id));
   };
 
   if (isActiveTab) {
@@ -104,7 +102,7 @@ const Tab = (props: TabParams): JSX.Element => {
 
   return useMemo(
     () => (
-      <div ref={tabRef} className={tabStyle.join(' ')} style={transform} onMouseDown={onMouseDown}>
+      <div id={props.tab.id} ref={tabRef} className={tabStyle.join(' ')} style={transform} onMouseDown={onMouseDown}>
         <p>{props.tab.title}</p>
         <FontAwesomeIcon icon={props.tab.isLoading ? faSpinner : faTimes} onClick={remove} spin={props.tab.isLoading} />
       </div>

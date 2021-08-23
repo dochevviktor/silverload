@@ -41,11 +41,13 @@ export class SLEvent<T = void> {
     window.ipcRenderer.send(this.channel, arg);
   }
 
-  sendBack(fn: (arg: T, event) => T | Promise<T>): void {
+  sendBack(fn: (arg: T, event: IpcRendererEvent) => T | Promise<T>): void {
     window.ipcRenderer.on(this.channel, async (event, arg: T) => this.send(await fn(arg, event)));
   }
 
-  on(fn: (arg: T, event) => T | Promise<T> | void | Promise<void> | PayloadAction<unknown>): () => IpcRenderer {
+  on(
+    fn: (arg: T, event: IpcRendererEvent) => T | Promise<T> | void | Promise<void> | PayloadAction<unknown>
+  ): () => IpcRenderer {
     window.ipcRenderer.on(this.channel, (event, arg: T) => fn(arg, event));
 
     return () => window.ipcRenderer.removeListener(this.channel, (event, arg: T) => fn(arg, event));
@@ -54,7 +56,7 @@ export class SLEvent<T = void> {
   /*
    * Main Process methods
    */
-  onMain(fn?: (arg: T, event) => T | Promise<T> | void | Promise<void> | PayloadAction<T>): void {
+  onMain(fn?: (arg: T) => T | Promise<T> | void | Promise<void> | PayloadAction<T>): void {
     global.ipcMain.on(this.channel, async (event, arg: T) => {
       if (this.destination) {
         if (!this.origin?.contains(event.sender.id)) {
@@ -64,9 +66,9 @@ export class SLEvent<T = void> {
         }
       } else {
         if (this.origin) {
-          this.origin.get().send(this.channel, await fn(arg, event));
+          this.origin.get().send(this.channel, await fn(arg));
         } else {
-          await fn(arg, event);
+          await fn(arg);
         }
       }
     });

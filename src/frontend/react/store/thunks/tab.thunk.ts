@@ -88,8 +88,7 @@ export const addNewActiveTab =
     const newTab: SLTab = tab ? tab : { id: uuid(), title: 'New Tab' };
 
     dispatch(actions.addTab(newTab));
-    dispatch(actions.setActiveTab(newTab));
-    loadImageData(newTab, (arg) => dispatch(arg));
+    dispatch(actions.setActiveTab(newTab.id));
   };
 
 // Database calls
