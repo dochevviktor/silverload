@@ -205,6 +205,10 @@ export const TabListSlice = createSlice({
       reorderTabs(state);
     },
     setActiveTab(state, { payload: tabId }: PayloadAction<string>) {
+      if (tabId === state.activeTab?.id) {
+        return;
+      }
+
       if (state.activeTab && state.activeTab.type === 'video') {
         const videoElement = <HTMLVideoElement>document.getElementById(state.activeTab.id + '-video');
         const prevTab = getTabById(state, state.activeTab.id);
