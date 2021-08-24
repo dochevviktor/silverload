@@ -3,6 +3,7 @@ import SLTab from '../../../../common/class/SLTab';
 import { SLTabImageData } from '../../../../common/interface/SLTabImageData';
 import SLContextMenuItem, { SLContextMenuData } from '../../../../common/constant/SLContextMenu';
 import { v4 as uuid } from 'uuid';
+import * as SLEvent from '../../../../common/class/SLEvent';
 
 interface SLTabListSlice {
   activeTab: SLTab;
@@ -11,6 +12,7 @@ interface SLTabListSlice {
   dragPosition: number;
   dragDirection: number;
   tabList: SLTab[];
+  closedTabList: string[];
 }
 
 interface SLImagePos {
@@ -30,6 +32,7 @@ const initialTabListState: SLTabListSlice = {
   dragPosition: 0,
   dragDirection: 0,
   tabList: [],
+  closedTabList: [],
 };
 
 const setData = (tab: SLTab, data: SLImageData) => {
@@ -189,6 +192,7 @@ export const TabListSlice = createSlice({
       getTabById(state, tabImageData.tabId).loadingProgress = tabImageData.loadingProgress;
     },
     removeTab(state, { payload: tabIndex }: PayloadAction<number>) {
+      state.tabList[tabIndex].path && state.closedTabList.push(state.tabList[tabIndex].path);
       state.tabList[tabIndex].base64 = null;
       state.tabList[tabIndex].base64Hash = null;
       state.tabList[tabIndex].path = null;
@@ -279,6 +283,15 @@ export const TabListSlice = createSlice({
         const { title, path, base64, base64Hash, type } = contextTab;
         const newTab: SLTab = { id: uuid(), title, path, base64, base64Hash, type };
 
+        state.tabList.splice(contextTab.sequence + 1, 0, newTab);
+        reorderTabs(state);
+      } else if (data.selectedItem === SLContextMenuItem.TAB_REOPEN_CLOSED) {
+        if (state.closedTabList.length < 1) {
+          return;
+        }
+        const newTab: SLTab = { id: uuid(), title: 'New Tab', path: state.closedTabList.shift(), isLoading: true };
+
+        SLEvent.LOAD_TAB_IMAGE.send({ tabId: newTab.id, path: newTab.path });
         state.tabList.splice(contextTab.sequence + 1, 0, newTab);
         reorderTabs(state);
       } else if (data.selectedItem === SLContextMenuItem.TAB_CLOSE_OTHERS) {

@@ -8,6 +8,10 @@ export const reactTabContext = (context: string): MenuItemConstructorOptions[] =
       label: SLContextMenu.TAB_DUPLICATE,
       click: () => SLEvent.TAB_CTX_MENU.sendMain({ context, selectedItem: SLContextMenu.TAB_DUPLICATE }),
     },
+    {
+      label: SLContextMenu.TAB_REOPEN_CLOSED,
+      click: () => SLEvent.TAB_CTX_MENU.sendMain({ context, selectedItem: SLContextMenu.TAB_REOPEN_CLOSED }),
+    },
     { type: 'separator' },
     {
       label: SLContextMenu.TAB_CLOSE_OTHERS,
