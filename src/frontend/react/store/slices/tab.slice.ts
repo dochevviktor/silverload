@@ -1,9 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import SLTab from '../../../../common/class/SLTab';
 import { SLTabImageData } from '../../../../common/interface/SLTabImageData';
-import SLContextMenuItem, { SLContextMenuData } from '../../../../common/constant/SLContextMenu';
-import { v4 as uuid } from 'uuid';
-import * as SLEvent from '../../../../common/class/SLEvent';
 
 interface SLTabListSlice {
   activeTab: SLTab;
@@ -272,39 +269,20 @@ export const TabListSlice = createSlice({
       }
       state.dragPosition += dragPosition;
     },
-    handleContextAction(state, { payload: data }: PayloadAction<SLContextMenuData<string>>) {
-      const contextTab = getTabById(state, data.context);
-
-      if (contextTab.isLoading) {
-        return;
-      }
-
-      if (data.selectedItem === SLContextMenuItem.TAB_DUPLICATE) {
-        const { title, path, base64, base64Hash, type } = contextTab;
-        const newTab: SLTab = { id: uuid(), title, path, base64, base64Hash, type };
-
-        state.tabList.splice(contextTab.sequence + 1, 0, newTab);
-        reorderTabs(state);
-      } else if (data.selectedItem === SLContextMenuItem.TAB_REOPEN_CLOSED) {
-        if (state.closedTabList.length < 1) {
-          return;
-        }
-        const newTab: SLTab = { id: uuid(), title: 'New Tab', path: state.closedTabList.shift(), isLoading: true };
-
-        SLEvent.LOAD_TAB_IMAGE.send({ tabId: newTab.id, path: newTab.path });
-        state.tabList.splice(contextTab.sequence + 1, 0, newTab);
-        reorderTabs(state);
-      } else if (data.selectedItem === SLContextMenuItem.TAB_CLOSE_OTHERS) {
-        const tab = getTabById(state, state.activeTab.id);
-
-        state.tabList = [tab];
-        reorderTabs(state);
-      } else if (data.selectedItem === SLContextMenuItem.TAB_CLOSE_LEFT) {
-        const tab = getTabById(state, state.activeTab.id);
-
-        state.tabList.splice(0, tab.sequence);
-        reorderTabs(state);
-      }
+    updateClosedTabList(state, { payload: pathList }: PayloadAction<string[]>) {
+      state.closedTabList = pathList;
+    },
+    addTabToPosition(state, { payload: newTab }: PayloadAction<SLTab>) {
+      state.tabList.splice(newTab.sequence, 0, newTab);
+      reorderTabs(state);
+    },
+    closeOtherTabs(state) {
+      state.tabList = [getTabById(state, state.activeTab.id)];
+      reorderTabs(state);
+    },
+    closeTabsToTheLeft(state) {
+      state.tabList.splice(0, getTabById(state, state.activeTab.id)?.sequence);
+      reorderTabs(state);
     },
   },
 });

@@ -15,7 +15,7 @@ import {
   resetTabShift,
 } from '../../../store/slices/tab.slice';
 import { RootState } from '../../../store/rootReducer';
-import * as SLEvent from '../../../../../common/class/SLEvent';
+import { tabContextMenu } from '../../../store/thunks/tab.thunk.context';
 
 interface TabParams {
   tab: SLTab;
@@ -69,8 +69,9 @@ const Tab = (props: TabParams): JSX.Element => {
 
   useEffect(() => {
     tabRef.current.oncontextmenu = (e) => {
+      e.stopPropagation();
       e.preventDefault();
-      SLEvent.TAB_CTX_MENU.send({ context: props.tab.id, x: e.x, y: e.y });
+      tabContextMenu(e, props.tab);
     };
   }, []);
 

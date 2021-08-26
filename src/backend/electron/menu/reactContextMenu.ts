@@ -2,25 +2,20 @@ import { BrowserWindow, Menu, MenuItemConstructorOptions } from 'electron';
 import SLContextMenu from '../../../common/constant/SLContextMenu';
 import * as SLEvent from '../../../common/class/SLEvent';
 
+const getMenuOption = (context: string, selectedItem: SLContextMenu): MenuItemConstructorOptions => {
+  return {
+    label: selectedItem,
+    click: () => SLEvent.TAB_CTX_MENU.sendMain({ context, selectedItem }),
+  };
+};
+
 export const reactTabContext = (context: string): MenuItemConstructorOptions[] => {
   return [
-    {
-      label: SLContextMenu.TAB_DUPLICATE,
-      click: () => SLEvent.TAB_CTX_MENU.sendMain({ context, selectedItem: SLContextMenu.TAB_DUPLICATE }),
-    },
-    {
-      label: SLContextMenu.TAB_REOPEN_CLOSED,
-      click: () => SLEvent.TAB_CTX_MENU.sendMain({ context, selectedItem: SLContextMenu.TAB_REOPEN_CLOSED }),
-    },
+    getMenuOption(context, SLContextMenu.TAB_DUPLICATE),
+    getMenuOption(context, SLContextMenu.TAB_REOPEN_CLOSED),
     { type: 'separator' },
-    {
-      label: SLContextMenu.TAB_CLOSE_OTHERS,
-      click: () => SLEvent.TAB_CTX_MENU.sendMain({ context, selectedItem: SLContextMenu.TAB_CLOSE_OTHERS }),
-    },
-    {
-      label: SLContextMenu.TAB_CLOSE_LEFT,
-      click: () => SLEvent.TAB_CTX_MENU.sendMain({ context, selectedItem: SLContextMenu.TAB_CLOSE_LEFT }),
-    },
+    getMenuOption(context, SLContextMenu.TAB_CLOSE_OTHERS),
+    getMenuOption(context, SLContextMenu.TAB_CLOSE_LEFT),
   ];
 };
 

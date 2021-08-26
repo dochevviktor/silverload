@@ -7,6 +7,7 @@ import { SLFile } from '../../../../common/interface/SLFile';
 import VALID_FILE_TYPES from '../../../../common/constant/SLImageFileTypes';
 import { SLTabImageData } from '../../../../common/interface/SLTabImageData';
 import { RootState } from '../rootReducer';
+import { handleTabContextAction } from './tab.thunk.context';
 
 // Variables
 const validateFileMimeType = (type: string) => VALID_FILE_TYPES.indexOf(type) !== -1;
@@ -44,7 +45,7 @@ export const addTabListeners = (): AppThunk => async (dispatch, getState) => {
   listeners.push(SLEvent.LOAD_TAB_GIF_VIDEO_PROGRESS.on((data) => dispatch(actions.loadTabProgress(data))));
   listeners.push(SLEvent.SAVE_TABS.on(() => dispatch(actions.setIsSaving(false))));
   listeners.push(SLEvent.LOAD_TABS.on((tabs) => dispatch(actions.loadTabs(tabs))));
-  listeners.push(SLEvent.TAB_CTX_MENU.on((data) => data && dispatch(actions.handleContextAction(data))));
+  listeners.push(SLEvent.TAB_CTX_MENU.on((data) => data && handleTabContextAction(data, getState(), dispatch)));
 };
 
 export const removeTabListeners = (): AppThunk => async () => {
