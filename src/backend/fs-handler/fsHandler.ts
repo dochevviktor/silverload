@@ -8,7 +8,7 @@ import VALID_FILE_TYPES from '../../common/constant/SLImageFileTypes';
 import { SLTabImageData } from '../../common/interface/SLTabImageData';
 import { sha1 } from 'object-hash';
 
-window.ipcRenderer = ipcRenderer;
+global.ipcRenderer = ipcRenderer;
 
 const validateFile = (type: string) => VALID_FILE_TYPES.indexOf(type) !== -1;
 
@@ -120,3 +120,4 @@ SLEvent.SEND_ADDITIONAL_FILE_ARGUMENTS.on(sendSLFiles);
 SLEvent.LOAD_TAB_IMAGE.on((arg) => readFileAsync(arg));
 SLEvent.LOAD_NEXT_TAB_IMAGE.on(readNextFileAsync);
 SLEvent.LOAD_PREV_TAB_IMAGE.on(readPrevFileAsync);
+SLEvent.UPDATE_SETTINGS.on((settings) => SLEvent.setGlobalSettings(settings));

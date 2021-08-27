@@ -5,9 +5,21 @@ import SLSettings from '../../../../common/class/SLSettings';
 
 const listeners: (() => void)[] = [];
 
-export const addSettingsListeners = (): AppThunk => async (dispatch) => {
-  listeners.push(SLEvent.LOAD_SETTINGS.on((args) => dispatch(actions.loadSettings(args))));
-  listeners.push(SLEvent.SAVE_SETTINGS.on(() => dispatch(actions.saveSettingsDone())));
+export const addSettingsListeners = (): AppThunk => async (dispatch, getState) => {
+  listeners.push(
+    SLEvent.LOAD_SETTINGS.on((args) => {
+      dispatch(actions.loadSettings(args));
+      console.log('sending settings', getState().settingsModal.settings);
+      SLEvent.UPDATE_SETTINGS.send(getState().settingsModal.settings);
+    })
+  );
+  listeners.push(
+    SLEvent.SAVE_SETTINGS.on(() => {
+      dispatch(actions.saveSettingsDone());
+      console.log('sending settings', getState().settingsModal.settings);
+      SLEvent.UPDATE_SETTINGS.send(getState().settingsModal.settings);
+    })
+  );
 };
 
 export const removeSettingsListeners = (): AppThunk => async () => {

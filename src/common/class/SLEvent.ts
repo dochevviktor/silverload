@@ -3,11 +3,15 @@ import { SLTabImageData } from '../interface/SLTabImageData';
 import { SLFile } from '../interface/SLFile';
 import SLTab from './SLTab';
 import SLSettings from './SLSettings';
-import { SLPoint, SL_DATABASE, SL_REACT, SL_FILE_SYSTEM, SL_FFMPEG } from './SLPoint';
+import { SLPoint, SL_DATABASE, SL_REACT, SL_FILE_SYSTEM, SL_FFMPEG, SL_ALL } from './SLPoint';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { SLContextMenuData } from '../constant/SLContextMenu';
 
 let lastChannelId = 0;
+let globalSettings: SLSettings[] = [];
+
+export const getGlobalSettings = (): SLSettings[] => globalSettings;
+export const setGlobalSettings = (s: SLSettings[]) => (globalSettings = s);
 
 /**
  * Event class for wrapping Electron IPC event calls b/w Main and Render processes with type safety.<br>
@@ -38,19 +42,19 @@ export class SLEvent<T = void> {
    * Render Process methods
    */
   send(arg?: T): void {
-    window.ipcRenderer.send(this.channel, arg);
+    global.ipcRenderer.send(this.channel, arg);
   }
 
   sendBack(fn: (arg: T, event: IpcRendererEvent) => T | Promise<T>): void {
-    window.ipcRenderer.on(this.channel, async (event, arg: T) => this.send(await fn(arg, event)));
+    global.ipcRenderer.on(this.channel, async (event, arg: T) => this.send(await fn(arg, event)));
   }
 
   on(
     fn: (arg: T, event: IpcRendererEvent) => T | Promise<T> | void | Promise<void> | PayloadAction<unknown>
   ): () => IpcRenderer {
-    window.ipcRenderer.on(this.channel, (event, arg: T) => fn(arg, event));
+    global.ipcRenderer.on(this.channel, (event, arg: T) => fn(arg, event));
 
-    return () => window.ipcRenderer.removeListener(this.channel, (event, arg: T) => fn(arg, event));
+    return () => global.ipcRenderer.removeListener(this.channel, (event, arg: T) => fn(arg, event));
   }
 
   /*
@@ -80,6 +84,14 @@ export class SLEvent<T = void> {
     } else {
       this.origin?.get()?.send(this.channel, arg);
     }
+  }
+
+  onBroadcast(fn: (arg: T) => T | Promise<T> | void | Promise<void> | PayloadAction<unknown>): void {
+    global.ipcMain.on(this.channel, (event, arg: T) => {
+      console.log('Main got the broadcast request', arg);
+      fn(arg);
+      this.origin.getAll().forEach((webContent) => webContent.send(this.channel, arg));
+    });
   }
 }
 
@@ -116,3 +128,6 @@ export const LOAD_PREV_TAB_IMAGE = new SLEvent<SLTabImageData>(SL_REACT, SL_FILE
 // FFMPEG
 export const LOAD_TAB_GIF_VIDEO = new SLEvent<SLTabImageData>(SL_FFMPEG, SL_REACT);
 export const LOAD_TAB_GIF_VIDEO_PROGRESS = new SLEvent<SLTabImageData>(SL_FFMPEG, SL_REACT);
+
+// Broadcast
+export const UPDATE_SETTINGS = new SLEvent<SLSettings[]>(SL_ALL);

@@ -5,7 +5,7 @@ import * as SLEvent from '../../common/class/SLEvent';
 import { getSettings, saveSettings } from '../../common/class/SLSettings';
 import { deleteTabs, loadTabs, saveTabs } from '../../common/class/SLTab';
 
-window.ipcRenderer = ipcRenderer;
+global.ipcRenderer = ipcRenderer;
 
 let db = null;
 
@@ -29,3 +29,4 @@ const bootstrapDatabase = (dbPath: string) => {
 
 SLEvent.GET_DB_PATH.on(bootstrapDatabase);
 SLEvent.GET_DB_PATH.send();
+SLEvent.UPDATE_SETTINGS.on((settings) => SLEvent.setGlobalSettings(settings));

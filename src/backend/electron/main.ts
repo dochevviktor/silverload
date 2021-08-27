@@ -3,6 +3,7 @@ import createReactWindow from './window/reactWindow';
 import createDbWindow from './window/databaseWindow';
 import createFsWindow from './window/fsHandlerWindow';
 import createFfmpegWindow from './window/ffmpegWindow';
+import * as SLEvent from '../../common/class/SLEvent';
 
 const loadAllWindows = async () => {
   await createDbWindow().load();
@@ -14,6 +15,8 @@ const loadAllWindows = async () => {
 
   await reactWindow.load();
   reactWindow.browserWindow.show();
+
+  SLEvent.UPDATE_SETTINGS.onBroadcast((settings) => SLEvent.setGlobalSettings(settings));
 };
 
 const bootstrap = () => {
