@@ -47,7 +47,7 @@ const SLSettingsModal = (): JSX.Element => {
         <div key={index} className={styles.setting} onClick={() => toggleSet(index)}>
           <p>{SLSetting[setting.code]}</p>
           <Switch
-            checked={setting.flag}
+            checked={!!setting.flag}
             checkedChildren={<FontAwesomeIcon icon={faCheck} />}
             unCheckedChildren={<FontAwesomeIcon icon={faTimes} color="silver" />}
           />

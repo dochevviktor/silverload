@@ -8,7 +8,7 @@ const title = 'Database window';
 const preload = 'databaseHandler.js';
 
 const loadListeners = () => {
-  const dbPath = isDev ? '.\\build\\storage.db' : `${process.resourcesPath}\\storage.db`;
+  const dbPath = isDev ? 'storage.db' : `${process.resourcesPath}\\storage.db`;
 
   console.log('Loading db IPC Main listeners');
 

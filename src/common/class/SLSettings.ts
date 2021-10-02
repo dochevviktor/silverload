@@ -10,8 +10,11 @@ export default interface SLSettings {
   code: string;
   sequence?: number;
   value?: string;
-  flag?: boolean;
+  flag?: boolean | number;
 }
+
+export const findSetting = (list: SLSettings[], s: SLSetting): SLSettings =>
+  list.find((e) => e.code === Object.keys(SLSetting).find((it) => SLSetting[it] === s));
 
 export const getSettings = (db: Database): SLSettings[] => {
   console.log('Call to load settings');

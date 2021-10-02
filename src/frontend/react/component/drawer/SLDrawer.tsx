@@ -12,7 +12,7 @@ import { loadTabs, saveTabs, deleteTabs } from '../../store/thunks/tab.thunk';
 const SLDrawer = (): JSX.Element => {
   const [isVisible, updateVisible] = useState(false);
 
-  const { tabList, isSaving } = useSelector((state: RootState) => state.tabsSlice);
+  const { isSaving } = useSelector((state: RootState) => state.tabsSlice);
 
   const drawerButtonIcon = isVisible ? faCaretSquareLeft : faCaretSquareRight;
 
@@ -42,7 +42,7 @@ const SLDrawer = (): JSX.Element => {
         visible={isVisible}
         width="170px">
         <div className={styles.topSection}>
-          <Button type="text" onClick={() => dispatch(saveTabs(tabList))} loading={isSaving} className={buttonStyle} block>
+          <Button type="text" onClick={() => dispatch(saveTabs())} loading={isSaving} className={buttonStyle} block>
             <FontAwesomeIcon icon={faSaveSol} size="lg" />
             <p>Save Tabs</p>
           </Button>

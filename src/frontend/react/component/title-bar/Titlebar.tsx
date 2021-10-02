@@ -4,14 +4,26 @@ import { faWindowRestore, faWindowMaximize, faWindowMinimize, faTimes } from '@f
 import { faSuperpowers } from '@fortawesome/free-brands-svg-icons';
 import styles from './Titlebar.scss';
 import * as SLEvent from '../../../../common/class/SLEvent';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
+import { saveTabsThenExit } from '../../store/thunks/tab.thunk';
+import { SLSetting, findSetting } from '../../../../common/class/SLSettings';
 
 const TitleBar = (): JSX.Element => {
   const [isMaximized, updateMaxState] = useState(false);
 
+  const dispatch = useDispatch();
+
   const tabTitle = useSelector((state: RootState) => state.tabsSlice.activeTab?.title);
   const tabCount = useSelector((state: RootState) => state.tabsSlice.tabList.length);
+  const settings = useSelector((state: RootState) => state.settingsModal.settings);
+  const closeWindow = (): void => {
+    if (findSetting(settings, SLSetting.SAVE_ON_EXIT).flag) {
+      dispatch(saveTabsThenExit());
+    } else {
+      SLEvent.CLOSE_WINDOW.send();
+    }
+  };
 
   useEffect(() => {
     const removeList: (() => void)[] = [];
@@ -38,7 +50,7 @@ const TitleBar = (): JSX.Element => {
         <button className={styles.titleBarButton} onClick={() => SLEvent.MAXIMIZE_WINDOW.send()}>
           <FontAwesomeIcon icon={getMaximisedButtonIcon} size="xs" />
         </button>
-        <button className={styles.titleBarCloseButton} onClick={() => SLEvent.CLOSE_WINDOW.send()}>
+        <button className={styles.titleBarCloseButton} onClick={closeWindow}>
           <FontAwesomeIcon icon={faTimes} />
         </button>
       </div>

@@ -247,14 +247,11 @@ export const TabListSlice = createSlice({
         state.activeTab = state.tabList[0];
       }
     },
-    saveTabs(state) {
+    saveTabsStart(state) {
       state.isSaving = true;
     },
     saveTabsDone(state) {
       state.isSaving = false;
-    },
-    setIsSaving(state, { payload: isSaving }: PayloadAction<boolean>) {
-      state.isSaving = isSaving;
     },
     setIsLoading(state, { payload: isLoading }: PayloadAction<boolean>) {
       state.activeTab.isLoading = isLoading;

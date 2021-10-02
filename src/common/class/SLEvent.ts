@@ -2,7 +2,7 @@ import { IpcRenderer, IpcRendererEvent } from 'electron';
 import { SLTabImageData } from '../interface/SLTabImageData';
 import { SLFile } from '../interface/SLFile';
 import SLTab from './SLTab';
-import SLSettings from './SLSettings';
+import SLSettings, { findSetting, SLSetting } from './SLSettings';
 import { SLPoint, SL_DATABASE, SL_REACT, SL_FILE_SYSTEM, SL_FFMPEG, SL_ALL } from './SLPoint';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { SLContextMenuData } from '../constant/SLContextMenu';
@@ -10,8 +10,8 @@ import { SLContextMenuData } from '../constant/SLContextMenu';
 let lastChannelId = 0;
 let globalSettings: SLSettings[] = [];
 
-export const getGlobalSettings = (): SLSettings[] => globalSettings;
-export const setGlobalSettings = (s: SLSettings[]) => (globalSettings = s);
+export const findGlobalSettings = (s: SLSetting): SLSettings => findSetting(globalSettings, s);
+export const setGlobalSettings = (s: SLSettings[]): SLSettings[] => (globalSettings = s);
 
 /**
  * Event class for wrapping Electron IPC event calls b/w Main and Render processes with type safety.<br>
