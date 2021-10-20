@@ -7,7 +7,6 @@ const options: CliOptions = {
     productName: 'silverload',
     copyright: 'Copyright (c) 2020 - 2021 Viktor Dochev',
     icon: 'icon.png',
-    extraResources: { from: 'build/better_sqlite3.node' },
     files: ['build/*.js', '!build/bundle*', '!build/ffmpegHandler*', 'build/*.html', 'build/*.wasm', '!node_modules'],
     asar: true,
     electronDist: 'node_modules/electron/dist',

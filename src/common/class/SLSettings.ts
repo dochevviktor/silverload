@@ -1,6 +1,4 @@
 import { Column, Entity, SLTable } from './SLTable';
-import { Database } from 'better-sqlite3';
-import { getAllFromTableOrdered, saveTable } from '../../backend/database/databaseOperations';
 
 export enum SLSetting {
   SAVE_ON_EXIT = 'Save tabs on application exit',
@@ -16,34 +14,35 @@ export default interface SLSettings {
 export const findSetting = (list: SLSettings[], s: SLSetting): SLSettings =>
   list.find((e) => e.code === Object.keys(SLSetting).find((it) => SLSetting[it] === s));
 
-export const getSettings = (db: Database): SLSettings[] => {
-  console.log('Call to load settings');
+export const getSettings = async (): Promise<SLSettings[]> => SLSettingsTable.prototype.table.toArray();
 
-  return getAllFromTableOrdered<SLSettings>(db, SLSettingsTable.prototype);
-};
-
-export const saveSettings = (db: Database, settings: SLSettings[]): SLSettings[] => {
-  console.log('Call to save settings');
-  if (db && settings && settings.length > 0) {
-    const tableRows = settings.map((it) => new SLSettingsTable(it));
-
-    saveTable(db, tableRows);
+export const saveSettings = async (settings: SLSettings[]): Promise<SLSettings[]> => {
+  if (settings && settings.length > 0) {
+    await SLSettingsTable.prototype.table.bulkPut(settings);
   }
 
   return [];
 };
 
+export const initSettings = async (): Promise<void> => {
+  const settings = await getSettings();
+  const newSettings: SLSettings[] = [];
+
+  Object.keys(SLSetting).forEach((settingCode, index) => {
+    const setting = settings.find((it) => it.code === settingCode);
+
+    if (setting) {
+      setting.sequence = index;
+    } else {
+      newSettings.push({ code: settingCode, sequence: index, flag: false });
+    }
+  });
+  settings.push(...newSettings);
+  await saveSettings(settings);
+};
+
 @Entity
 export class SLSettingsTable extends SLTable<SLSettings> implements SLSettings {
-  @Column({ pk: true })
+  @Column
   code: string;
-
-  @Column({ default: 0 })
-  sequence: number;
-
-  @Column({ nullable: true })
-  value: string;
-
-  @Column({ default: false })
-  flag: boolean;
 }

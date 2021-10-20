@@ -5,14 +5,10 @@ import { BrowserWindowConstructorOptions } from 'electron';
 
 const isDev = process.env.ELECTRON_START_URL != null;
 const title = 'Database window';
-const preload = 'databaseHandler.js';
+const preload = 'preload.js';
 
 const loadListeners = () => {
-  const dbPath = isDev ? 'storage.db' : `${process.resourcesPath}\\storage.db`;
-
   console.log('Loading db IPC Main listeners');
-
-  SLEvent.GET_DB_PATH.onMain(() => dbPath);
 
   SLEvent.LOAD_SETTINGS.onMain();
   SLEvent.SAVE_SETTINGS.onMain();
@@ -23,18 +19,17 @@ const loadListeners = () => {
 };
 
 const createDbWindow = (): SLBrowserWindow => {
-  const opt: BrowserWindowConstructorOptions = {
-    show: isDev,
-    webPreferences: {
-      javascript: false,
-      images: false,
-      webgl: false,
-      spellcheck: false,
-      enableWebSQL: false,
-    },
-  };
+  const opt: BrowserWindowConstructorOptions = { show: isDev };
+  const win = new SLBrowserWindow(title, preload, SL_DATABASE, loadListeners, opt);
+  const startURL = process.env.ELECTRON_START_URL;
 
-  return new SLBrowserWindow(title, preload, SL_DATABASE, loadListeners, opt);
+  if (startURL) {
+    win.setLoadUrl(`${startURL}/database.html`);
+  } else {
+    win.setLoadPath('database.html');
+  }
+
+  return win;
 };
 
 export default createDbWindow;

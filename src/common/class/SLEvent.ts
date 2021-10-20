@@ -105,9 +105,6 @@ export const WINDOW_UN_MAXIMIZED = new SLEvent(SL_REACT);
 // Context Menu
 export const TAB_CTX_MENU = new SLEvent<SLContextMenuData<string>>(SL_REACT);
 
-// Database Generic
-export const GET_DB_PATH = new SLEvent<string>(SL_DATABASE);
-
 // Database SLTabs
 export const SAVE_TABS = new SLEvent<SLTab[]>(SL_REACT, SL_DATABASE);
 export const LOAD_TABS = new SLEvent<SLTab[]>(SL_REACT, SL_DATABASE);

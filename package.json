@@ -112,6 +112,6 @@
   },
   "dependencies": {
     "@ffmpeg/core": "^0.10.0",
-    "better-sqlite3": "^7.4.3"
+    "dexie": "^3.0.3"
   }
 }

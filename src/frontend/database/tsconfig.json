@@ -1,0 +1,17 @@
+{
+  "extends": "./../../../tsconfig.json",
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS",
+      "target": "ES2017",
+      "esModuleInterop": true,
+      "importHelpers": true,
+      "resolveJsonModule": true,
+    },
+  },
+  "compilerOptions": {
+    "types": ["node", "electron"],
+    "sourceMap": false,
+  },
+  "include": ["../../common/**/*", "./**/*"],
+}

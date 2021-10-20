@@ -61,38 +61,11 @@ const elInputOptions: InputOptions = {
       tsconfig: 'src/backend/electron/tsconfig.json',
     }),
     commonjs(),
-    copy({
-      targets: [{ src: ['**/Release/*.node', '!**/*test*'], dest: 'build' }],
-      verbose: true,
-    }),
   ],
 };
 
 const elOutputOptions: OutputOptions = {
   file: 'build/main.js',
-  format: 'cjs',
-  sourcemap: false,
-};
-
-const dbInputOptions: InputOptions = {
-  input: 'src/backend/database/databaseHandler.ts',
-  plugins: [
-    externals({
-      include: ['electron'],
-      devDeps: false,
-    }),
-    nodeResolve({
-      preferBuiltins: true,
-    }),
-    typescript({
-      tsconfig: 'src/backend/database/tsconfig.json',
-    }),
-    commonjs(),
-  ],
-};
-
-const dbOutputOptions: OutputOptions = {
-  file: 'build/databaseHandler.js',
   format: 'cjs',
   sourcemap: false,
 };
@@ -164,9 +137,6 @@ const build = (input: InputOptions, output: OutputOptions): void => {
 
 // Build main electron process
 build(elInputOptions, elOutputOptions);
-
-// Build database handler process
-build(dbInputOptions, dbOutputOptions);
 
 // Build file system handler process
 build(fsInputOptions, fsOutputOptions);

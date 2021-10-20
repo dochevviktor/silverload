@@ -12,6 +12,7 @@ import { reactConfig } from './config/react.config';
 import { ffmpegConfig } from './config/ffmpeg.config';
 import ElectronDevPlugin from './config/class/ElectronDevPlugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import { databaseConfig } from './config/database.config';
 
 //Always attach this to the fist config for a proper cleanup on start.
 const cleanOutputConfig: Configuration = {
@@ -68,9 +69,11 @@ export default (env: { production: boolean }): Configuration[] => {
   if (env?.production) {
     // because of a resolver bug with FFMPEG WASM lib, we need to use the dev environment var
     configurations.push(merge(merge(ffmpegConfig, cleanOutputConfig), devConfig));
+    configurations.push(merge(databaseConfig, prodConfig));
     configurations.push(merge(reactConfig, prodConfig));
   } else {
     configurations.push(merge(merge(ffmpegConfig, cleanOutputConfig), devConfig));
+    configurations.push(merge(databaseConfig, devConfig));
     configurations.push(merge(merge(reactConfig, devServerConfig), devConfig));
   }
 
