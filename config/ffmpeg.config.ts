@@ -1,5 +1,6 @@
 import { Configuration } from 'webpack';
 import path from 'path';
+import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CspHtmlWebpackPlugin from 'csp-html-webpack-plugin';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
@@ -28,6 +29,14 @@ export const ffmpegConfig: Configuration = {
     ],
   },
   plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: '**/@ffmpeg/core/dist/*',
+          to: '[name][ext]',
+        },
+      ],
+    }),
     new HtmlWebpackPlugin({
       title: 'FFMPEG',
       filename: 'ffmpeg.html',

@@ -2,11 +2,10 @@ import path from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
 import InlineChunkHtmlPlugin from 'inline-chunk-html-plugin';
 import HTMLInlineCSSWebpackPlugin from 'html-inline-css-webpack-plugin';
+import HtmlMinimizerPlugin from 'html-minimizer-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { EnvironmentPlugin, Configuration } from 'webpack';
-import { Application, Request, Response, NextFunction } from 'express';
 import merge from 'webpack-merge';
-import CompressionPlugin from 'compression-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import { reactConfig } from './config/react.config';
 import { ffmpegConfig } from './config/ffmpeg.config';
@@ -26,14 +25,10 @@ const devServerConfig: Configuration = {
     contentBase: path.join(__dirname, 'build'),
     historyApiFallback: true,
     hot: true,
-    before(app: Application) {
-      // Add Content-Encoding so that browser can read gzip-ed files
-      app.get('bundle.*.js', (req: Request, res: Response, next: NextFunction) => {
-        req.url = req.url + '.gz';
-        res.set('Content-Encoding', 'gzip');
-        res.set('Content-Type', 'text/javascript');
-        next();
-      });
+    // Needed for SharedArrayBuffer used by FFMPEG
+    headers: {
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Opener-Policy': 'same-origin',
     },
   },
 };
@@ -47,7 +42,6 @@ const devConfig: Configuration = {
       NODE_ENV: 'development',
       DEBUG: false,
     }),
-    new CompressionPlugin(),
   ],
 };
 
@@ -55,7 +49,7 @@ const prodConfig: Configuration = {
   mode: 'production',
   optimization: {
     minimize: true,
-    minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
+    minimizer: [new TerserPlugin(), new CssMinimizerPlugin(), new HtmlMinimizerPlugin()],
   },
   plugins: [new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/.*/]), new HTMLInlineCSSWebpackPlugin()],
   performance: {

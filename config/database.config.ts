@@ -3,11 +3,10 @@ import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CspHtmlWebpackPlugin from 'csp-html-webpack-plugin';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
-import InlineChunkHtmlPlugin from 'inline-chunk-html-plugin';
-import HTMLInlineCSSWebpackPlugin from 'html-inline-css-webpack-plugin';
 
 export const databaseConfig: Configuration = {
   name: 'databaseConfig',
+  dependencies: ['ffmpegConfig'],
   entry: './src/frontend/database/databaseHandler.ts',
   output: {
     path: path.resolve('build'),
@@ -47,7 +46,5 @@ export const databaseConfig: Configuration = {
       'worker-src': ["'self'", 'blob:', "'unsafe-inline'"],
       'style-src': ["'self'", "'unsafe-inline'"],
     }),
-    new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/.*/]),
-    new HTMLInlineCSSWebpackPlugin(),
   ],
 };

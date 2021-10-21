@@ -6,20 +6,10 @@ import { terser } from 'rollup-plugin-terser';
 import { rollup, InputOptions, OutputOptions } from 'rollup';
 import merge from 'webpack-merge';
 import replace from '@rollup/plugin-replace';
-import copy from 'rollup-plugin-copy';
 import externals from 'rollup-plugin-node-externals';
 
 const devInputOptions: InputOptions = {
   plugins: [
-    // we step in and manually adjust the path and importing of the sqlite node module
-    replace({
-      delimiters: ['', ''],
-      preventAssignment: true,
-      values: {
-        'exports.getRoot(exports.getFileName());': "exports.getRoot('package.json');",
-        ': commonjsRequire;': ': require;',
-      },
-    }),
     json({
       compact: false,
     }),
@@ -28,16 +18,6 @@ const devInputOptions: InputOptions = {
 
 const prodInputOptions: InputOptions = {
   plugins: [
-    // for prod, the node module has to be outside the asar pack - adjust accordingly
-    replace({
-      delimiters: ['', ''],
-      preventAssignment: true,
-      values: {
-        'exports.getRoot(exports.getFileName());': 'process.resourcesPath',
-        ': commonjsRequire;': ': require;',
-        "'build'": "'.'",
-      },
-    }),
     json({
       compact: true,
     }),
@@ -115,11 +95,6 @@ const preloadInputOptions: InputOptions = {
       tsconfig: 'src/backend/preload/tsconfig.json',
     }),
     commonjs(),
-    // get the worker and WASM
-    copy({
-      targets: [{ src: ['**/@ffmpeg/core/dist/*'], dest: 'build' }],
-      verbose: true,
-    }),
   ],
 };
 
