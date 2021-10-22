@@ -1,5 +1,6 @@
 .drawerFrame {
   margin-top: 70px;
+
   div {
     div {
       overflow: hidden;
@@ -24,7 +25,6 @@
 
 @keyframes spin {
   100% {
-    -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }
@@ -89,7 +89,7 @@ button.buttonStyle {
   }
 
   &:hover {
-    box-shadow: 0 0 8px 2px rgba(114, 114, 114, 0.3);
+    box-shadow: 0 0 8px 2px rgb(114 114 114 / 30%);
     background: linear-gradient(45deg, #646464 30%, #4e4e4e 90%);
 
     svg {

@@ -7,11 +7,11 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { EnvironmentPlugin, Configuration } from 'webpack';
 import merge from 'webpack-merge';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
-import { reactConfig } from './config/react.config';
-import { ffmpegConfig } from './config/ffmpeg.config';
-import ElectronDevPlugin from './config/class/ElectronDevPlugin';
+import { reactConfig } from './config/webpack/react.config';
+import { ffmpegConfig } from './config/webpack/ffmpeg.config';
+import ElectronDevPlugin from './config/webpack/plugin/ElectronDevPlugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-import { databaseConfig } from './config/database.config';
+import { databaseConfig } from './config/webpack/database.config';
 
 //Always attach this to the fist config for a proper cleanup on start.
 const cleanOutputConfig: Configuration = {
@@ -22,7 +22,7 @@ const cleanOutputConfig: Configuration = {
 const devServerConfig: Configuration = {
   plugins: [new ElectronDevPlugin()],
   devServer: {
-    contentBase: path.join(__dirname, 'build'),
+    static: path.join(__dirname, 'build'),
     historyApiFallback: true,
     hot: true,
     // Needed for SharedArrayBuffer used by FFMPEG
@@ -57,7 +57,7 @@ const prodConfig: Configuration = {
   },
 };
 
-export default (env: { production: boolean }): Configuration[] => {
+module.exports = (env: { production: boolean }): Configuration[] => {
   const configurations: Configuration[] = [];
 
   if (env?.production) {

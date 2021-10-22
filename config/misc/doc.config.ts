@@ -1,5 +1,5 @@
 import { replaceInFileSync } from 'replace-in-file';
-import { devDependencies, dependencies } from '../package.json';
+import { devDependencies, dependencies } from '../../package.json';
 
 const replace = (): void => {
   const from = [];
