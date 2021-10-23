@@ -7,7 +7,7 @@ export default class ElectronDevPlugin {
 
     compiler.hooks.afterEmit.tap('AfterEmitPlugin', () => {
       if (!electronProcess) {
-        electronProcess = exec('yarn run electron:run');
+        electronProcess = exec('electron .');
         electronProcess.stdout.on('data', (data) => console.log(data.toString()));
         electronProcess.stderr.on('data', (data) => console.log(data.toString()));
         electronProcess.on('exit', () => process.exit(0));

@@ -7,15 +7,7 @@ const options: CliOptions = {
     productName: 'silverload',
     copyright: 'Copyright (c) 2020 - 2021 Viktor Dochev',
     icon: 'icon.png',
-    files: [
-      'build/*.js',
-      '!build/bundle*',
-      '!build/ffmpegHandler*',
-      '!build/databaseHandler*',
-      'build/*.html',
-      'build/*.wasm',
-      '!node_modules',
-    ],
+    files: ['build/**', '!node_modules'],
     asar: true,
     electronDist: 'node_modules/electron/dist',
     directories: {

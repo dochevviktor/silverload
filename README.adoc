@@ -24,7 +24,7 @@ This project will be written entirely in TypeScript, where possible.
 :verAntDesign: 4.16.13
 :verESLint: ^8.0.1
 :verStyleLint: ^13.13.1
-:verPrettier: ^2.3.2
+:verPrettier: 2.3.2
 :verWebpack: ^5.59.1
 :verRollup: ^2.56.0
 :verFfmpeg: ^0.10.1
@@ -43,7 +43,6 @@ This project will be written entirely in TypeScript, where possible.
 :imgStyleLint: https://cdn.worldvectorlogo.com/logos/stylelint.svg
 :imgPrettier: https://cdn.worldvectorlogo.com/logos/prettier-1.svg
 :imgWebpack: https://cdn.worldvectorlogo.com/logos/webpack-icon.svg
-:imgRollup: https://seeklogo.com/images/R/rollup-js-logo-F3925E2546-seeklogo.com.png
 :imgFfmpeg: https://upload.wikimedia.org/wikipedia/commons/7/76/FFmpeg_icon.svg
 // IMG_VARIABLES_END
 
@@ -59,7 +58,6 @@ This project will be written entirely in TypeScript, where possible.
 :ghStyleLint: https://github.com/stylelint/stylelint
 :ghPrettier: https://github.com/prettier/prettier
 :ghWebpack: https://github.com/webpack/webpack
-:ghRollup: https://github.com/webpack/webpack
 :ghFfmpeg: https://github.com/ffmpegwasm/ffmpeg.wasm
 // GH_VARIABLES_END
 
@@ -161,15 +159,7 @@ a|[source, subs="attributes"]
 ----
 webpack: {verWebpack}
 ----
-|Front end builder, bundler and development server
-
-a|image::{imgRollup}[link={ghRollup},40,40]
-|Rollup
-a|[source, subs="attributes"]
-----
-rollup: {verRollup}
-----
-|Back end builder and bundler
+|Builder, bundler and development server
 
 a|image::{imgFfmpeg}[link={ghFfmpeg},50,50]
 |FFMPEG

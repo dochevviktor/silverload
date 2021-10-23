@@ -21,6 +21,12 @@ const createFfmpegWindow = (addListeners = true): SLBrowserWindow => {
     win.setLoadUrl(`${startURL}/ffmpeg.html`);
   } else {
     win.setLoadPath('ffmpeg.html');
+    // Needed for the SharedArrayBuffer
+    win.browserWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+      details.responseHeaders['Cross-Origin-Embedder-Policy'] = ['require-corp'];
+      details.responseHeaders['Cross-Origin-Opener-Policy'] = ['same-origin'];
+      callback({ responseHeaders: details.responseHeaders });
+    });
   }
 
   return win;

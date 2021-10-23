@@ -27,7 +27,6 @@ export default class SLBrowserWindow {
           webPreferences: {
             nodeIntegration: false,
             nodeIntegrationInWorker: false,
-            enableRemoteModule: false,
             contextIsolation: false,
             preload: path.join(__dirname, preload),
           },

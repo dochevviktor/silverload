@@ -12,11 +12,16 @@ import { ffmpegConfig } from './config/webpack/ffmpeg.config';
 import ElectronDevPlugin from './config/webpack/plugin/ElectronDevPlugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import { databaseConfig } from './config/webpack/database.config';
+import { fsConfig } from './config/webpack/fs.config';
+import { preloadConfig } from './config/webpack/preload.config';
+import { electronConfig } from './config/webpack/electron.config';
 
 //Always attach this to the fist config for a proper cleanup on start.
 const cleanOutputConfig: Configuration = {
   plugins: [new CleanWebpackPlugin()],
 };
+
+const writeToDiskFiles = [/.*main.js/, /.*preload.js/, /.*fsHandler.js/];
 
 // Add this to the last config in development mode for the dev server.
 const devServerConfig: Configuration = {
@@ -30,6 +35,9 @@ const devServerConfig: Configuration = {
       'Cross-Origin-Embedder-Policy': 'require-corp',
       'Cross-Origin-Opener-Policy': 'same-origin',
     },
+    devMiddleware: {
+      writeToDisk: (filename) => writeToDiskFiles.some((it) => it.test(filename)),
+    },
   },
 };
 
@@ -40,6 +48,7 @@ const devConfig: Configuration = {
     // use 'development' unless process.env.NODE_ENV is defined
     new EnvironmentPlugin({
       NODE_ENV: 'development',
+      ELECTRON_START_URL: 'http://localhost:8080',
       DEBUG: false,
     }),
   ],
@@ -65,10 +74,16 @@ module.exports = (env: { production: boolean }): Configuration[] => {
     configurations.push(merge(merge(ffmpegConfig, cleanOutputConfig), devConfig));
     configurations.push(merge(databaseConfig, prodConfig));
     configurations.push(merge(reactConfig, prodConfig));
+    configurations.push(merge(preloadConfig, prodConfig));
+    configurations.push(merge(fsConfig, prodConfig));
+    configurations.push(merge(electronConfig, prodConfig));
   } else {
     configurations.push(merge(merge(ffmpegConfig, cleanOutputConfig), devConfig));
     configurations.push(merge(databaseConfig, devConfig));
     configurations.push(merge(merge(reactConfig, devServerConfig), devConfig));
+    configurations.push(merge(preloadConfig, devConfig));
+    configurations.push(merge(fsConfig, devConfig));
+    configurations.push(merge(electronConfig, devConfig));
   }
 
   return configurations;

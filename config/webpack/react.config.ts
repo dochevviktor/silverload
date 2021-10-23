@@ -6,7 +6,7 @@ import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 
 export const reactConfig: Configuration = {
   name: 'reactConfig',
-  dependencies: ['ffmpegConfig', 'databaseConfig'],
+  dependencies: ['ffmpegConfig', 'databaseConfig', 'preloadConfig', 'fsConfig', 'electronConfig'],
   entry: './src/frontend/react/index.tsx',
   output: {
     path: path.resolve('build'),
