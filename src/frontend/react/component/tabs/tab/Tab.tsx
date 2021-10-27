@@ -1,5 +1,4 @@
 import { MouseEvent, useMemo, useRef, useEffect } from 'react';
-import styles from './Tab.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,6 +15,7 @@ import {
 } from '../../../store/slices/tab.slice';
 import { RootState } from '../../../store/rootReducer';
 import { tabContextMenu } from '../../../store/thunks/tab.thunk.context';
+import styles from './Tab.scss';
 
 interface TabParams {
   tab: SLTab;

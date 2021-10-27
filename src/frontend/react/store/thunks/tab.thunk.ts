@@ -1,14 +1,14 @@
+import { v4 as uuid } from 'uuid';
+import { message } from 'antd';
 import { AppThunk } from '../store';
 import * as SLEvent from '../../../../common/class/SLEvent';
 import { actions } from '../slices/tab.slice';
-import { v4 as uuid } from 'uuid';
 import SLTab from '../../../../common/class/SLTab';
 import { SLFile } from '../../../../common/interface/SLFile';
 import VALID_FILE_TYPES from '../../../../common/constant/SLImageFileTypes';
 import { SLTabImageData } from '../../../../common/interface/SLTabImageData';
 import { RootState } from '../rootReducer';
 import { handleTabContextAction } from './tab.thunk.context';
-import { message } from 'antd';
 
 // Variables
 const validateFileMimeType = (type: string) => VALID_FILE_TYPES.indexOf(type) !== -1;

@@ -1,11 +1,11 @@
 import { IpcRenderer, IpcRendererEvent } from 'electron';
+import { PayloadAction } from '@reduxjs/toolkit';
 import { SLTabImageData } from '../interface/SLTabImageData';
 import { SLFile } from '../interface/SLFile';
+import { SLContextMenuData } from '../constant/SLContextMenu';
 import SLTab from './SLTab';
 import SLSettings, { findSetting, SLSetting } from './SLSettings';
 import { SLPoint, SL_DATABASE, SL_REACT, SL_FILE_SYSTEM, SL_FFMPEG, SL_ALL } from './SLPoint';
-import { PayloadAction } from '@reduxjs/toolkit';
-import { SLContextMenuData } from '../constant/SLContextMenu';
 
 let lastChannelId = 0;
 let globalSettings: SLSettings[] = [];

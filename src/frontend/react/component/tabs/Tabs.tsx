@@ -1,13 +1,13 @@
 import { useRef, WheelEvent } from 'react';
-import styles from './Tabs.scss';
-import Tab from './tab/Tab';
-import SLScroll from '../../class/SLScroll';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
+import SLScroll from '../../class/SLScroll';
 import { RootState } from '../../store/rootReducer';
 import SLDrawer from '../drawer/SLDrawer';
 import { addNewActiveTab } from '../../store/thunks/tab.thunk';
+import Tab from './tab/Tab';
+import styles from './Tabs.scss';
 
 const Tabs = (): JSX.Element => {
   const scrollRef = useRef<HTMLDivElement>(null);

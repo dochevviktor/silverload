@@ -1,9 +1,9 @@
-import styles from './DragAndDrop.scss';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store/rootReducer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Progress } from 'antd';
+import { RootState } from '../../store/rootReducer';
+import styles from './DragAndDrop.scss';
 
 const DragAndDrop = (): JSX.Element => {
   const showOverlay = useSelector((state: RootState) => state.dragEvent.showOverlay);

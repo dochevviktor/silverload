@@ -1,6 +1,6 @@
+import { v4 as uuid } from 'uuid';
 import * as SLEvent from '../../../../common/class/SLEvent';
 import { actions } from '../slices/tab.slice';
-import { v4 as uuid } from 'uuid';
 import SLTab from '../../../../common/class/SLTab';
 import { RootState } from '../rootReducer';
 import SLContextMenuItem, { SLContextMenuData } from '../../../../common/constant/SLContextMenu';

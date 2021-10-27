@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { DragEvent } from 'react';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface SLDragAndDrop {
   dragCounter: number;

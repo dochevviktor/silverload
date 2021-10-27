@@ -1,10 +1,10 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import TabListSlice from './slices/tab.slice';
+import TabList from './slices/tab.slice';
 import DragAndDrop from './slices/drag.slice';
 import SettingsModal from './slices/settings.slice';
 
 export const rootReducer = combineReducers({
-  tabsSlice: TabListSlice,
+  tabsSlice: TabList,
   dragEvent: DragAndDrop,
   settingsModal: SettingsModal,
 });

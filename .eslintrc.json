@@ -1,6 +1,8 @@
 {
   "extends": [
     "eslint:recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
@@ -25,6 +27,11 @@
     "react/no-unescaped-entities": 0,
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
+    "import/order": [
+      "warn", {
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type"]
+      }
+    ],
     "@typescript-eslint/no-var-requires": 0,
     "@typescript-eslint/no-unused-vars": 0,
     "no-undef": 0,
@@ -68,7 +75,12 @@
     "react": {
       "pragma": "React",
       "version": "detect"
-    }
+    },
+    "import/extensions": [
+      ".ts",
+      ".tsx"
+    ],
+    "import/core-modules": ["electron", "react", "react-dom"]
   },
   "parser": "@typescript-eslint/parser"
 }

@@ -1,5 +1,5 @@
-import { Configuration } from 'webpack';
 import path from 'path';
+import { Configuration } from 'webpack';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 
 export const electronConfig: Configuration = {

@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store/rootReducer';
 import { Modal, Switch } from 'antd';
-import { toggleVisibility, toggleSetting } from '../../store/slices/settings.slice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { toggleVisibility, toggleSetting } from '../../store/slices/settings.slice';
+import { RootState } from '../../store/rootReducer';
 import { SLSetting } from '../../../../common/class/SLSettings';
-import styles from './SLSettingsModal.scss';
 import { loadSettings, saveSettings } from '../../store/thunks/settings.thunk';
+import styles from './SLSettingsModal.scss';
 
 const SLSettingsModal = (): JSX.Element => {
   const { isVisible, isSaving, settings } = useSelector((state: RootState) => state.settingsModal);

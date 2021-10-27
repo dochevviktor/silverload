@@ -1,11 +1,11 @@
-import { Configuration } from 'webpack';
 import path from 'path';
+import { Configuration } from 'webpack';
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CspHtmlWebpackPlugin from 'csp-html-webpack-plugin';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
-import InlineChunkHtmlPlugin from 'inline-chunk-html-plugin';
-import HTMLInlineCSSWebpackPlugin from 'html-inline-css-webpack-plugin';
+import ReplaceInFileWebpackPlugin from 'replace-in-file-webpack-plugin';
+import merge from 'webpack-merge';
 
 export const ffmpegConfig: Configuration = {
   name: 'ffmpegConfig',
@@ -56,7 +56,30 @@ export const ffmpegConfig: Configuration = {
       'worker-src': ["'self'", 'blob:', "'unsafe-inline'"],
       'style-src': ["'self'", "'unsafe-inline'"],
     }),
-    new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/.*/]),
-    new HTMLInlineCSSWebpackPlugin(),
   ],
 };
+
+export const ffmpegConfigProd: Configuration = merge(ffmpegConfig, {
+  plugins: [
+    new ReplaceInFileWebpackPlugin([
+      {
+        dir: 'build',
+        test: [/ffmpegHandler.*\.js$/, /ffmpeg\.html$/],
+        rules: [
+          {
+            search: 'https://unpkg.com/@ffmpeg/core@',
+            replace: '',
+          },
+          {
+            search: '].substring',
+            replace: ']?.substring',
+          },
+          {
+            search: '/dist',
+            replace: '.',
+          },
+        ],
+      },
+    ]),
+  ],
+});

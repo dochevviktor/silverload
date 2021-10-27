@@ -1,6 +1,5 @@
-import { Drawer, Button, Popover } from 'antd';
 import { useState } from 'react';
-import styles from './SLDrawer.scss';
+import { Drawer, Button, Popover } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretSquareLeft, faCaretSquareRight, faSave as faSaveReg } from '@fortawesome/free-regular-svg-icons';
 import { faCog, faInfoCircle, faTrash, faSave as faSaveSol } from '@fortawesome/free-solid-svg-icons';
@@ -8,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toggleVisibility } from '../../store/slices/settings.slice';
 import { RootState } from '../../store/rootReducer';
 import { loadTabs, saveTabs, deleteTabs } from '../../store/thunks/tab.thunk';
+import styles from './SLDrawer.scss';
 
 const SLDrawer = (): JSX.Element => {
   const [isVisible, updateVisible] = useState(false);

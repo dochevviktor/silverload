@@ -1,16 +1,16 @@
 import { MouseEvent, useState, useRef, useEffect, WheelEvent, DragEvent } from 'react';
-import styles from './ImagePanel.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store/rootReducer';
 import { v4 as uuid } from 'uuid';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUpload } from '@fortawesome/free-solid-svg-icons';
+import { RootState } from '../../store/rootReducer';
 import SLZoom from '../../class/SLZoom';
 import VALID_FILE_TYPES from '../../../../common/constant/SLImageFileTypes';
 import DragAndDrop from '../image-drop/DragAndDrop';
 import { handleDragIn, handleDragOut, handleDrag, handleDragDrop } from '../../store/slices/drag.slice';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import { changeImageSize, setActiveTabData, setImagePosition } from '../../store/slices/tab.slice';
 import { addNewTab, requestImageData } from '../../store/thunks/tab.thunk';
+import styles from './ImagePanel.scss';
 
 const ImagePanel = (): JSX.Element => {
   const [isAnimated, setAnimated] = useState<boolean>(false);

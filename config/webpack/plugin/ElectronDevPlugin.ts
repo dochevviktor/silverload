@@ -1,5 +1,5 @@
-import { Compiler } from 'webpack';
 import { ChildProcess, exec } from 'child_process';
+import { Compiler } from 'webpack';
 
 export default class ElectronDevPlugin {
   apply(compiler: Compiler): void {

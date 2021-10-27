@@ -1,7 +1,7 @@
 import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
 import path from 'path';
-import { SLPoint } from '../../../common/class/SLPoint';
 import merge from 'webpack-merge';
+import { SLPoint } from '../../../common/class/SLPoint';
 
 const isDev = process.env.ELECTRON_START_URL != null;
 

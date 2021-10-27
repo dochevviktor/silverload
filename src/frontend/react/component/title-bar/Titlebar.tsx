@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowRestore, faWindowMaximize, faWindowMinimize, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faSuperpowers } from '@fortawesome/free-brands-svg-icons';
-import styles from './Titlebar.scss';
-import * as SLEvent from '../../../../common/class/SLEvent';
 import { useDispatch, useSelector } from 'react-redux';
+import * as SLEvent from '../../../../common/class/SLEvent';
 import { RootState } from '../../store/rootReducer';
 import { saveTabsThenExit } from '../../store/thunks/tab.thunk';
 import { SLSetting, findSetting } from '../../../../common/class/SLSettings';
+import styles from './Titlebar.scss';
 
 const TitleBar = (): JSX.Element => {
   const [isMaximized, updateMaxState] = useState(false);

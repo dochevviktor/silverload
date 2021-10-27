@@ -1,7 +1,7 @@
+import { BrowserWindowConstructorOptions } from 'electron';
 import * as SLEvent from '../../../common/class/SLEvent';
 import SLBrowserWindow from '../class/SLBrowserWindow';
 import { SL_DATABASE } from '../../../common/class/SLPoint';
-import { BrowserWindowConstructorOptions } from 'electron';
 
 const isDev = process.env.ELECTRON_START_URL != null;
 const title = 'Database window';

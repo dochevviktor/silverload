@@ -7,14 +7,14 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { EnvironmentPlugin, Configuration } from 'webpack';
 import merge from 'webpack-merge';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
-import { reactConfig } from './config/webpack/react.config';
-import { ffmpegConfig } from './config/webpack/ffmpeg.config';
-import ElectronDevPlugin from './config/webpack/plugin/ElectronDevPlugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-import { databaseConfig } from './config/webpack/database.config';
-import { fsConfig } from './config/webpack/fs.config';
-import { preloadConfig } from './config/webpack/preload.config';
 import { electronConfig } from './config/webpack/electron.config';
+import { preloadConfig } from './config/webpack/preload.config';
+import { fsConfig } from './config/webpack/fs.config';
+import { databaseConfig } from './config/webpack/database.config';
+import { ffmpegConfig, ffmpegConfigProd } from './config/webpack/ffmpeg.config';
+import { reactConfig } from './config/webpack/react.config';
+import ElectronDevPlugin from './config/webpack/plugin/ElectronDevPlugin';
 
 //Always attach this to the fist config for a proper cleanup on start.
 const cleanOutputConfig: Configuration = {
@@ -70,8 +70,7 @@ module.exports = (env: { production: boolean }): Configuration[] => {
   const configurations: Configuration[] = [];
 
   if (env?.production) {
-    // because of a resolver bug with FFMPEG WASM lib, we need to use the dev environment var
-    configurations.push(merge(merge(ffmpegConfig, cleanOutputConfig), devConfig));
+    configurations.push(merge(merge(ffmpegConfigProd, cleanOutputConfig), prodConfig));
     configurations.push(merge(databaseConfig, prodConfig));
     configurations.push(merge(reactConfig, prodConfig));
     configurations.push(merge(preloadConfig, prodConfig));

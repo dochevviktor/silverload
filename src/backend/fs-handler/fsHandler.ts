@@ -1,12 +1,12 @@
 import { ipcRenderer } from 'electron';
+import { existsSync, lstatSync, promises } from 'fs';
+import { basename, dirname, join } from 'path';
+import { FileTypeResult, fromFile } from 'file-type';
+import { sha1 } from 'object-hash';
 import * as SLEvent from '../../common/class/SLEvent';
 import { SLFile } from '../../common/interface/SLFile';
-import { existsSync, lstatSync, promises } from 'fs';
-import { FileTypeResult, fromFile } from 'file-type';
-import { basename, dirname, join } from 'path';
 import VALID_FILE_TYPES from '../../common/constant/SLImageFileTypes';
 import { SLTabImageData } from '../../common/interface/SLTabImageData';
-import { sha1 } from 'object-hash';
 
 global.ipcRenderer = ipcRenderer;
 

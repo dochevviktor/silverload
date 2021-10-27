@@ -1,7 +1,7 @@
-import { SLTabImageData } from '../../common/interface/SLTabImageData';
-import bytesToBase64 from './constant/SLBase64Converters';
 import { createFFmpeg } from '@ffmpeg/ffmpeg';
+import { SLTabImageData } from '../../common/interface/SLTabImageData';
 import * as SLEvent from '../../common/class/SLEvent';
+import bytesToBase64 from './constant/SLBase64Converters';
 
 const ffmpeg = createFFmpeg({ corePath: './ffmpeg-core.js' });
 const ffmpegQueue: SLTabImageData[] = [];

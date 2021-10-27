@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import styles from './Main.scss';
-import Tabs from './tabs/Tabs';
-import ImagePanel from './image-panel/ImagePanel';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/rootReducer';
 import { addTabListeners, loadFileArgs, removeTabListeners } from '../store/thunks/tab.thunk';
 import { addSettingsListeners, removeSettingsListeners } from '../store/thunks/settings.thunk';
+import ImagePanel from './image-panel/ImagePanel';
+import Tabs from './tabs/Tabs';
+import styles from './Main.scss';
 import SLSettingsModal from './settings/SLSettingsModal';
 
 const Main = (): JSX.Element => {
