@@ -19,7 +19,7 @@ export const Entity: ClassDecorator = (target) => {
     slTable: Dexie.Table<unknown, number>;
     constructor() {
       super(target.name);
-      this.version(1).stores({
+      this.version(2).stores({
         slTable: columns.join(','),
       });
     }

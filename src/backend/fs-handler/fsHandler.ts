@@ -4,9 +4,11 @@ import { basename, dirname, join } from 'path';
 import { FileTypeResult, fromFile } from 'file-type';
 import { sha1 } from 'object-hash';
 import * as SLEvent from '../../common/class/SLEvent';
+import { findGlobalSettings } from '../../common/class/SLEvent';
 import { SLFile } from '../../common/interface/SLFile';
 import VALID_FILE_TYPES from '../../common/constant/SLImageFileTypes';
 import { SLTabImageData } from '../../common/interface/SLTabImageData';
+import { SLSetting } from '../../common/class/SLSettings';
 
 global.ipcRenderer = ipcRenderer;
 
@@ -41,7 +43,7 @@ const readFileAsync = async (tabImageData: SLTabImageData, fileType?: FileTypeRe
 
     tabImageData.title = basename(tabImageData.path);
 
-    if (mimeType === 'image/gif') {
+    if (mimeType === 'image/gif' && findGlobalSettings(SLSetting.GIF_TO_VIDEO)?.flag) {
       tabImageData.rawFile = await promises.readFile(tabImageData.path);
       tabImageData.base64Hash = sha1(tabImageData.rawFile);
       tabImageData.type = 'video';
