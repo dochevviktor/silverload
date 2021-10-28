@@ -93,6 +93,9 @@ export const addNewActiveTab =
 
     dispatch(actions.addTab(newTab));
     dispatch(actions.setActiveTab(newTab.id));
+    if (newTab.path) {
+      loadImageData(newTab, (arg) => dispatch(arg));
+    }
   };
 
 // Database calls

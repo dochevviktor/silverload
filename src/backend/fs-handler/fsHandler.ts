@@ -32,9 +32,9 @@ const readSLFile = async (path: string): Promise<SLFile> => {
   return { name, mimeType, path };
 };
 
-const readFileAsync = async (tabImageData: SLTabImageData, fileType?: FileTypeResult): Promise<void> => {
+const loadTabImage = async (tabImageData: SLTabImageData, fileType?: FileTypeResult): Promise<void> => {
   if (tabImageData?.path) {
-    console.log('Loading file: ' + tabImageData.path);
+    console.log('Loading tab image from: ' + tabImageData.path);
     const mimeType = fileType != null ? fileType.mime : (await fromFile(tabImageData.path))?.mime;
 
     if (!validateFile(mimeType)) {
@@ -88,7 +88,7 @@ const readFile = async (data: SLTabImageData, basePath: string, dir: string[], i
 
   data.path = path;
 
-  return readFileAsync(data, fileType);
+  return loadTabImage(data, fileType);
 };
 
 const readNextFileAsync = async (tabImageData: SLTabImageData): Promise<void> => {
@@ -119,7 +119,7 @@ const sendSLFiles = async (args) => SLEvent.SEND_SL_FILES.send(await getSLFilesF
 
 SLEvent.LOAD_FILE_ARGUMENTS.on(sendSLFiles);
 SLEvent.SEND_ADDITIONAL_FILE_ARGUMENTS.on(sendSLFiles);
-SLEvent.LOAD_TAB_IMAGE.on((arg) => readFileAsync(arg));
+SLEvent.LOAD_TAB_IMAGE.on((arg) => loadTabImage(arg));
 SLEvent.LOAD_NEXT_TAB_IMAGE.on(readNextFileAsync);
 SLEvent.LOAD_PREV_TAB_IMAGE.on(readPrevFileAsync);
 SLEvent.UPDATE_SETTINGS.on((settings) => SLEvent.setGlobalSettings(settings));
