@@ -1,6 +1,6 @@
 import { Platform, build, CliOptions } from 'electron-builder';
 
-const options: CliOptions = {
+export const packageOptions: CliOptions = {
   targets: Platform.WINDOWS.createTarget(),
   config: {
     appId: 'com.electron.silverload',
@@ -22,4 +22,4 @@ const options: CliOptions = {
   },
 };
 
-build(options).catch((error) => console.log(error));
+build(packageOptions).catch((error) => console.log(error));
