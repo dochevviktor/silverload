@@ -1,7 +1,16 @@
+import { platform } from 'os';
 import { Platform, build, CliOptions } from 'electron-builder';
 
+let target;
+
+if (platform() == 'win32') {
+  target = Platform.WINDOWS.createTarget();
+} else if (platform() == 'linux') {
+  target = Platform.LINUX.createTarget();
+}
+
 export const packageOptions: CliOptions = {
-  targets: Platform.WINDOWS.createTarget(),
+  targets: target,
   config: {
     appId: 'com.electron.silverload',
     productName: 'silverload',
@@ -14,10 +23,13 @@ export const packageOptions: CliOptions = {
       output: 'out',
     },
     win: {
-      target: 'dir',
+      target: ['dir'],
     },
-    nsis: {
-      license: 'LICENSE',
+    linux: {
+      icon: 'icon.icns',
+      target: ['deb'],
+      maintainer: 'Viktor Dochev <dochevviktor@gmail.com>',
+      category: 'Viewer',
     },
   },
 };
