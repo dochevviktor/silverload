@@ -1,7 +1,7 @@
 {
   "name": "silverload",
   "homepage": "https://github.com/dochevviktor/silverload",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "private": true,
   "author": "Viktor Dochev",
   "description": "A thin and lite Image Browser app",
