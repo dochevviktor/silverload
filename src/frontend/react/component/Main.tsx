@@ -7,6 +7,13 @@ import ImagePanel from './image-panel/ImagePanel';
 import Tabs from './tabs/Tabs';
 import styles from './Main.scss';
 import SLSettingsModal from './settings/SLSettingsModal';
+import SLIcon from './SLIcon';
+
+const logo = (
+  <div className={styles.svgLogo}>
+    <SLIcon />
+  </div>
+);
 
 const Main = (): JSX.Element => {
   const tabListSize = useSelector((state: RootState) => state.tabsSlice.tabList.length);
@@ -28,7 +35,7 @@ const Main = (): JSX.Element => {
       <div className={styles.mainHeader}>
         <Tabs />
       </div>
-      <div>{tabListSize > 0 ? <ImagePanel /> : null}</div>
+      <div>{tabListSize > 0 ? <ImagePanel /> : logo}</div>
       <SLSettingsModal />
     </>
   );

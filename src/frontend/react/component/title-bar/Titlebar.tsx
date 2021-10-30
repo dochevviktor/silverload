@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowRestore, faWindowMaximize, faWindowMinimize, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { faSuperpowers } from '@fortawesome/free-brands-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import * as SLEvent from '../../../../common/class/SLEvent';
 import { RootState } from '../../store/rootReducer';
 import { saveTabsThenExit } from '../../store/thunks/tab.thunk';
 import { SLSetting, findSetting } from '../../../../common/class/SLSettings';
+import SLIcon from '../SLIcon';
 import styles from './Titlebar.scss';
 
 const TitleBar = (): JSX.Element => {
@@ -38,9 +38,9 @@ const TitleBar = (): JSX.Element => {
 
   return (
     <div className={styles.titleBar}>
-      <p>
-        <FontAwesomeIcon icon={faSuperpowers} size="sm" />
-        &nbsp;Sliverload
+      <p className={styles.logo}>
+        <SLIcon />
+        <p>SliverLoad</p>
       </p>
       <p>{tabCount ? tabTitle : ''}</p>
       <div className={styles.titleBar}>

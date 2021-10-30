@@ -24,6 +24,20 @@
   }
 }
 
+.logo {
+  background-color: #36393f;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  -webkit-app-region: drag;
+  height: 30px;
+
+  svg {
+    width: 7mm;
+    height: 7mm;
+  }
+}
+
 @mixin titleBarButtonCommon {
   background: transparent;
   border-radius: 0;
