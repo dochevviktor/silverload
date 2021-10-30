@@ -1,5 +1,5 @@
 import { app, BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
-import * as SLEvent from '../../../common/class/SLEvent';
+import SLEvent from '../../../common/class/SLEvent';
 import { SL_REACT } from '../../../common/class/SLPoint';
 import SLBrowserWindow from '../class/SLBrowserWindow';
 import { reactContext, reactTabContext } from '../menu/reactContextMenu';

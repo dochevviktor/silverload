@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowRestore, faWindowMaximize, faWindowMinimize, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import * as SLEvent from '../../../../common/class/SLEvent';
+import SLEvent from '../../../../common/class/SLEvent';
 import { RootState } from '../../store/rootReducer';
 import { saveTabsThenExit } from '../../store/thunks/tab.thunk';
 import { SLSetting, findSetting } from '../../../../common/class/SLSettings';

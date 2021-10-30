@@ -16,18 +16,18 @@ export const setGlobalSettings = (s: SLSettings[]): SLSettings[] => (globalSetti
 /**
  * Event class for wrapping Electron IPC event calls b/w Main and Render processes with type safety.<br>
  * Type declaration:
- * - SLEvent() -> type is set to void
- * - SLEvent<X>() -> type is set to X and the type is check at both source and destination.
+ * - SLEventClass() -> type is set to void
+ * - SLEventClass<X>() -> type is set to X and the type is check at both source and destination.
  *
  * Source and destination logic:
- * - SLEvent() -> call goes to main process, where some action is done and no return action is done
- * - SLEvent(A) -> call goes to main process, where some action is done, then result is sent to A
- * - SLEvent(A, B) -> call goes to B, where some action is done then result is sent to A
+ * - SLEventClass() -> call goes to main process, where some action is done and no return action is done
+ * - SLEventClass(A) -> call goes to main process, where some action is done, then result is sent to A
+ * - SLEventClass(A, B) -> call goes to B, where some action is done then result is sent to A
  *
  * All these calls can be done from any process, not just the involved A or B.<br>
- * For example, in C we could call SLEvent(A, B), where A could process data sent by C and then return the result to B.
+ * For example, in C we could call SLEventClass(A, B), where A could process data sent by C and then return the result to B.
  */
-export class SLEvent<T = void> {
+export class SLEventClass<T = void> {
   private readonly channel: string;
   private readonly origin?: SLPoint;
   private readonly destination?: SLPoint;
@@ -95,36 +95,40 @@ export class SLEvent<T = void> {
   }
 }
 
-// React
-export const MINIMIZE_WINDOW = new SLEvent();
-export const MAXIMIZE_WINDOW = new SLEvent();
-export const CLOSE_WINDOW = new SLEvent();
-export const WINDOW_MAXIMIZED = new SLEvent(SL_REACT);
-export const WINDOW_UN_MAXIMIZED = new SLEvent(SL_REACT);
+const SLEvent = {
+  // React
+  MINIMIZE_WINDOW: new SLEventClass(),
+  MAXIMIZE_WINDOW: new SLEventClass(),
+  CLOSE_WINDOW: new SLEventClass(),
+  WINDOW_MAXIMIZED: new SLEventClass(SL_REACT),
+  WINDOW_UN_MAXIMIZED: new SLEventClass(SL_REACT),
 
-// Context Menu
-export const TAB_CTX_MENU = new SLEvent<SLContextMenuData<string>>(SL_REACT);
+  // Context Menu
+  TAB_CTX_MENU: new SLEventClass<SLContextMenuData<string>>(SL_REACT),
 
-// Database SLTabs
-export const SAVE_TABS = new SLEvent<SLTab[]>(SL_REACT, SL_DATABASE);
-export const LOAD_TABS = new SLEvent<SLTab[]>(SL_REACT, SL_DATABASE);
-export const DELETE_TABS = new SLEvent(SL_REACT, SL_DATABASE);
+  // Database SLTabs
+  SAVE_TABS: new SLEventClass<SLTab[]>(SL_REACT, SL_DATABASE),
+  LOAD_TABS: new SLEventClass<SLTab[]>(SL_REACT, SL_DATABASE),
+  DELETE_TABS: new SLEventClass(SL_REACT, SL_DATABASE),
 
-// Database SLSettings
-export const SAVE_SETTINGS = new SLEvent<SLSettings[]>(SL_REACT, SL_DATABASE);
-export const LOAD_SETTINGS = new SLEvent<SLSettings[]>(SL_REACT, SL_DATABASE);
+  // Database SLSettings
+  SAVE_SETTINGS: new SLEventClass<SLSettings[]>(SL_REACT, SL_DATABASE),
+  LOAD_SETTINGS: new SLEventClass<SLSettings[]>(SL_REACT, SL_DATABASE),
 
-// File System
-export const LOAD_FILE_ARGUMENTS = new SLEvent<string[]>(SL_FILE_SYSTEM);
-export const SEND_SL_FILES = new SLEvent<SLFile[]>(SL_FILE_SYSTEM, SL_REACT);
-export const SEND_ADDITIONAL_FILE_ARGUMENTS = new SLEvent<string[]>(SL_FILE_SYSTEM);
-export const LOAD_TAB_IMAGE = new SLEvent<SLTabImageData>(SL_REACT, SL_FILE_SYSTEM);
-export const LOAD_NEXT_TAB_IMAGE = new SLEvent<SLTabImageData>(SL_REACT, SL_FILE_SYSTEM);
-export const LOAD_PREV_TAB_IMAGE = new SLEvent<SLTabImageData>(SL_REACT, SL_FILE_SYSTEM);
+  // File System
+  LOAD_FILE_ARGUMENTS: new SLEventClass<string[]>(SL_FILE_SYSTEM),
+  SEND_SL_FILES: new SLEventClass<SLFile[]>(SL_FILE_SYSTEM, SL_REACT),
+  SEND_ADDITIONAL_FILE_ARGUMENTS: new SLEventClass<string[]>(SL_FILE_SYSTEM),
+  LOAD_TAB_IMAGE: new SLEventClass<SLTabImageData>(SL_REACT, SL_FILE_SYSTEM),
+  LOAD_NEXT_TAB_IMAGE: new SLEventClass<SLTabImageData>(SL_REACT, SL_FILE_SYSTEM),
+  LOAD_PREV_TAB_IMAGE: new SLEventClass<SLTabImageData>(SL_REACT, SL_FILE_SYSTEM),
 
-// FFMPEG
-export const LOAD_TAB_GIF_VIDEO = new SLEvent<SLTabImageData>(SL_FFMPEG, SL_REACT);
-export const LOAD_TAB_GIF_VIDEO_PROGRESS = new SLEvent<SLTabImageData>(SL_FFMPEG, SL_REACT);
+  // FFMPEG
+  LOAD_TAB_GIF_VIDEO: new SLEventClass<SLTabImageData>(SL_FFMPEG, SL_REACT),
+  LOAD_TAB_GIF_VIDEO_PROGRESS: new SLEventClass<SLTabImageData>(SL_FFMPEG, SL_REACT),
 
-// Broadcast
-export const UPDATE_SETTINGS = new SLEvent<SLSettings[]>(SL_ALL);
+  // Broadcast
+  UPDATE_SETTINGS: new SLEventClass<SLSettings[]>(SL_ALL),
+};
+
+export default SLEvent;

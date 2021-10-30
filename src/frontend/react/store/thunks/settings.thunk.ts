@@ -1,5 +1,5 @@
 import { AppThunk } from '../store';
-import * as SLEvent from '../../../../common/class/SLEvent';
+import SLEvent from '../../../../common/class/SLEvent';
 import { actions } from '../slices/settings.slice';
 import SLSettings from '../../../../common/class/SLSettings';
 

@@ -1,4 +1,4 @@
-import * as SLEvent from '../../common/class/SLEvent';
+import SLEvent, { setGlobalSettings } from '../../common/class/SLEvent';
 import { getSettings, saveSettings, initSettings } from '../../common/class/SLSettings';
 import { deleteTabs, loadTabs, saveTabs } from '../../common/class/SLTab';
 
@@ -13,4 +13,4 @@ SLEvent.SAVE_TABS.sendBack((arg) => saveTabs(arg));
 SLEvent.LOAD_TABS.sendBack(() => loadTabs());
 SLEvent.DELETE_TABS.on(() => deleteTabs());
 
-SLEvent.UPDATE_SETTINGS.on((settings) => SLEvent.setGlobalSettings(settings));
+SLEvent.UPDATE_SETTINGS.on((settings) => setGlobalSettings(settings));

@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron';
-import * as SLEvent from '../../common/class/SLEvent';
+import SLEvent, { setGlobalSettings } from '../../common/class/SLEvent';
 
 global.ipcRenderer = ipcRenderer;
 
-SLEvent.UPDATE_SETTINGS.on((settings) => SLEvent.setGlobalSettings(settings));
+SLEvent.UPDATE_SETTINGS.on((settings) => setGlobalSettings(settings));

@@ -1,5 +1,5 @@
 import { BrowserWindowConstructorOptions } from 'electron';
-import * as SLEvent from '../../../common/class/SLEvent';
+import SLEvent from '../../../common/class/SLEvent';
 import SLBrowserWindow from '../class/SLBrowserWindow';
 import { SL_FFMPEG } from '../../../common/class/SLPoint';
 

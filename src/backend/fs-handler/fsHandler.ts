@@ -3,8 +3,8 @@ import { existsSync, lstatSync, promises } from 'fs';
 import { basename, dirname, join } from 'path';
 import { FileTypeResult, fromFile } from 'file-type';
 import { sha1 } from 'object-hash';
-import * as SLEvent from '../../common/class/SLEvent';
-import { findGlobalSettings } from '../../common/class/SLEvent';
+import SLEvent, { findGlobalSettings, setGlobalSettings } from '../../common/class/SLEvent';
+
 import { SLFile } from '../../common/interface/SLFile';
 import VALID_FILE_TYPES from '../../common/constant/SLImageFileTypes';
 import { SLTabImageData } from '../../common/interface/SLTabImageData';
@@ -122,4 +122,4 @@ SLEvent.SEND_ADDITIONAL_FILE_ARGUMENTS.on(sendSLFiles);
 SLEvent.LOAD_TAB_IMAGE.on((arg) => loadTabImage(arg));
 SLEvent.LOAD_NEXT_TAB_IMAGE.on(readNextFileAsync);
 SLEvent.LOAD_PREV_TAB_IMAGE.on(readPrevFileAsync);
-SLEvent.UPDATE_SETTINGS.on((settings) => SLEvent.setGlobalSettings(settings));
+SLEvent.UPDATE_SETTINGS.on((settings) => setGlobalSettings(settings));

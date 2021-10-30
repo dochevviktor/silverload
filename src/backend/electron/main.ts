@@ -1,5 +1,5 @@
 import { app, ipcMain } from 'electron';
-import * as SLEvent from '../../common/class/SLEvent';
+import SLEvent, { setGlobalSettings } from '../../common/class/SLEvent';
 import createReactWindow from './window/reactWindow';
 import createDbWindow from './window/databaseWindow';
 import createFsWindow from './window/fsHandlerWindow';
@@ -16,7 +16,7 @@ const loadAllWindows = async () => {
   await reactWindow.load();
   reactWindow.browserWindow.show();
 
-  SLEvent.UPDATE_SETTINGS.onBroadcast((settings) => SLEvent.setGlobalSettings(settings));
+  SLEvent.UPDATE_SETTINGS.onBroadcast((settings) => setGlobalSettings(settings));
 };
 
 const bootstrap = () => {

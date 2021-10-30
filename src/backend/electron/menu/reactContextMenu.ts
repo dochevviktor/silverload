@@ -1,6 +1,6 @@
 import { BrowserWindow, Menu, MenuItemConstructorOptions } from 'electron';
 import SLContextMenu from '../../../common/constant/SLContextMenu';
-import * as SLEvent from '../../../common/class/SLEvent';
+import SLEvent from '../../../common/class/SLEvent';
 
 const getMenuOption = (context: string, selectedItem: SLContextMenu): MenuItemConstructorOptions => {
   return {

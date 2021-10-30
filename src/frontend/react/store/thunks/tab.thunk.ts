@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { message } from 'antd';
 import { AppThunk } from '../store';
-import * as SLEvent from '../../../../common/class/SLEvent';
+import SLEvent from '../../../../common/class/SLEvent';
 import { actions } from '../slices/tab.slice';
 import SLTab from '../../../../common/class/SLTab';
 import { SLFile } from '../../../../common/interface/SLFile';
