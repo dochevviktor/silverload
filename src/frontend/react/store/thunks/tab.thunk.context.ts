@@ -18,7 +18,7 @@ contextAction[SLContextMenuItem.TAB_REOPEN_CLOSED] = (tab: SLTab, dispatch, stat
   const closedTabList = [...state.tabsSlice.closedTabList];
 
   if (closedTabList.length > 0) {
-    const path = closedTabList.shift();
+    const path = closedTabList.pop();
     const reopenedTab: SLTab = { id: uuid(), title: 'New Tab', path, isLoading: true, sequence: tab.sequence + 1 };
 
     dispatch(actions.addTabToPosition(reopenedTab));
