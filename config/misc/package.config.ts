@@ -27,9 +27,9 @@ export const packageOptions: CliOptions = {
     },
     linux: {
       icon: 'icon.icns',
-      target: ['deb'],
+      target: ['pacman'],
       maintainer: 'Viktor Dochev <dochevviktor@gmail.com>',
-      category: 'Viewer',
+      category: 'Graphics',
     },
   },
 };

@@ -15,6 +15,8 @@ const loadListeners = (win: BrowserWindow) => {
   SLEvent.LOAD_TAB_IMAGE.onMain();
   SLEvent.LOAD_NEXT_TAB_IMAGE.onMain();
   SLEvent.LOAD_PREV_TAB_IMAGE.onMain();
+  SLEvent.LOAD_NEXT_TAB_DATE_IMAGE.onMain();
+  SLEvent.LOAD_PREV_TAB_DATE_IMAGE.onMain();
 
   app.on('second-instance', (event, commandLine) => loadAdditionalFiles(win, commandLine));
 };

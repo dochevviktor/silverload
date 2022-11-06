@@ -8,10 +8,13 @@ import SLContextMenuItem, { SLContextMenuData } from '../../../../common/constan
 const contextAction = {};
 
 contextAction[SLContextMenuItem.TAB_DUPLICATE] = (tab: SLTab, dispatch) => {
-  const { title, path, base64, base64Hash, type, sequence } = tab;
-  const newTab: SLTab = { id: uuid(), title, path, base64, base64Hash, type, sequence: sequence + 1 };
+  const newTab: SLTab = { ...tab };
+
+  newTab.id = uuid();
+  newTab.sequence += 1;
 
   dispatch(actions.addTabToPosition(newTab));
+  dispatch(actions.setActiveTab(newTab.id));
 };
 
 contextAction[SLContextMenuItem.TAB_REOPEN_CLOSED] = (tab: SLTab, dispatch, state: RootState) => {
