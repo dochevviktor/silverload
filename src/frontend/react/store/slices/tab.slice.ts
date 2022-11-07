@@ -189,7 +189,12 @@ export const TabListSlice = createSlice({
       getTabById(state, tabImageData.tabId).loadingProgress = tabImageData.loadingProgress;
     },
     removeTab(state, { payload: tabIndex }: PayloadAction<number>) {
-      state.tabList[tabIndex].path && state.closedTabList.push(state.tabList[tabIndex].path);
+      if (state.tabList[tabIndex].path) {
+        const closedTabList = [...state.closedTabList];
+
+        closedTabList.push(state.tabList[tabIndex].path);
+        state.closedTabList = closedTabList;
+      }
       state.tabList[tabIndex].base64 = null;
       state.tabList[tabIndex].base64Hash = null;
       state.tabList[tabIndex].path = null;
@@ -278,8 +283,18 @@ export const TabListSlice = createSlice({
       reorderTabs(state);
     },
     closeTabsToTheLeft(state) {
-      state.tabList.splice(0, getTabById(state, state.activeTab.id)?.sequence);
-      reorderTabs(state);
+      const activeTab = getTabById(state, state.activeTab.id);
+
+      if (activeTab) {
+        const tabList: SLTab[] = [...state.tabList];
+        const closedTabList = [...state.closedTabList];
+        const removedTabList = tabList.splice(activeTab.sequence + 1, tabList.length - activeTab.sequence);
+
+        closedTabList.push(...removedTabList.map((it) => it.path));
+        state.tabList = tabList;
+        state.closedTabList = closedTabList;
+        reorderTabs(state);
+      }
     },
   },
 });

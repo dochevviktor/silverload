@@ -62,8 +62,14 @@ const changeImage = (e: KeyboardEvent, state: RootState, dispatch) => {
   if (!isSettingsPanelVisible && activeTab?.path && !activeTab.isLoading) {
     if (e.code === 'ArrowLeft') {
       dispatch(actions.setIsLoading(true));
-      SLEvent.LOAD_PREV_TAB_IMAGE.send({ tabId: activeTab.id, path: activeTab.path });
+      SLEvent.LOAD_PREV_TAB_DATE_IMAGE.send({ tabId: activeTab.id, path: activeTab.path });
     } else if (e.code === 'ArrowRight') {
+      dispatch(actions.setIsLoading(true));
+      SLEvent.LOAD_NEXT_TAB_DATE_IMAGE.send({ tabId: activeTab.id, path: activeTab.path });
+    } else if (e.code === 'ArrowUp') {
+      dispatch(actions.setIsLoading(true));
+      SLEvent.LOAD_PREV_TAB_IMAGE.send({ tabId: activeTab.id, path: activeTab.path });
+    } else if (e.code === 'ArrowDown') {
       dispatch(actions.setIsLoading(true));
       SLEvent.LOAD_NEXT_TAB_IMAGE.send({ tabId: activeTab.id, path: activeTab.path });
     }
