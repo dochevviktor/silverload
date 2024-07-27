@@ -77,10 +77,12 @@ const ImagePanel = (): JSX.Element => {
     e.preventDefault();
   };
 
-  let onDoubleClick = (e: MouseEvent) => {
-    dispatch(setImagePosition());
-    e.stopPropagation();
-    e.preventDefault();
+  const onAuxClick = (e: MouseEvent) => {
+    if (e.button === 1) {
+      dispatch(setImagePosition());
+      e.stopPropagation();
+      e.preventDefault();
+    }
   };
 
   const onMouseLeave = (e: MouseEvent) => {
@@ -89,7 +91,7 @@ const ImagePanel = (): JSX.Element => {
     e.preventDefault();
   };
 
-  let onWheel = async (e: WheelEvent) => {
+  const onWheel = async (e: WheelEvent) => {
     setAnimated(true);
     if (e.deltaY > 0) {
       if (activeTab?.scaleX > 0.05) await zoom.zoom(false);
@@ -131,8 +133,6 @@ const ImagePanel = (): JSX.Element => {
   if (activeTab?.base64) {
     if (activeTab?.type === 'video') {
       displayElement = videoElement;
-      onDoubleClick = undefined;
-      onWheel = undefined;
     } else {
       displayElement = imageElement;
     }
@@ -143,8 +143,8 @@ const ImagePanel = (): JSX.Element => {
   return (
     <div
       className={styles.contentContainer}
-      onDoubleClick={onDoubleClick}
       onMouseLeave={onMouseLeave}
+      onAuxClick={onAuxClick}
       onWheel={onWheel}
       onDragEnter={(e) => dispatch(handleDragIn(e))}
       onDragLeave={(e) => dispatch(handleDragOut(e))}
