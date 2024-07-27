@@ -78,12 +78,24 @@ const getDir = async (dirPath: string, sort: (a: FileData, b: FileData) => numbe
   if (dirEntries.has(dirPath + sort.name)) {
     const cachedDir = dirEntries.get(dirPath + sort.name);
 
-    if (cachedDir.length === dir.length) {
+    if (cachedDir) {
       return cachedDir.map((it) => it.name);
     }
   }
-  const currentDir = dir.map((fileName) => direntToFileData(dirPath, fileName)).sort(sort);
 
+  const currentDir: FileData[] = [];
+
+  for (const dirent of dir) {
+    if (dirent.isFile()) {
+      const fileType = direntToFileData(dirPath, dirent);
+      const mimeType = (await fromFile(dirPath + '/' + fileType.name))?.mime;
+
+      if (validateFile(mimeType)) {
+        currentDir.push(fileType);
+      }
+    }
+  }
+  currentDir.sort(sort);
   dirEntries.set(dirPath + sort.name, currentDir);
 
   return currentDir.map((it) => it.name);

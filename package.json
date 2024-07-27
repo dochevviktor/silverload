@@ -8,7 +8,7 @@
   "repository": "github:dochevviktor/silverload",
   "main": "build/main.js",
   "scripts": {
-    "start:dev": "webpack serve & rimraf build",
+    "start:dev": "webpack serve",
     "build:prod": "rimraf out & webpack --env production & yarn electron:package & rimraf build",
     "build:pub": "rimraf out & webpack --env production & yarn electron:publish & rimraf build",
     "electron:install": "electron-rebuild",
@@ -28,6 +28,7 @@
     "run": "lint:fix:eslint, lint:fix:stylelint, format, document:build"
   },
   "devDependencies": {
+    "@electron/rebuild": "^3.6.0",
     "@ffmpeg/ffmpeg": "^0.10.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-brands-svg-icons": "^5.15.4",
@@ -53,7 +54,7 @@
     "csp-html-webpack-plugin": "^5.1.0",
     "css-loader": "^6.4.0",
     "css-minimizer-webpack-plugin": "^3.1.1",
-    "electron": "^15.3.0",
+    "electron": "31.3.0",
     "electron-builder": "^22.13.1",
     "electron-builder-squirrel-windows": "^22.14.5",
     "electron-squirrel-startup": "^1.0.0",
@@ -92,13 +93,13 @@
     "tsconfig-paths-webpack-plugin": "^3.5.1",
     "typescript": "^4.4.4",
     "uuid": "^8.3.2",
-    "webpack": "^5.59.1",
+    "webpack": "5.76.0",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.3.1",
     "webpack-merge": "5.8.0"
   },
   "dependencies": {
     "@ffmpeg/core": "^0.10.0",
-    "dexie": "^3.0.3"
+    "dexie": "4.0.8"
   }
 }

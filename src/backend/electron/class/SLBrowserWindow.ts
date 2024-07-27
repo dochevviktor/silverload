@@ -28,6 +28,7 @@ export default class SLBrowserWindow {
             nodeIntegration: false,
             nodeIntegrationInWorker: false,
             contextIsolation: false,
+            sandbox: false,
             preload: path.join(__dirname, preload),
           },
         },
