@@ -186,7 +186,11 @@ export const TabListSlice = createSlice({
       if (state.activeTab.id === tabImageData.tabId) {
         state.activeTab.loadingProgress = tabImageData.loadingProgress;
       }
-      getTabById(state, tabImageData.tabId).loadingProgress = tabImageData.loadingProgress;
+      const tabById = getTabById(state, tabImageData.tabId);
+
+      if (tabById && tabImageData?.loadingProgress) {
+        tabById.loadingProgress = tabImageData.loadingProgress;
+      }
     },
     removeTab(state, { payload: tabIndex }: PayloadAction<number>) {
       if (state.tabList[tabIndex].path) {

@@ -34,7 +34,7 @@ const SLSettingsModal = (): JSX.Element => {
     <Modal
       wrapClassName={styles.wrapStyle}
       title="Settings"
-      visible={isVisible}
+      open={isVisible}
       destroyOnClose={true}
       onOk={handleOk}
       closable={false}
@@ -42,7 +42,8 @@ const SLSettingsModal = (): JSX.Element => {
       maskClosable={false}
       cancelText="Back"
       okText="Save"
-      onCancel={handleCancel}>
+      onCancel={handleCancel}
+    >
       {settings?.map((setting, index) => (
         <div key={index} className={styles.setting} onClick={() => toggleSet(index)}>
           <p>{SLSetting[setting.code]}</p>

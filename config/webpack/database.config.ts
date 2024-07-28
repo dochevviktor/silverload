@@ -1,5 +1,5 @@
-import { Configuration } from 'webpack';
 import path from 'path';
+import { Configuration } from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CspHtmlWebpackPlugin from 'csp-html-webpack-plugin';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';

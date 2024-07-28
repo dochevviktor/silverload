@@ -2,7 +2,7 @@ import { ipcRenderer } from 'electron';
 import { Dirent, existsSync, lstatSync, promises } from 'fs';
 import { basename, dirname, join } from 'path';
 import * as fs from 'fs';
-import { FileTypeResult, fromFile } from 'file-type';
+import { FileTypeResult, fileTypeFromFile } from 'file-type';
 import { sha1 } from 'object-hash';
 import SLEvent, { findGlobalSettings, setGlobalSettings } from '../../common/class/SLEvent';
 
@@ -34,7 +34,7 @@ const getSLFilesFromArgs = (argList: string[]): Promise<SLFile[]> => {
 
 const readSLFile = async (path: string): Promise<SLFile> => {
   console.log('Loading file: ' + path);
-  const mimeType = (await fromFile(path))?.mime;
+  const mimeType = (await fileTypeFromFile(path))?.mime;
   const name = basename(path);
 
   return { name, mimeType, path };
@@ -43,7 +43,7 @@ const readSLFile = async (path: string): Promise<SLFile> => {
 const loadTabImage = async (tabImageData: SLTabImageData, fileType?: FileTypeResult): Promise<void> => {
   if (tabImageData?.path) {
     console.log('Loading tab image from: ' + tabImageData.path);
-    const mimeType = fileType != null ? fileType.mime : (await fromFile(tabImageData.path))?.mime;
+    const mimeType = fileType != null ? fileType.mime : (await fileTypeFromFile(tabImageData.path))?.mime;
 
     if (!validateFile(mimeType)) {
       SLEvent.LOAD_TAB_IMAGE.send(tabImageData);
@@ -88,7 +88,7 @@ const getDir = async (dirPath: string, sort: (a: FileData, b: FileData) => numbe
   for (const dirent of dir) {
     if (dirent.isFile()) {
       const fileType = direntToFileData(dirPath, dirent);
-      const mimeType = (await fromFile(dirPath + '/' + fileType.name))?.mime;
+      const mimeType = (await fileTypeFromFile(dirPath + '/' + fileType.name))?.mime;
 
       if (validateFile(mimeType)) {
         currentDir.push(fileType);
@@ -114,7 +114,7 @@ const readFile = async (data: SLTabImageData, basePath: string, dir: string[], i
   }
 
   const path = join(basePath, dir[index]);
-  const fileType = await fromFile(path);
+  const fileType = await fileTypeFromFile(path);
 
   if (!validateFile(fileType?.mime)) {
     return await readFile(data, basePath, dir, index, rev);

@@ -4,7 +4,8 @@ import InlineChunkHtmlPlugin from 'inline-chunk-html-plugin';
 import HTMLInlineCSSWebpackPlugin from 'html-inline-css-webpack-plugin';
 import HtmlMinimizerPlugin from 'html-minimizer-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { EnvironmentPlugin, Configuration } from 'webpack';
+import { EnvironmentPlugin, Configuration as WebpackConfiguration } from 'webpack';
+import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 import merge from 'webpack-merge';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
@@ -15,6 +16,10 @@ import { databaseConfig } from './config/webpack/database.config';
 import { ffmpegConfig, ffmpegConfigProd } from './config/webpack/ffmpeg.config';
 import { reactConfig } from './config/webpack/react.config';
 import ElectronDevPlugin from './config/webpack/plugin/ElectronDevPlugin';
+
+interface Configuration extends WebpackConfiguration {
+  devServer?: WebpackDevServerConfiguration;
+}
 
 //Always attach this to the fist config for a proper cleanup on start.
 const cleanOutputConfig: Configuration = {

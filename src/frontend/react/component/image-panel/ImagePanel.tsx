@@ -149,7 +149,8 @@ const ImagePanel = (): JSX.Element => {
       onDragEnter={(e) => dispatch(handleDragIn(e))}
       onDragLeave={(e) => dispatch(handleDragOut(e))}
       onDragOver={(e) => dispatch(handleDrag(e))}
-      onDrop={handleDrop}>
+      onDrop={handleDrop}
+    >
       <DragAndDrop />
       {displayElement}
     </div>

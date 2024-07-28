@@ -1,6 +1,10 @@
-const bytesToBase64 = (bytes: Uint8Array): string => {
+const bytesToBase64 = (bytes: Uint8Array | string): string => {
   let result = '',
     i;
+
+  if (typeof bytes === 'string') {
+    return null;
+  }
   const l = bytes.length;
 
   for (i = 2; i < l; i += 3) {

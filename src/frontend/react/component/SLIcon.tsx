@@ -10,7 +10,8 @@ const SLIcon = (): JSX.Element => {
           y="142.93573"
           fontFamily="'Copperplate Gothic Light'"
           fontStyle="line-height:1.25"
-          xmlSpace="preserve">
+          xmlSpace="preserve"
+        >
           <tspan fontFamily="'Copperplate Gothic Light'" strokeWidth=".26458" />
         </text>
         <text x="94.588539" y="153.72292" fontFamily="'Cooper Black'" fontStyle="line-height:1.25" xmlSpace="preserve">
@@ -21,7 +22,8 @@ const SLIcon = (): JSX.Element => {
           y="144.72708"
           fontFamily="'Baskerville Old Face'"
           fontStyle="line-height:1.25"
-          xmlSpace="preserve">
+          xmlSpace="preserve"
+        >
           <tspan x="103.31979" y="144.72708" fontFamily="'Baskerville Old Face'" strokeWidth=".26458" />
         </text>
       </g>

@@ -39,8 +39,9 @@ const SLDrawer = (): JSX.Element => {
         placement="left"
         closable={false}
         onClose={() => updateVisible(false)}
-        visible={isVisible}
-        width="170px">
+        open={isVisible}
+        width="170px"
+      >
         <div className={styles.topSection}>
           <Button type="text" onClick={() => dispatch(saveTabs())} loading={isSaving} className={buttonStyle} block>
             <FontAwesomeIcon icon={faSaveSol} size="lg" />
@@ -62,7 +63,8 @@ const SLDrawer = (): JSX.Element => {
             overlayClassName={styles.tooltip}
             content={content}
             title="Project Silverload"
-            trigger="click">
+            trigger="click"
+          >
             <Button type="text" className={styles.buttonStyle} block>
               <FontAwesomeIcon icon={faInfoCircle} size="lg" />
               <p>About</p>

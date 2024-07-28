@@ -33,7 +33,7 @@ const openNewTabs = (fileList: SLFile[], dispatch: (arg) => void) => {
 
   if (length === 1) return;
 
-  Object.values(otherFiles)
+  otherFiles
     .filter((it) => validateFileMimeType(it.mimeType))
     .map((it) => dispatch(addNewTab({ id: uuid(), title: it.name, path: it.path })));
 };
