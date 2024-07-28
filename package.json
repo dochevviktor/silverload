@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@electron/rebuild": "^3.6.0",
-    "@ffmpeg/ffmpeg": "^0.12.10",
+    "@ffmpeg/ffmpeg": "^0.10.1",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
@@ -99,7 +99,7 @@
     "webpack-merge": "6.0.1"
   },
   "dependencies": {
-    "@ffmpeg/core": "^0.12.6",
+    "@ffmpeg/core": "^0.10.0",
     "dexie": "4.0.8"
   }
 }

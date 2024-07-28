@@ -1,6 +1,5 @@
 import path from 'path';
 import { Configuration } from 'webpack';
-// eslint-disable-next-line import/default
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CspHtmlWebpackPlugin from 'csp-html-webpack-plugin';
@@ -33,7 +32,7 @@ export const ffmpegConfig: Configuration = {
     new CopyPlugin({
       patterns: [
         {
-          from: '**/@ffmpeg/core/dist/esm/*',
+          from: '**/@ffmpeg/core/dist/*',
           to: '[name][ext]',
         },
       ],
